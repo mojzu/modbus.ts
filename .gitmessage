@@ -1,0 +1,9 @@
+# Commit message format.
+# ```
+# <type>(<scope>): <subject>
+#
+# <body>
+#
+# <footer>
+# ```
+# types: feat, fix, docs, style, refactor, test, chore

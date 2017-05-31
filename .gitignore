@@ -1,0 +1,8 @@
+# Git ignored files.
+# <https://git-scm.com/docs/gitignore>
+/.deprecated
+/coverage
+/dist
+/node_modules
+/*.log
+/*.tgz

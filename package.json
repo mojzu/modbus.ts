@@ -1,0 +1,35 @@
+{
+  "name": "modbus.ts",
+  "version": "0.1.0",
+  "description": "Modbus application protocol",
+  "license": "Unlicense",
+  "author": "mojzu <mail@mojzu.net>",
+  "repository": "https://github.com/mojzu/modbus.ts.git",
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "scripts": {
+    "clean": "rimraf dist",
+    "test": "npm run tsc && node test.js",
+    "coverage": "npm run tsc && istanbul cover test.js -x \"**/*.spec.js\"",
+    "lint": "tslint -p tsconfig.json --type-check",
+    "pack": "npm run tsc && npm pack",
+    "tsc": "npm run clean && tsc"
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "debug": "^2.6.8",
+    "rxjs": "^5.4.0"
+  },
+  "devDependencies": {
+    "@types/jasmine": "^2.5.47",
+    "@types/node": "^7.0.22",
+    "istanbul": "^0.4.5",
+    "jasmine": "^2.6.0",
+    "rimraf": "^2.6.1",
+    "tslint": "^5.3.2",
+    "tslint-eslint-rules": "^4.1.1",
+    "typescript": "^2.3.4"
+  }
+}
