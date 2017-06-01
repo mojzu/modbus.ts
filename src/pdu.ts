@@ -22,7 +22,7 @@ function validQuantityOfRegisters(value: number, maximum = 0x7D): void {
 /**
  * Modbus function codes.
  */
-export const enum FunctionCode {
+export const enum ModbusFunctionCode {
     ReadCoils = 0x1,
     ReadDiscreteInputs,
     ReadHoldingRegisters,
@@ -31,6 +31,18 @@ export const enum FunctionCode {
     WriteSingleRegister,
     WriteMultipleCoils = 0xF,
     WriteMultipleRegisters,
+}
+
+/**
+ * Modbus exception codes.
+ */
+export const enum ModbusExceptionCode {
+    IllegalFunctionCode = 0x1,
+    IllegalDataAddress,
+    IllegalDataValue,
+    ServerFailure,
+    Acknowledge,
+    ServerBusy,
 }
 
 /**
@@ -51,7 +63,7 @@ export class ModbusPduClient {
     validAddress(startingAddress + quantityOfCoils);
 
     const buffer = Buffer.alloc(5, 0);
-    buffer[0] = FunctionCode.ReadCoils;
+    buffer[0] = ModbusFunctionCode.ReadCoils;
     buffer.writeUInt16BE(startingAddress, 1);
     buffer.writeUInt16BE(quantityOfCoils, 3);
 
@@ -70,7 +82,7 @@ export class ModbusPduClient {
     validAddress(startingAddress + quantityOfInputs);
 
     const buffer = Buffer.alloc(5, 0);
-    buffer[0] = FunctionCode.ReadDiscreteInputs;
+    buffer[0] = ModbusFunctionCode.ReadDiscreteInputs;
     buffer.writeUInt16BE(startingAddress, 1);
     buffer.writeUInt16BE(quantityOfInputs, 3);
 
@@ -89,7 +101,7 @@ export class ModbusPduClient {
     validAddress(startingAddress + quantityOfRegisters);
 
     const buffer = Buffer.alloc(5, 0);
-    buffer[0] = FunctionCode.ReadHoldingRegisters;
+    buffer[0] = ModbusFunctionCode.ReadHoldingRegisters;
     buffer.writeUInt16BE(startingAddress, 1);
     buffer.writeUInt16BE(quantityOfRegisters, 3);
 
@@ -108,7 +120,7 @@ export class ModbusPduClient {
     validAddress(startingAddress + quantityOfRegisters);
 
     const buffer = Buffer.alloc(5, 0);
-    buffer[0] = FunctionCode.ReadInputRegisters;
+    buffer[0] = ModbusFunctionCode.ReadInputRegisters;
     buffer.writeUInt16BE(startingAddress, 1);
     buffer.writeUInt16BE(quantityOfRegisters, 3);
 
@@ -125,7 +137,7 @@ export class ModbusPduClient {
     validAddress(outputAddress);
 
     const buffer = Buffer.alloc(5, 0);
-    buffer[0] = FunctionCode.WriteSingleCoil;
+    buffer[0] = ModbusFunctionCode.WriteSingleCoil;
     buffer.writeUInt16BE(outputAddress, 1);
     buffer.writeUInt16BE((!!outputValue ? 0xFF00 : 0x0000), 3);
 
@@ -143,7 +155,7 @@ export class ModbusPduClient {
     validRegister(registerValue);
 
     const buffer = Buffer.alloc(5, 0);
-    buffer[0] = FunctionCode.WriteSingleRegister;
+    buffer[0] = ModbusFunctionCode.WriteSingleRegister;
     buffer.writeUInt16BE(registerAddress, 1);
     buffer.writeUInt16BE(registerValue, 3);
 
@@ -175,7 +187,7 @@ export class ModbusPduClient {
 
     const byteCount = registerValues.length * 2;
     const buffer = Buffer.alloc(6 + byteCount, 0);
-    buffer[0] = FunctionCode.WriteMultipleRegisters;
+    buffer[0] = ModbusFunctionCode.WriteMultipleRegisters;
     buffer.writeUInt16BE(startingAddress, 1);
     buffer.writeUInt16BE(registerValues.length, 3);
     buffer[5] = byteCount;
