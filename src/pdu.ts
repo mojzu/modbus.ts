@@ -1,6 +1,5 @@
-/* tslint:disable:no-empty-interface */
-/// <reference types="node" />
-import * as assert from "assert";
+/* tslint:disable:no-bitwise no-empty-interface */
+import { assert } from "./node";
 
 export function validAddress(value: number): void {
   assert((0x0 <= value) && (value <= 0xFFFF), `Invalid address: ${value}`);
@@ -18,10 +17,53 @@ export function validQuantityOfRegisters(value: number, maximum = 0x7D): void {
   assert((0x1 <= value) && (value <= maximum), `Invalid quantity of registers: ${value}`);
 }
 
+export function bitsToBytes(values: boolean[]): [number, number[]] {
+  let byteCount = Math.floor(values.length / 8);
+  if ((values.length % 8) !== 0) {
+    byteCount += 1;
+  }
+
+  // Convert array of booleans to byte flag array.
+  const byteValues: number[] = [];
+  values.map((value, index) => {
+    const byteIndex = Math.floor(index / 8);
+    const bitIndex = Math.floor(index % 8);
+
+    let byteValue = byteValues[byteIndex] || 0;
+    if (!!value) {
+      byteValue |= (0x1 << bitIndex);
+    } else {
+      byteValue &= ~(0x1 << bitIndex);
+    }
+    byteValues[byteIndex] = byteValue;
+  });
+
+  return [byteCount, byteValues];
+}
+
+export function bytesToBits(quantity: number, buffer: Buffer): boolean[] {
+  let byteCount = Math.floor(quantity / 8);
+  if ((quantity % 8) !== 0) {
+    byteCount += 1;
+  }
+
+  // Convert byte flag array to array of booleans.
+  const bitValues: boolean[] = [];
+  for (let i = 0; i < quantity; i++) {
+    const byteIndex = Math.floor(i / 8);
+    const bitIndex = Math.floor(i % 8);
+
+    const byteValue = buffer.readUInt8(byteIndex);
+    bitValues.push(!!(byteValue & (0x1 << bitIndex)));
+  }
+
+  return bitValues;
+}
+
 /**
  * Modbus function codes.
  */
-export const enum ModbusFunctionCode {
+export enum ModbusFunctionCode {
   ReadCoils = 0x1,
   ReadDiscreteInputs,
   ReadHoldingRegisters,
@@ -35,7 +77,7 @@ export const enum ModbusFunctionCode {
 /**
  * Modbus exception codes.
  */
-export const enum ModbusExceptionCode {
+export enum ModbusExceptionCode {
   IllegalFunctionCode = 0x1,
   IllegalDataAddress,
   IllegalDataValue,
@@ -80,7 +122,7 @@ export interface IModbusWriteMultipleRegisters extends IModbusWriteMultiple { }
 /**
  * Modbus response properties for supported function codes.
  */
-export type ModbusResponseDataTypes = IModbusReadCoils
+export type ModbusData = IModbusReadCoils
   | IModbusReadDiscreteInputs
   | IModbusReadHoldingRegisters
   | IModbusReadInputRegisters
@@ -105,7 +147,8 @@ export class ModbusPduRequest {
 export class ModbusPduResponse {
   public constructor(
     public functionCode: number,
-    public data: ModbusResponseDataTypes,
+    public data: ModbusData,
+    public buffer: Buffer,
   ) { }
 }
 
@@ -117,5 +160,6 @@ export class ModbusPduException {
     public functionCode: number,
     public exceptionFunctionCode: number,
     public exceptionCode: number,
+    public buffer: Buffer,
   ) { }
 }
