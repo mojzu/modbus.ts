@@ -1,6 +1,6 @@
 {
   "name": "modbus.ts",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Modbus application protocol",
   "license": "Unlicense",
   "author": "mojzu <mail@mojzu.net>",
