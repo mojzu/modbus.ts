@@ -57,7 +57,6 @@ export class ModbusTcpClient {
 
   private _isConnected = false;
   private _retries = 0;
-  private _hadError = false;
   private _error: any;
 
   // Response buffer/emitter.
@@ -146,10 +145,9 @@ export class ModbusTcpClient {
         this._buffer = Buffer.alloc(0);
         this._isConnected = false;
         this._retries += 1;
-        this._hadError = hadError;
       }, undefined, () => {
         // Disconnect if retries have been used.
-        this.disconnect(this._hadError);
+        this.disconnect();
       });
 
     this._data
@@ -159,7 +157,7 @@ export class ModbusTcpClient {
       });
 
     // Wait for next disconnect or connect event to indicate success/failure.
-    return Observable.race(this._disconnect, this._connect).take(1)
+    return Observable.race(this._close, this._connect).take(retry)
       .switchMap((hadError) => {
         // Undefined argument if connect finished first.
         this._isConnected = (hadError == null);
@@ -181,10 +179,10 @@ export class ModbusTcpClient {
   /**
    * Disconnect the client from the configured host:port, if connected.
    */
-  public disconnect(_hadError?: boolean): void {
+  public disconnect(): void {
     if (this._socket != null) {
       this._socket.end();
-      this._disconnect.next(_hadError);
+      this._disconnect.next();
       this._disconnect.complete();
       this._receive.complete();
       this._isConnected = false;
