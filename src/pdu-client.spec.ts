@@ -1,74 +1,255 @@
-/// <reference types="node" />
 /// <reference types="jasmine" />
-import * as pdu from "./pdu";
-import * as pduClient from "./pdu-client";
+import {
+  ModbusFunctionCode,
+  IModbusReadCoils,
+  IModbusReadDiscreteInputs,
+  IModbusReadHoldingRegisters,
+  IModbusReadInputRegisters,
+  IModbusWriteSingleCoil,
+  IModbusWriteSingleRegister,
+  IModbusWriteMultipleCoils,
+  IModbusWriteMultipleRegisters,
+  ModbusPduResponse,
+} from "./pdu";
+import { ModbusPduClient } from "./pdu-client";
+import { ModbusPduMockServer } from "./pdu-server.mock";
 
 describe("Modbus PDU", () => {
 
   // TODO: Test method argument validation.
-  // TODO: Test parsed responses.
-  const client = new pduClient.ModbusPduClient();
+  // TODO: Test Modbus exception handling.
+  const client = new ModbusPduClient();
+  const server = new ModbusPduMockServer();
+
+  const readCoilsRequest = client.readCoils(0x0020, 5);
+  const readCoilsServerResponse = server.parseRequest(readCoilsRequest.buffer);
+  const readCoilsClientResponse = client.parseResponse(readCoilsServerResponse.buffer);
+
+  const readDiscreteInputsRequest = client.readDiscreteInputs(0x0040, 4);
+  const readDiscreteInputsServerResponse = server.parseRequest(readDiscreteInputsRequest.buffer);
+  const readDiscreteInputsClientResponse = client.parseResponse(readDiscreteInputsServerResponse.buffer);
+
+  const readHoldingRegistersRequest = client.readHoldingRegisters(0xFF00, 2);
+  const readHoldingRegistersServerResponse = server.parseRequest(readHoldingRegistersRequest.buffer);
+  const readHoldingRegistersClientResponse = client.parseResponse(readHoldingRegistersServerResponse.buffer);
+
+  const readInputRegistersRequest = client.readInputRegisters(0xAFAF, 1);
+  const readInputRegistersServerResponse = server.parseRequest(readInputRegistersRequest.buffer);
+  const readInputRegistersClientResponse = client.parseResponse(readInputRegistersServerResponse.buffer);
+
+  const writeSingleCoilRequest = client.writeSingleCoil(0x00FF, true);
+  const writeSingleCoilServerResponse = server.parseRequest(writeSingleCoilRequest.buffer);
+  const writeSingleCoilClientResponse = client.parseResponse(writeSingleCoilServerResponse.buffer);
+
+  const writeSingleRegisterRequest = client.writeSingleRegister(0x4000, 0xABCD);
+  const writeSingleRegisterServerResponse = server.parseRequest(writeSingleRegisterRequest.buffer);
+  const writeSingleRegisterClientResponse = client.parseResponse(writeSingleRegisterServerResponse.buffer);
+
+  const writeMultipleCoilsRequest = client.writeMultipleCoils(0x2000, [true, false, true, false]);
+  const writeMultipleCoilsServerResponse = server.parseRequest(writeMultipleCoilsRequest.buffer);
+  const writeMultipleCoilsClientResponse = client.parseResponse(writeMultipleCoilsServerResponse.buffer);
+
+  const writeMultipleRegistersRequest = client.writeMultipleRegisters(0x2000, [0x0001, 0x0002, 0x0003]);
+  const writeMultipleRegistersServerResponse = server.parseRequest(writeMultipleRegistersRequest.buffer);
+  const writeMultipleRegistersClientResponse = client.parseResponse(writeMultipleRegistersServerResponse.buffer);
 
   it("Read coils request", () => {
-    const request = client.readCoils(0x0020, 5);
-    expect(request.buffer.readUInt8(0)).toEqual(pdu.ModbusFunctionCode.ReadCoils);
-    expect(request.buffer.readUInt16BE(1)).toEqual(0x0020);
-    expect(request.buffer.readUInt16BE(3)).toEqual(5);
+    const buffer = readCoilsRequest.buffer;
+    expect(buffer.readUInt8(0)).toEqual(ModbusFunctionCode.ReadCoils);
+    expect(buffer.readUInt16BE(1)).toEqual(0x0020);
+    expect(buffer.readUInt16BE(3)).toEqual(5);
+  });
+
+  it("Read coils server response", () => {
+    const buffer = readCoilsServerResponse.buffer;
+    expect(buffer.readUInt8(0)).toEqual(ModbusFunctionCode.ReadCoils);
+    expect(buffer.readUInt8(1)).toEqual(1);
+    expect(buffer.readUInt8(2)).toEqual(0x15);
+  });
+
+  it("Read coils client response", () => {
+    if (readCoilsClientResponse instanceof ModbusPduResponse) {
+      const data: IModbusReadCoils = readCoilsClientResponse.data as any;
+      expect(data.bytes).toEqual(1);
+      expect(data.values).toEqual([true, false, true, false, true, false, false, false]);
+    } else {
+      fail(readCoilsClientResponse);
+    }
   });
 
   it("Read discrete inputs request", () => {
-    const request = client.readDiscreteInputs(0x0040, 10);
-    expect(request.buffer.readUInt8(0)).toEqual(pdu.ModbusFunctionCode.ReadDiscreteInputs);
-    expect(request.buffer.readUInt16BE(1)).toEqual(0x0040);
-    expect(request.buffer.readUInt16BE(3)).toEqual(10);
+    const buffer = readDiscreteInputsRequest.buffer;
+    expect(buffer.readUInt8(0)).toEqual(ModbusFunctionCode.ReadDiscreteInputs);
+    expect(buffer.readUInt16BE(1)).toEqual(0x0040);
+    expect(buffer.readUInt16BE(3)).toEqual(4);
+  });
+
+  it("Read discrete inputs server response", () => {
+    const buffer = readDiscreteInputsServerResponse.buffer;
+    expect(buffer.readUInt8(0)).toEqual(ModbusFunctionCode.ReadDiscreteInputs);
+    expect(buffer.readUInt8(1)).toEqual(1);
+    expect(buffer.readUInt8(2)).toEqual(0x5);
+  });
+
+  it("Read discrete inputs client response", () => {
+    if (readDiscreteInputsClientResponse instanceof ModbusPduResponse) {
+      const data: IModbusReadDiscreteInputs = readDiscreteInputsClientResponse.data as any;
+      expect(data.bytes).toEqual(1);
+      expect(data.values).toEqual([true, false, true, false, false, false, false, false]);
+    } else {
+      fail(readDiscreteInputsClientResponse);
+    }
   });
 
   it("Read holding registers request", () => {
-    const request = client.readHoldingRegisters(0xFF00, 10);
-    expect(request.buffer.readUInt8(0)).toEqual(pdu.ModbusFunctionCode.ReadHoldingRegisters);
-    expect(request.buffer.readUInt16BE(1)).toEqual(0xFF00);
-    expect(request.buffer.readUInt16BE(3)).toEqual(10);
+    const buffer = readHoldingRegistersRequest.buffer;
+    expect(buffer.readUInt8(0)).toEqual(ModbusFunctionCode.ReadHoldingRegisters);
+    expect(buffer.readUInt16BE(1)).toEqual(0xFF00);
+    expect(buffer.readUInt16BE(3)).toEqual(2);
+  });
+
+  it("Read holding registers server response", () => {
+    const buffer = readHoldingRegistersServerResponse.buffer;
+    expect(buffer.readUInt8(0)).toEqual(ModbusFunctionCode.ReadHoldingRegisters);
+    expect(buffer.readUInt8(1)).toEqual(4);
+    expect(buffer.readUInt16BE(2)).toEqual(0xAFAF);
+    expect(buffer.readUInt16BE(4)).toEqual(0xAFAF);
+  });
+
+  it("Read holding registers client response", () => {
+    if (readHoldingRegistersClientResponse instanceof ModbusPduResponse) {
+      const data: IModbusReadHoldingRegisters = readHoldingRegistersClientResponse.data as any;
+      expect(data.bytes).toEqual(4);
+      expect(data.values).toEqual([0xAFAF, 0xAFAF]);
+    } else {
+      fail(readHoldingRegistersClientResponse);
+    }
   });
 
   it("Read input registers request", () => {
-    const request = client.readInputRegisters(0xAFAF, 1);
-    expect(request.buffer.readUInt8(0)).toEqual(pdu.ModbusFunctionCode.ReadInputRegisters);
-    expect(request.buffer.readUInt16BE(1)).toEqual(0xAFAF);
-    expect(request.buffer.readUInt16BE(3)).toEqual(1);
+    const buffer = readInputRegistersRequest.buffer;
+    expect(buffer.readUInt8(0)).toEqual(ModbusFunctionCode.ReadInputRegisters);
+    expect(buffer.readUInt16BE(1)).toEqual(0xAFAF);
+    expect(buffer.readUInt16BE(3)).toEqual(1);
+  });
+
+  it("Read input registers server response", () => {
+    const buffer = readInputRegistersServerResponse.buffer;
+    expect(buffer.readUInt8(0)).toEqual(ModbusFunctionCode.ReadInputRegisters);
+    expect(buffer.readUInt8(1)).toEqual(2);
+    expect(buffer.readUInt16BE(2)).toEqual(0xAFAF);
+  });
+
+  it("Read holding registers client response", () => {
+    if (readInputRegistersClientResponse instanceof ModbusPduResponse) {
+      const data: IModbusReadInputRegisters = readInputRegistersClientResponse.data as any;
+      expect(data.bytes).toEqual(2);
+      expect(data.values).toEqual([0xAFAF]);
+    } else {
+      fail(readInputRegistersClientResponse);
+    }
   });
 
   it("Write single coil request", () => {
-    const request = client.writeSingleCoil(0x00FF, true);
-    expect(request.buffer.readUInt8(0)).toEqual(pdu.ModbusFunctionCode.WriteSingleCoil);
-    expect(request.buffer.readUInt16BE(1)).toEqual(0x00FF);
-    expect(request.buffer.readUInt16BE(3)).toEqual(0xFF00);
+    const buffer = writeSingleCoilRequest.buffer;
+    expect(buffer.readUInt8(0)).toEqual(ModbusFunctionCode.WriteSingleCoil);
+    expect(buffer.readUInt16BE(1)).toEqual(0x00FF);
+    expect(buffer.readUInt16BE(3)).toEqual(0xFF00);
+  });
+
+  it("Write single coil server response", () => {
+    const buffer = writeSingleCoilServerResponse.buffer;
+    expect(buffer.readUInt8(0)).toEqual(ModbusFunctionCode.WriteSingleCoil);
+    expect(buffer.readUInt16BE(1)).toEqual(0x00FF);
+    expect(buffer.readUInt16BE(3)).toEqual(0xFF00);
+  });
+
+  it("Write single coil client response", () => {
+    if (writeSingleCoilClientResponse instanceof ModbusPduResponse) {
+      const data: IModbusWriteSingleCoil = writeSingleCoilClientResponse.data as any;
+      expect(data.address).toEqual(0x00FF);
+      expect(data.value).toEqual(true);
+    } else {
+      fail(writeSingleCoilClientResponse);
+    }
   });
 
   it("Write single register request", () => {
-    const request = client.writeSingleRegister(0x4000, 0xABCD);
-    expect(request.buffer.readUInt8(0)).toEqual(pdu.ModbusFunctionCode.WriteSingleRegister);
-    expect(request.buffer.readUInt16BE(1)).toEqual(0x4000);
-    expect(request.buffer.readUInt16BE(3)).toEqual(0xABCD);
+    const buffer = writeSingleRegisterRequest.buffer;
+    expect(buffer.readUInt8(0)).toEqual(ModbusFunctionCode.WriteSingleRegister);
+    expect(buffer.readUInt16BE(1)).toEqual(0x4000);
+    expect(buffer.readUInt16BE(3)).toEqual(0xABCD);
+  });
+
+  it("Write single register server response", () => {
+    const buffer = writeSingleRegisterServerResponse.buffer;
+    expect(buffer.readUInt8(0)).toEqual(ModbusFunctionCode.WriteSingleRegister);
+    expect(buffer.readUInt16BE(1)).toEqual(0x4000);
+    expect(buffer.readUInt16BE(3)).toEqual(0xABCD);
+  });
+
+  it("Write single register client response", () => {
+    if (writeSingleRegisterClientResponse instanceof ModbusPduResponse) {
+      const data: IModbusWriteSingleRegister = writeSingleRegisterClientResponse.data as any;
+      expect(data.address).toEqual(0x4000);
+      expect(data.value).toEqual(0xABCD);
+    } else {
+      fail(writeSingleRegisterClientResponse);
+    }
   });
 
   it("Write multiple coils request", () => {
-    const request = client.writeMultipleCoils(0x2000, [true, false, true, false]);
-    expect(request.buffer.readUInt8(0)).toEqual(pdu.ModbusFunctionCode.WriteMultipleCoils);
-    expect(request.buffer.readUInt16BE(1)).toEqual(0x2000);
-    expect(request.buffer.readUInt16BE(3)).toEqual(1);
-    expect(request.buffer.readUInt8(5)).toEqual(1);
-    expect(request.buffer.readUInt8(6)).toEqual(0xA0);
+    const buffer = writeMultipleCoilsRequest.buffer;
+    expect(buffer.readUInt8(0)).toEqual(ModbusFunctionCode.WriteMultipleCoils);
+    expect(buffer.readUInt16BE(1)).toEqual(0x2000);
+    expect(buffer.readUInt16BE(3)).toEqual(4);
+    expect(buffer.readUInt8(5)).toEqual(1);
+    expect(buffer.readUInt8(6)).toEqual(0x05);
+  });
+
+  it("Write multiple coils server response", () => {
+    const buffer = writeMultipleCoilsServerResponse.buffer;
+    expect(buffer.readUInt8(0)).toEqual(ModbusFunctionCode.WriteMultipleCoils);
+    expect(buffer.readUInt16BE(1)).toEqual(0x2000);
+    expect(buffer.readUInt16BE(3)).toEqual(4);
+  });
+
+  it("Write multiple coils client response", () => {
+    if (writeMultipleCoilsClientResponse instanceof ModbusPduResponse) {
+      const data: IModbusWriteMultipleCoils = writeMultipleCoilsClientResponse.data as any;
+      expect(data.address).toEqual(0x2000);
+      expect(data.quantity).toEqual(4);
+    } else {
+      fail(writeMultipleCoilsClientResponse);
+    }
   });
 
   it("Write multiple registers request", () => {
-    const request = client.writeMultipleRegisters(0x2000, [0x0001, 0x0002, 0x0003]);
-    expect(request.buffer.readUInt8(0)).toEqual(pdu.ModbusFunctionCode.WriteMultipleRegisters);
-    expect(request.buffer.readUInt16BE(1)).toEqual(0x2000);
-    expect(request.buffer.readUInt16BE(3)).toEqual(3);
-    expect(request.buffer.readUInt8(5)).toEqual(6);
-    expect(request.buffer.readUInt16BE(6)).toEqual(0x0001);
-    expect(request.buffer.readUInt16BE(8)).toEqual(0x0002);
-    expect(request.buffer.readUInt16BE(10)).toEqual(0x0003);
+    const buffer = writeMultipleRegistersRequest.buffer;
+    expect(buffer.readUInt8(0)).toEqual(ModbusFunctionCode.WriteMultipleRegisters);
+    expect(buffer.readUInt16BE(1)).toEqual(0x2000);
+    expect(buffer.readUInt16BE(3)).toEqual(3);
+    expect(buffer.readUInt8(5)).toEqual(6);
+    expect(buffer.readUInt16BE(6)).toEqual(0x0001);
+    expect(buffer.readUInt16BE(8)).toEqual(0x0002);
+    expect(buffer.readUInt16BE(10)).toEqual(0x0003);
+  });
+
+  it("Write multiple registers request", () => {
+    const buffer = writeMultipleRegistersServerResponse.buffer;
+    expect(buffer.readUInt8(0)).toEqual(ModbusFunctionCode.WriteMultipleRegisters);
+    expect(buffer.readUInt16BE(1)).toEqual(0x2000);
+    expect(buffer.readUInt16BE(3)).toEqual(3);
+  });
+
+  it("Write multiple registers client response", () => {
+    if (writeMultipleRegistersClientResponse instanceof ModbusPduResponse) {
+      const data: IModbusWriteMultipleRegisters = writeMultipleRegistersClientResponse.data as any;
+      expect(data.address).toEqual(0x2000);
+      expect(data.quantity).toEqual(3);
+    } else {
+      fail(writeMultipleRegistersClientResponse);
+    }
   });
 
 });

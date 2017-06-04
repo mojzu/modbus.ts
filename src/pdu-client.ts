@@ -1,6 +1,22 @@
 /* tslint:disable:no-bitwise */
-/// <reference types="node" />
-import * as pdu from "./pdu";
+import { Buffer } from "./node";
+import {
+  validAddress,
+  validRegister,
+  validQuantityOfBits,
+  validQuantityOfRegisters,
+  bitsToBytes,
+  ModbusFunctionCode,
+  ModbusExceptionCode,
+  IModbusReadBits,
+  IModbusReadRegisters,
+  IModbusWriteBit,
+  IModbusWriteRegister,
+  IModbusWriteMultiple,
+  ModbusPduRequest,
+  ModbusPduResponse,
+  ModbusPduException,
+} from "./pdu";
 
 /**
  * Modbus PDU client.
@@ -14,18 +30,18 @@ export class ModbusPduClient {
    * @param startingAddress Starting address.
    * @param quantityOfCoils Quantity of coils.
    */
-  public readCoils(startingAddress: number, quantityOfCoils: number): pdu.ModbusPduRequest {
-    pdu.validAddress(startingAddress);
-    pdu.validQuantityOfBits(quantityOfCoils);
-    pdu.validAddress(startingAddress + quantityOfCoils);
+  public readCoils(startingAddress: number, quantityOfCoils: number): ModbusPduRequest {
+    validAddress(startingAddress);
+    validQuantityOfBits(quantityOfCoils);
+    validAddress(startingAddress + quantityOfCoils);
 
-    const functionCode = pdu.ModbusFunctionCode.ReadCoils;
+    const functionCode = ModbusFunctionCode.ReadCoils;
     const buffer = Buffer.alloc(5, 0);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(startingAddress, 1);
     buffer.writeUInt16BE(quantityOfCoils, 3);
 
-    return new pdu.ModbusPduRequest(functionCode, buffer);
+    return new ModbusPduRequest(functionCode, buffer);
   }
 
   /**
@@ -34,18 +50,18 @@ export class ModbusPduClient {
    * @param startingAddress Starting address.
    * @param quantityOfInputs Quantity of inputs.
    */
-  public readDiscreteInputs(startingAddress: number, quantityOfInputs: number): pdu.ModbusPduRequest {
-    pdu.validAddress(startingAddress);
-    pdu.validQuantityOfBits(quantityOfInputs);
-    pdu.validAddress(startingAddress + quantityOfInputs);
+  public readDiscreteInputs(startingAddress: number, quantityOfInputs: number): ModbusPduRequest {
+    validAddress(startingAddress);
+    validQuantityOfBits(quantityOfInputs);
+    validAddress(startingAddress + quantityOfInputs);
 
-    const functionCode = pdu.ModbusFunctionCode.ReadDiscreteInputs;
+    const functionCode = ModbusFunctionCode.ReadDiscreteInputs;
     const buffer = Buffer.alloc(5, 0);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(startingAddress, 1);
     buffer.writeUInt16BE(quantityOfInputs, 3);
 
-    return new pdu.ModbusPduRequest(functionCode, buffer);
+    return new ModbusPduRequest(functionCode, buffer);
   }
 
   /**
@@ -54,18 +70,18 @@ export class ModbusPduClient {
    * @param startingAddress Starting address.
    * @param quantityOfRegisters Quantity of registers.
    */
-  public readHoldingRegisters(startingAddress: number, quantityOfRegisters: number): pdu.ModbusPduRequest {
-    pdu.validAddress(startingAddress);
-    pdu.validQuantityOfRegisters(quantityOfRegisters);
-    pdu.validAddress(startingAddress + quantityOfRegisters);
+  public readHoldingRegisters(startingAddress: number, quantityOfRegisters: number): ModbusPduRequest {
+    validAddress(startingAddress);
+    validQuantityOfRegisters(quantityOfRegisters);
+    validAddress(startingAddress + quantityOfRegisters);
 
-    const functionCode = pdu.ModbusFunctionCode.ReadHoldingRegisters;
+    const functionCode = ModbusFunctionCode.ReadHoldingRegisters;
     const buffer = Buffer.alloc(5, 0);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(startingAddress, 1);
     buffer.writeUInt16BE(quantityOfRegisters, 3);
 
-    return new pdu.ModbusPduRequest(functionCode, buffer);
+    return new ModbusPduRequest(functionCode, buffer);
   }
 
   /**
@@ -74,18 +90,18 @@ export class ModbusPduClient {
    * @param startingAddress Starting address.
    * @param quantityOfRegisters Quantity of registers.
    */
-  public readInputRegisters(startingAddress: number, quantityOfRegisters: number): pdu.ModbusPduRequest {
-    pdu.validAddress(startingAddress);
-    pdu.validQuantityOfRegisters(quantityOfRegisters);
-    pdu.validAddress(startingAddress + quantityOfRegisters);
+  public readInputRegisters(startingAddress: number, quantityOfRegisters: number): ModbusPduRequest {
+    validAddress(startingAddress);
+    validQuantityOfRegisters(quantityOfRegisters);
+    validAddress(startingAddress + quantityOfRegisters);
 
-    const functionCode = pdu.ModbusFunctionCode.ReadInputRegisters;
+    const functionCode = ModbusFunctionCode.ReadInputRegisters;
     const buffer = Buffer.alloc(5, 0);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(startingAddress, 1);
     buffer.writeUInt16BE(quantityOfRegisters, 3);
 
-    return new pdu.ModbusPduRequest(functionCode, buffer);
+    return new ModbusPduRequest(functionCode, buffer);
   }
 
   /**
@@ -94,16 +110,16 @@ export class ModbusPduClient {
    * @param outputAddress Output address.
    * @param outputValue  Output value.
    */
-  public writeSingleCoil(outputAddress: number, outputValue: boolean): pdu.ModbusPduRequest {
-    pdu.validAddress(outputAddress);
+  public writeSingleCoil(outputAddress: number, outputValue: boolean): ModbusPduRequest {
+    validAddress(outputAddress);
 
-    const functionCode = pdu.ModbusFunctionCode.WriteSingleCoil;
+    const functionCode = ModbusFunctionCode.WriteSingleCoil;
     const buffer = Buffer.alloc(5, 0);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(outputAddress, 1);
     buffer.writeUInt16BE((!!outputValue ? 0xFF00 : 0x0000), 3);
 
-    return new pdu.ModbusPduRequest(functionCode, buffer);
+    return new ModbusPduRequest(functionCode, buffer);
   }
 
   /**
@@ -112,17 +128,17 @@ export class ModbusPduClient {
    * @param registerAddress Register address.
    * @param registerValue Register value.
    */
-  public writeSingleRegister(registerAddress: number, registerValue: number): pdu.ModbusPduRequest {
-    pdu.validAddress(registerAddress);
-    pdu.validRegister(registerValue);
+  public writeSingleRegister(registerAddress: number, registerValue: number): ModbusPduRequest {
+    validAddress(registerAddress);
+    validRegister(registerValue);
 
-    const functionCode = pdu.ModbusFunctionCode.WriteSingleRegister;
+    const functionCode = ModbusFunctionCode.WriteSingleRegister;
     const buffer = Buffer.alloc(5, 0);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(registerAddress, 1);
     buffer.writeUInt16BE(registerValue, 3);
 
-    return new pdu.ModbusPduRequest(functionCode, buffer);
+    return new ModbusPduRequest(functionCode, buffer);
   }
 
   /**
@@ -131,32 +147,13 @@ export class ModbusPduClient {
    * @param startingAddress Starting address.
    * @param outputValues Output values.
    */
-  public writeMultipleCoils(startingAddress: number, outputValues: boolean[]): pdu.ModbusPduRequest {
-    pdu.validAddress(startingAddress);
-    pdu.validQuantityOfBits(outputValues.length, 0x7B0);
-    pdu.validAddress(startingAddress + outputValues.length);
+  public writeMultipleCoils(startingAddress: number, outputValues: boolean[]): ModbusPduRequest {
+    validAddress(startingAddress);
+    validQuantityOfBits(outputValues.length, 0x7B0);
+    validAddress(startingAddress + outputValues.length);
 
-    let byteCount = Math.floor(outputValues.length / 8);
-    if ((outputValues.length % 8) !== 0) {
-      byteCount += 1;
-    }
-
-    // Convert array of booleans to byte flag array.
-    const byteValues: number[] = [];
-    outputValues.map((value, index) => {
-      const byteIndex = Math.floor(index / 8);
-      const bitIndex = Math.floor(index % 8);
-
-      let byteValue = byteValues[byteIndex] || 0;
-      if (!!value) {
-        byteValue |= (0x1 << bitIndex);
-      } else {
-        byteValue &= ~(0x1 << bitIndex);
-      }
-      byteValues[byteIndex] = byteValue;
-    });
-
-    const functionCode = pdu.ModbusFunctionCode.WriteMultipleCoils;
+    const functionCode = ModbusFunctionCode.WriteMultipleCoils;
+    const [byteCount, byteValues] = bitsToBytes(outputValues);
     const buffer = Buffer.alloc(6 + byteCount, 0);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(startingAddress, 1);
@@ -166,7 +163,7 @@ export class ModbusPduClient {
       buffer.writeUInt8(value, 6 + index);
     });
 
-    return new pdu.ModbusPduRequest(functionCode, buffer);
+    return new ModbusPduRequest(functionCode, buffer);
   }
 
   /**
@@ -175,16 +172,16 @@ export class ModbusPduClient {
    * @param startingAddress Starting address.
    * @param registerValues Register values.
    */
-  public writeMultipleRegisters(startingAddress: number, registerValues: number[]): pdu.ModbusPduRequest {
-    pdu.validAddress(startingAddress);
-    pdu.validQuantityOfRegisters(registerValues.length, 0x7B);
-    pdu.validAddress(startingAddress + registerValues.length);
+  public writeMultipleRegisters(startingAddress: number, registerValues: number[]): ModbusPduRequest {
+    validAddress(startingAddress);
+    validQuantityOfRegisters(registerValues.length, 0x7B);
+    validAddress(startingAddress + registerValues.length);
     registerValues.map((value) => {
-      pdu.validRegister(value);
+      validRegister(value);
     });
 
+    const functionCode = ModbusFunctionCode.WriteMultipleRegisters;
     const byteCount = registerValues.length * 2;
-    const functionCode = pdu.ModbusFunctionCode.WriteMultipleRegisters;
     const buffer = Buffer.alloc(6 + byteCount, 0);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(startingAddress, 1);
@@ -194,57 +191,57 @@ export class ModbusPduClient {
       buffer.writeUInt16BE(value, 6 + (index * 2));
     });
 
-    return new pdu.ModbusPduRequest(functionCode, buffer);
+    return new ModbusPduRequest(functionCode, buffer);
   }
 
   /**
    * Parse response buffer into PDU response or exception.
    * @param buffer Response buffer.
    */
-  public parseResponse(buffer: Buffer): pdu.ModbusPduResponse | pdu.ModbusPduException {
+  public parseResponse(buffer: Buffer): ModbusPduResponse | ModbusPduException {
     const functionCode = buffer.readUInt8(0);
+    const response = buffer.slice(1);
 
     if (functionCode >= 0x80) {
       // Buffer contains an exception response.
       const exceptionCode = buffer.readUInt8(1);
-      return new pdu.ModbusPduException((functionCode - 0x80), functionCode, exceptionCode);
+      return new ModbusPduException((functionCode - 0x80), functionCode, exceptionCode, buffer);
     }
 
-    const response = buffer.slice(1);
     switch (functionCode) {
-      case pdu.ModbusFunctionCode.ReadCoils:
-      case pdu.ModbusFunctionCode.ReadDiscreteInputs: {
+      case ModbusFunctionCode.ReadCoils:
+      case ModbusFunctionCode.ReadDiscreteInputs: {
         const data = this._parseReadBits(response);
-        return new pdu.ModbusPduResponse(functionCode, data);
+        return new ModbusPduResponse(functionCode, data, buffer);
       }
-      case pdu.ModbusFunctionCode.ReadHoldingRegisters:
-      case pdu.ModbusFunctionCode.ReadInputRegisters: {
+      case ModbusFunctionCode.ReadHoldingRegisters:
+      case ModbusFunctionCode.ReadInputRegisters: {
         const data = this._parseReadRegisters(response);
-        return new pdu.ModbusPduResponse(functionCode, data);
+        return new ModbusPduResponse(functionCode, data, buffer);
       }
-      case pdu.ModbusFunctionCode.WriteSingleCoil: {
+      case ModbusFunctionCode.WriteSingleCoil: {
         const data = this._parseWriteBit(response);
-        return new pdu.ModbusPduResponse(functionCode, data);
+        return new ModbusPduResponse(functionCode, data, buffer);
       }
-      case pdu.ModbusFunctionCode.WriteSingleRegister: {
+      case ModbusFunctionCode.WriteSingleRegister: {
         const data = this._parseWriteRegister(response);
-        return new pdu.ModbusPduResponse(functionCode, data);
+        return new ModbusPduResponse(functionCode, data, buffer);
       }
-      case pdu.ModbusFunctionCode.WriteMultipleCoils:
-      case pdu.ModbusFunctionCode.WriteMultipleRegisters: {
+      case ModbusFunctionCode.WriteMultipleCoils:
+      case ModbusFunctionCode.WriteMultipleRegisters: {
         const data = this._parseWriteMultiple(response);
-        return new pdu.ModbusPduResponse(functionCode, data);
+        return new ModbusPduResponse(functionCode, data, buffer);
       }
       default: {
         // Unsupported function code, convert to exception.
-        const exceptionFunctionCode = (functionCode + 0x80);
-        const exceptionCode = pdu.ModbusExceptionCode.IllegalFunctionCode;
-        return new pdu.ModbusPduException(functionCode, exceptionFunctionCode, exceptionCode);
+        const exceptionFunctionCode = (functionCode + 0x80) % 0xFF;
+        const exceptionCode = ModbusExceptionCode.IllegalFunctionCode;
+        return new ModbusPduException(functionCode, exceptionFunctionCode, exceptionCode, buffer);
       }
     }
   }
 
-  private _parseReadBits(buffer: Buffer): pdu.IModbusReadBits {
+  private _parseReadBits(buffer: Buffer): IModbusReadBits {
     const bytes = buffer.readUInt8(0);
     const values: boolean[] = [];
 
@@ -259,7 +256,7 @@ export class ModbusPduClient {
     return { bytes, values };
   }
 
-  private _parseReadRegisters(buffer: Buffer): pdu.IModbusReadRegisters {
+  private _parseReadRegisters(buffer: Buffer): IModbusReadRegisters {
     const bytes = buffer.readUInt8(0);
     const values: number[] = [];
 
@@ -270,21 +267,21 @@ export class ModbusPduClient {
     return { bytes, values };
   }
 
-  private _parseWriteBit(buffer: Buffer): pdu.IModbusWriteBit {
+  private _parseWriteBit(buffer: Buffer): IModbusWriteBit {
     const address = buffer.readUInt16BE(0);
     const value = (buffer.readUInt16BE(2) === 0xFF00) ? true : false;
 
     return { address, value };
   }
 
-  private _parseWriteRegister(buffer: Buffer): pdu.IModbusWriteRegister {
+  private _parseWriteRegister(buffer: Buffer): IModbusWriteRegister {
     const address = buffer.readUInt16BE(0);
     const value = buffer.readUInt16BE(2);
 
     return { address, value };
   }
 
-  private _parseWriteMultiple(buffer: Buffer): pdu.IModbusWriteMultiple {
+  private _parseWriteMultiple(buffer: Buffer): IModbusWriteMultiple {
     const address = buffer.readUInt16BE(0);
     const quantity = buffer.readUInt16BE(2);
 
