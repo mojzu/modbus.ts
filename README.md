@@ -7,12 +7,22 @@
 ```Shell
 # Install dependencies.
 $ yarn install
+
 # Clean distribution directory.
 $ yarn run clean
-# Run tests (with coverage).
-$ yarn run test|coverage
+
+# Clean Node modules directory.
+$ yarn run distclean
+
+# Run tests.
+$ yarn run test
+
+# Run tests with coverage.
+$ yarn run coverage
+
 # Run linter.
 $ yarn run lint
+
 # Package library.
 $ yarn run pack
 ```
