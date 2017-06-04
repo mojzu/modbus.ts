@@ -12,7 +12,7 @@ import {
   ModbusPduResponse,
 } from "./pdu";
 import { ModbusPduClient } from "./pdu-client";
-import { ModbusPduMockServer } from "./pdu-server.mock";
+import { ModbusPduMockServer } from "./pdu-server-mock";
 
 describe("Modbus PDU", () => {
 
