@@ -14,7 +14,7 @@ import {
 import { ModbusPduClient } from "./pdu-client";
 import { ModbusPduMockServer } from "./pdu-server-mock";
 
-describe("Modbus PDU", () => {
+describe("Modbus PDU Client", () => {
 
   // TODO: Test method argument validation.
   // TODO: Test Modbus exception handling.

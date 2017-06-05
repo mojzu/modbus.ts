@@ -5,3 +5,5 @@ import { Buffer } from "buffer";
 export { Buffer };
 import { Socket, createConnection } from "net";
 export { Socket, createConnection };
+const debug = require("debug");
+export { debug };
