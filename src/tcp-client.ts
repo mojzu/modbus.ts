@@ -1,15 +1,4 @@
-import { Observable } from "rxjs/Observable";
-import { Subject } from "rxjs/Subject";
-import "rxjs/add/observable/fromEvent";
-import "rxjs/add/observable/race";
-import "rxjs/add/observable/of";
-import "rxjs/add/observable/empty";
-import "rxjs/add/operator/take";
-import "rxjs/add/operator/takeUntil";
-import "rxjs/add/operator/switchMap";
-import "rxjs/add/operator/filter";
-import "rxjs/add/operator/timeout";
-import "rxjs/add/operator/delay";
+import { Observable, Subject, BehaviorSubject } from "./rx";
 import { Buffer, Socket, createConnection, debug } from "./node";
 import { ModbusPduRequest, ModbusPduResponse, ModbusPduException } from "./pdu";
 import { ModbusPduClient } from "./pdu-client";
@@ -34,11 +23,6 @@ export interface IModbusTcpClientConnect {
 }
 
 /**
- * Observable Modbus TCP response or exception.
- */
-export type ModbusTcpResponseType = Observable<ModbusTcpResponse | ModbusTcpException>;
-
-/**
  * Modbus TCP client.
  */
 export class ModbusTcpClient {
@@ -58,7 +42,7 @@ export class ModbusTcpClient {
   private _connect: Observable<any>;
   private _data: Observable<Buffer>;
 
-  private _isConnected = false;
+  private _connected = new BehaviorSubject<boolean>(false);
   private _retries = 0;
   private _error: any;
 
@@ -85,7 +69,7 @@ export class ModbusTcpClient {
   public get unitId(): number { return this._unitId; }
 
   /** Returns true if client is connected to host:port. */
-  public get isConnected(): boolean { return this._isConnected; }
+  public get isConnected(): boolean { return this._connected.value; }
 
   /** Returns most recent error code returned by client socket. */
   public get errorCode(): string | null { return (this._error != null) ? (this._error.code || null) : null; }
@@ -196,42 +180,42 @@ export class ModbusTcpClient {
     return Observable.of(undefined);
   }
 
-  public readCoils(startingAddress: number, quantityOfCoils: number, timeout = 5000): ModbusTcpResponseType {
+  public readCoils(startingAddress: number, quantityOfCoils: number, timeout = 5000): Observable<ModbusTcpResponse> {
     const request = this._aduHeader(this._pdu.readCoils(startingAddress, quantityOfCoils));
     return this._writeRequest(request, timeout);
   }
 
-  public readDiscreteInputs(startingAddress: number, quantityOfInputs: number, timeout = 5000): ModbusTcpResponseType {
+  public readDiscreteInputs(startingAddress: number, quantityOfInputs: number, timeout = 5000): Observable<ModbusTcpResponse> {
     const request = this._aduHeader(this._pdu.readDiscreteInputs(startingAddress, quantityOfInputs));
     return this._writeRequest(request, timeout);
   }
 
-  public readHoldingRegisters(startingAddress: number, quantityOfRegisters: number, timeout = 5000): ModbusTcpResponseType {
+  public readHoldingRegisters(startingAddress: number, quantityOfRegisters: number, timeout = 5000): Observable<ModbusTcpResponse> {
     const request = this._aduHeader(this._pdu.readHoldingRegisters(startingAddress, quantityOfRegisters));
     return this._writeRequest(request, timeout);
   }
 
-  public readInputRegisters(startingAddress: number, quantityOfRegisters: number, timeout = 5000): ModbusTcpResponseType {
+  public readInputRegisters(startingAddress: number, quantityOfRegisters: number, timeout = 5000): Observable<ModbusTcpResponse> {
     const request = this._aduHeader(this._pdu.readInputRegisters(startingAddress, quantityOfRegisters));
     return this._writeRequest(request, timeout);
   }
 
-  public writeSingleCoil(outputAddress: number, outputValue: boolean, timeout = 5000): ModbusTcpResponseType {
+  public writeSingleCoil(outputAddress: number, outputValue: boolean, timeout = 5000): Observable<ModbusTcpResponse> {
     const request = this._aduHeader(this._pdu.writeSingleCoil(outputAddress, outputValue));
     return this._writeRequest(request, timeout);
   }
 
-  public writeSingleRegister(registerAddress: number, registerValue: number, timeout = 5000): ModbusTcpResponseType {
+  public writeSingleRegister(registerAddress: number, registerValue: number, timeout = 5000): Observable<ModbusTcpResponse> {
     const request = this._aduHeader(this._pdu.writeSingleRegister(registerAddress, registerValue));
     return this._writeRequest(request, timeout);
   }
 
-  public writeMultipleCoils(startingAddress: number, outputValues: boolean[], timeout = 5000): ModbusTcpResponseType {
+  public writeMultipleCoils(startingAddress: number, outputValues: boolean[], timeout = 5000): Observable<ModbusTcpResponse> {
     const request = this._aduHeader(this._pdu.writeMultipleCoils(startingAddress, outputValues));
     return this._writeRequest(request, timeout);
   }
 
-  public writeMultipleRegisters(startingAddress: number, registerValues: number[], timeout = 5000): ModbusTcpResponseType {
+  public writeMultipleRegisters(startingAddress: number, registerValues: number[], timeout = 5000): Observable<ModbusTcpResponse> {
     const request = this._aduHeader(this._pdu.writeMultipleRegisters(startingAddress, registerValues));
     return this._writeRequest(request, timeout);
   }
@@ -257,8 +241,8 @@ export class ModbusTcpClient {
     return this._transactionId;
   }
 
-  private _writeRequest(request: ModbusTcpRequest, timeout = 5000): ModbusTcpResponseType {
-    if ((this._socket == null) || (!this._isConnected)) {
+  private _writeRequest(request: ModbusTcpRequest, timeout = 5000): Observable<ModbusTcpResponse> {
+    if ((this._socket == null) || (!this.isConnected)) {
       return Observable.throw(ModbusTcpClientError.NotConnected);
     }
 
