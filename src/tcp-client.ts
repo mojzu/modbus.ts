@@ -229,7 +229,7 @@ export class ModbusTcpClient {
     buffer.writeUInt16BE((request.buffer.length + 1), 4);
     buffer.writeUInt8(this._unitId, 6);
 
-    return new ModbusTcpRequest(request.functionCode, transactionId, buffer);
+    return new ModbusTcpRequest(transactionId, request.functionCode, buffer);
   }
 
   private get _connectionOptions(): { port: number, host: string } {
