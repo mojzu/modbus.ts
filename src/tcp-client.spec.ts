@@ -1,49 +1,64 @@
 /// <reference types="jasmine" />
+import { Observable } from "./rx";
+import "rxjs/add/observable/forkJoin";
 import { IModbusTcpClientOptions, ModbusTcpClient } from "./tcp-client";
 import { ModbusTcpServer } from "./tcp-server";
+
+function create(port = 502, namespace = 1): [ModbusTcpServer, ModbusTcpClient] {
+  const server = new ModbusTcpServer(`mbtcps:${namespace}`);
+  const options: IModbusTcpClientOptions = { host: "localhost", port };
+  const client = new ModbusTcpClient(options, `mbtcpc:${namespace}`);
+  return [server, client];
+}
 
 describe("Modbus TCP Client", () => {
 
   it("Fails to connect to closed server port after retries", (done) => {
-    const options: IModbusTcpClientOptions = { host: "localhost", port: 1122 };
-    const client = new ModbusTcpClient(options, "mbtcpc:1");
+    const [, client] = create(1122, 1);
     let retries = 0;
 
     client.connect(3)
-      .subscribe((result) => {
+      .switchMap((result) => {
         retries += 1;
         expect(result.connected).toEqual(false);
         expect(result.retries).toEqual(retries);
         expect(result.error).toEqual("ECONNREFUSED");
-      }, (error) => {
-        fail(error);
-        done();
-      }, () => {
-        client.disconnect();
-        expect(retries).toEqual(3);
-        done();
+        return (retries === 3) ? client.disconnect() : Observable.of(undefined);
+      })
+      .subscribe({
+        error: (error) => {
+          fail(error);
+          done();
+        },
+        complete: () => {
+          expect(retries).toEqual(3);
+          done();
+        },
       });
   });
 
   it("Connects to open server port", (done) => {
-    const server = new ModbusTcpServer("mbtcps:2");
+    const [server, client] = create(5022, 2);
     server.open(5022)
       .subscribe(() => {
-        const options: IModbusTcpClientOptions = { host: "localhost", port: 5022 };
-        const client = new ModbusTcpClient(options, "mbtcpc:2");
-
         client.connect(3)
-          .subscribe((result) => {
+          .switchMap((result) => {
             expect(result.connected).toEqual(true);
             expect(result.retries).toEqual(0);
             expect(result.error).toBeUndefined();
-          }, (error) => {
-            fail(error);
-            done();
-          }, () => {
-            client.disconnect();
-            server.close();
-            done();
+            return Observable.forkJoin(
+              client.disconnect(),
+              server.close(),
+            );
+          })
+          .subscribe({
+            error: (error) => {
+              fail(error);
+              done();
+            },
+            complete: () => {
+              done();
+            },
           });
       });
   });
