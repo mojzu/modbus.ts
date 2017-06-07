@@ -190,55 +190,63 @@ export class ModbusTcpClient {
   }
 
   public readCoils(startingAddress: number, quantityOfCoils: number, timeout = 5000): Observable<ModbusTcpResponse> {
-    const request = this._aduHeader(this._pdu.readCoils(startingAddress, quantityOfCoils));
+    const pdu = this._pdu.readCoils(startingAddress, quantityOfCoils);
+    const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this._writeRequest(request, timeout);
   }
 
   public readDiscreteInputs(startingAddress: number, quantityOfInputs: number, timeout = 5000): Observable<ModbusTcpResponse> {
-    const request = this._aduHeader(this._pdu.readDiscreteInputs(startingAddress, quantityOfInputs));
+    const pdu = this._pdu.readDiscreteInputs(startingAddress, quantityOfInputs);
+    const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this._writeRequest(request, timeout);
   }
 
   public readHoldingRegisters(startingAddress: number, quantityOfRegisters: number, timeout = 5000): Observable<ModbusTcpResponse> {
-    const request = this._aduHeader(this._pdu.readHoldingRegisters(startingAddress, quantityOfRegisters));
+    const pdu = this._pdu.readHoldingRegisters(startingAddress, quantityOfRegisters);
+    const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this._writeRequest(request, timeout);
   }
 
   public readInputRegisters(startingAddress: number, quantityOfRegisters: number, timeout = 5000): Observable<ModbusTcpResponse> {
-    const request = this._aduHeader(this._pdu.readInputRegisters(startingAddress, quantityOfRegisters));
+    const pdu = this._pdu.readInputRegisters(startingAddress, quantityOfRegisters);
+    const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this._writeRequest(request, timeout);
   }
 
   public writeSingleCoil(outputAddress: number, outputValue: boolean, timeout = 5000): Observable<ModbusTcpResponse> {
-    const request = this._aduHeader(this._pdu.writeSingleCoil(outputAddress, outputValue));
+    const pdu = this._pdu.writeSingleCoil(outputAddress, outputValue);
+    const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this._writeRequest(request, timeout);
   }
 
   public writeSingleRegister(registerAddress: number, registerValue: number, timeout = 5000): Observable<ModbusTcpResponse> {
-    const request = this._aduHeader(this._pdu.writeSingleRegister(registerAddress, registerValue));
+    const pdu = this._pdu.writeSingleRegister(registerAddress, registerValue);
+    const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this._writeRequest(request, timeout);
   }
 
   public writeMultipleCoils(startingAddress: number, outputValues: boolean[], timeout = 5000): Observable<ModbusTcpResponse> {
-    const request = this._aduHeader(this._pdu.writeMultipleCoils(startingAddress, outputValues));
+    const pdu = this._pdu.writeMultipleCoils(startingAddress, outputValues);
+    const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this._writeRequest(request, timeout);
   }
 
   public writeMultipleRegisters(startingAddress: number, registerValues: number[], timeout = 5000): Observable<ModbusTcpResponse> {
-    const request = this._aduHeader(this._pdu.writeMultipleRegisters(startingAddress, registerValues));
+    const pdu = this._pdu.writeMultipleRegisters(startingAddress, registerValues);
+    const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this._writeRequest(request, timeout);
   }
 
-  private _aduHeader(request: ModbusPduRequest): ModbusTcpRequest {
-    const buffer = Buffer.concat([Buffer.alloc(7, 0), request.buffer]);
+  protected aduHeader(functionCode: number, request: Buffer): ModbusTcpRequest {
+    const buffer = Buffer.concat([Buffer.alloc(7, 0), request]);
     const transactionId = this._nextTransactionId;
 
     buffer.writeUInt16BE(transactionId, 0);
     buffer.writeUInt16BE(this._protocolId, 2);
-    buffer.writeUInt16BE((request.buffer.length + 1), 4);
+    buffer.writeUInt16BE((request.length + 1), 4);
     buffer.writeUInt8(this._unitId, 6);
 
-    return new ModbusTcpRequest(transactionId, request.functionCode, buffer);
+    return new ModbusTcpRequest(transactionId, functionCode, buffer);
   }
 
   private get _connectionOptions(): { port: number, host: string } {
