@@ -1,6 +1,6 @@
 import { Observable, Subject, BehaviorSubject } from "./rx";
 import { Buffer, Socket, createConnection, debug } from "./node";
-import { ModbusPduRequest, ModbusPduResponse, ModbusPduException } from "./pdu";
+import { ModbusPduResponse, ModbusPduException } from "./pdu";
 import { ModbusPduClient } from "./pdu-client";
 import { ModbusTcpRequest, ModbusTcpResponse, ModbusTcpException, ModbusTcpClientError } from "./tcp";
 
@@ -97,88 +97,80 @@ export class ModbusTcpClient {
   /**
    * Connect the client to configured host:port.
    * Emits incremental results based on number of retries.
+   * TODO: Add timeout argument.
    * @param retry Number of reconnection attempts (1 - 10).
    */
   public connect(retry = 1): Observable<IModbusTcpClientConnect> {
     retry = Math.min(10, Math.max(1, Number(retry)));
     this.debug(`connect ${this._host}:${this._port}`);
 
-    // Disconnect and (re)create socket.
-    // Error listener required to prevent process exiting.
-    this.disconnect();
-    this._socket = createConnection(this._connectionOptions);
-    this._socket.on("error", (error) => { this._error = error; });
+    return this.disconnect()
+      .switchMap(() => {
+        // (Re)create socket.
+        // Error listener required to prevent process exiting.
+        this._socket = createConnection(this._connectionOptions);
+        this._socket.on("error", (error) => { this._error = error; });
 
-    // Reset retry counter, receive buffer.
-    this._retries = 0;
-    this._buffer = Buffer.alloc(0);
+        // Reset retry counter, receive buffer.
+        this._retries = 0;
+        this._buffer = Buffer.alloc(0);
 
-    // Map socket events to observables.
-    // Observables are completed with a disconnect event.
-    this._close = Observable.fromEvent(this._socket, "close").take(retry).takeUntil(this._disconnect);
-    this._connect = Observable.fromEvent(this._socket, "connect").takeUntil(this._disconnect);
-    this._data = Observable.fromEvent(this._socket, "data").takeUntil(this._disconnect);
+        // Map socket events to observables.
+        // Observables are completed with a disconnect event.
+        this._close = Observable.fromEvent(this._socket, "close").take(retry).takeUntil(this._disconnect);
+        this._connect = Observable.fromEvent(this._socket, "connect").takeUntil(this._disconnect);
+        this._data = Observable.fromEvent(this._socket, "data").takeUntil(this._disconnect);
 
-    this._close
-      // Socket only attempts reconnection until a connection is made.
-      .takeWhile(() => !this.isConnected)
-      .subscribe(() => {
-        // Increment retry counter.
-        this._retries += 1;
-        this.debug(`socket:close '${this.errorCode}' '${this._retries}/${retry}'`);
+        this._close
+          // Socket only attempts reconnection until a connection is made.
+          .takeWhile(() => !this.isConnected)
+          .subscribe(() => {
+            // Increment retry counter.
+            this._retries += 1;
 
-        // Retry socket connection on close event up to limit.
-        setTimeout(() => {
-          if (this._socket != null) {
-            this._socket.connect(this._port, this._host);
-            this._buffer = Buffer.alloc(0);
-          }
-        }, 500);
-      });
+            // Retry socket connection on close event up to limit.
+            setTimeout(() => {
+              if (this._socket != null) {
+                this._socket.connect(this._port, this._host);
+                this._buffer = Buffer.alloc(0);
+              }
+            }, 500);
+          });
 
-    this._data
-      .subscribe((data) => {
-        // Receive data into internal buffer and process.
-        this._buffer = this._receiveData(this._buffer, data);
-      });
+        this._data
+          .subscribe((data) => {
+            // Receive data into internal buffer and process.
+            this._buffer = this._receiveData(this._buffer, data);
+          });
 
-    // Wait for close/connect events up to maximum number of retries.
-    // Observable continues emiting until connected.
-    return Observable.race(this._close, this._connect)
-      .take(retry)
-      .takeWhile(() => !this.isConnected)
-      .switchMap((hadError) => {
-        // Undefined argument if connect finished first.
-        this._connected.next(hadError == null);
+        // Wait for close/connect events up to maximum number of retries.
+        // Observable continues emiting until connected.
+        return Observable.race(this._close, this._connect)
+          .take(retry)
+          .takeWhile(() => !this.isConnected)
+          .switchMap((hadError) => {
+            // Undefined argument if connect finished first.
+            this._connected.next(hadError == null);
 
-        const result: IModbusTcpClientConnect = {
-          connected: this.isConnected,
-          retries: this._retries,
-        };
+            const result: IModbusTcpClientConnect = {
+              connected: this.isConnected,
+              retries: this._retries,
+            };
 
-        // Error code only applicable if not connected.
-        const errorCode = this.errorCode;
-        if (!this.isConnected && (errorCode != null)) {
-          result.error = errorCode;
-        }
-
-        // Hacky method of ensuring observable completes after connection.
-        // (Re)emitting connect event causes 'take' or 'takeWhile' to complete.
-        if (this.isConnected) {
-          setTimeout(() => {
-            if (this._socket != null) {
-              this._socket.emit("connect");
+            // Error code only applicable if not connected.
+            const errorCode = this.errorCode;
+            if (!this.isConnected && (errorCode != null)) {
+              result.error = errorCode;
             }
-          }, 20);
-        }
 
-        this.debug(`connect '${result.connected}' '${result.retries}/${retry}' '${result.error}'`);
-        return Observable.of(result);
+            this.debug(`connect '${result.connected}' '${result.retries}/${retry}' '${result.error}'`);
+            return Observable.of(result);
+          });
       });
   }
 
   /** Disconnect the client from the configured host:port, if connected. */
-  public disconnect(): void {
+  public disconnect(): Observable<void> {
     if (this._socket != null) {
       this.debug(`disconnect`);
       this._disconnect.next();
@@ -187,6 +179,7 @@ export class ModbusTcpClient {
       this._socket.destroy();
       this._socket = null;
     }
+    return Observable.of(undefined);
   }
 
   public readCoils(startingAddress: number, quantityOfCoils: number, timeout = 5000): Observable<ModbusTcpResponse> {
@@ -272,12 +265,21 @@ export class ModbusTcpClient {
     return this._receive
       .filter((response) => (response.transactionId === request.transactionId))
       .take(1)
-      .timeout(timeout);
+      .timeout(timeout)
+      .switchMap((response) => {
+        if (response instanceof ModbusTcpResponse) {
+          return Observable.of(response);
+        } else {
+          return Observable.throw(response);
+        }
+      });
   }
 
   private _receiveData(buffer: Buffer, data: Buffer): Buffer {
     this._bytesReceived += data.length;
     buffer = Buffer.concat([buffer, data]);
+
+    // TODO: Split into pdu/tcp process.
 
     // Check if buffer may contain MBAP header.
     if (buffer.length >= 7) {
