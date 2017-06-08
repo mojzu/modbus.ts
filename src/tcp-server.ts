@@ -4,7 +4,7 @@ import { Server, createServer, debug } from "./node";
 /**
  * Modbus TCP server.
  */
-export class ModbusTcpServer {
+export class TcpServer {
 
   private _debug: any;
   private _server: Server | null;

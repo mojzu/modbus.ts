@@ -1,20 +1,20 @@
 /* tslint:disable:no-bitwise no-empty-interface */
-import { assert } from "./node";
+import * as node from "./node";
 
 export function validAddress(value: number): void {
-  assert((0x0 <= value) && (value <= 0xFFFF), `Invalid address: ${value}`);
+  node.assert((0x0 <= value) && (value <= 0xFFFF), `Invalid address: ${value}`);
 }
 
 export function validRegister(value: number): void {
-  assert((0x0 <= value) && (value <= 0xFFFF), `Invalid register value: ${value}`);
+  node.assert((0x0 <= value) && (value <= 0xFFFF), `Invalid register value: ${value}`);
 }
 
 export function validQuantityOfBits(value: number, maximum = 0x7D0): void {
-  assert((0x1 <= value) && (value <= maximum), `Invalid quantity of bits: ${value}`);
+  node.assert((0x1 <= value) && (value <= maximum), `Invalid quantity of bits: ${value}`);
 }
 
 export function validQuantityOfRegisters(value: number, maximum = 0x7D): void {
-  assert((0x1 <= value) && (value <= maximum), `Invalid quantity of registers: ${value}`);
+  node.assert((0x1 <= value) && (value <= maximum), `Invalid quantity of registers: ${value}`);
 }
 
 export function bitsToBytes(values: boolean[]): [number, number[]] {
@@ -63,7 +63,7 @@ export function bytesToBits(quantity: number, buffer: Buffer): boolean[] {
 /**
  * Modbus function codes.
  */
-export enum ModbusFunctionCode {
+export enum FunctionCode {
   ReadCoils = 0x1,
   ReadDiscreteInputs,
   ReadHoldingRegisters,
@@ -72,12 +72,13 @@ export enum ModbusFunctionCode {
   WriteSingleRegister,
   WriteMultipleCoils = 0xF,
   WriteMultipleRegisters,
+  Mei = 0x2B,
 }
 
 /**
  * Modbus exception codes.
  */
-export enum ModbusExceptionCode {
+export enum ExceptionCode {
   IllegalFunctionCode = 0x1,
   IllegalDataAddress,
   IllegalDataValue,
@@ -86,55 +87,43 @@ export enum ModbusExceptionCode {
   ServerBusy,
 }
 
-export interface IModbusReadBits {
+export interface IReadBits {
   bytes: number;
   values: boolean[];
 }
-export interface IModbusReadCoils extends IModbusReadBits { }
-export interface IModbusReadDiscreteInputs extends IModbusReadBits { }
+export interface IReadCoils extends IReadBits { }
+export interface IReadDiscreteInputs extends IReadBits { }
 
-export interface IModbusReadRegisters {
+export interface IReadRegisters {
   bytes: number;
   values: number[];
 }
-export interface IModbusReadHoldingRegisters extends IModbusReadRegisters { }
-export interface IModbusReadInputRegisters extends IModbusReadRegisters { }
+export interface IReadHoldingRegisters extends IReadRegisters { }
+export interface IReadInputRegisters extends IReadRegisters { }
 
-export interface IModbusWriteBit {
+export interface IWriteBit {
   address: number;
   value: boolean;
 }
-export interface IModbusWriteSingleCoil extends IModbusWriteBit { }
+export interface IWriteSingleCoil extends IWriteBit { }
 
-export interface IModbusWriteRegister {
+export interface IWriteRegister {
   address: number;
   value: number;
 }
-export interface IModbusWriteSingleRegister extends IModbusWriteRegister { }
+export interface IWriteSingleRegister extends IWriteRegister { }
 
-export interface IModbusWriteMultiple {
+export interface IWriteMultiple {
   address: number;
   quantity: number;
 }
-export interface IModbusWriteMultipleCoils extends IModbusWriteMultiple { }
-export interface IModbusWriteMultipleRegisters extends IModbusWriteMultiple { }
-
-/**
- * Modbus response properties for supported function codes.
- */
-export type ModbusData = IModbusReadCoils
-  | IModbusReadDiscreteInputs
-  | IModbusReadHoldingRegisters
-  | IModbusReadInputRegisters
-  | IModbusWriteSingleCoil
-  | IModbusWriteSingleRegister
-  | IModbusWriteMultipleCoils
-  | IModbusWriteMultipleRegisters;
+export interface IWriteMultipleCoils extends IWriteMultiple { }
+export interface IWriteMultipleRegisters extends IWriteMultiple { }
 
 /**
  * Modbus PDU request.
  */
-export class ModbusPduRequest {
+export class PduRequest {
   public constructor(
     public functionCode: number,
     public buffer: Buffer,
@@ -144,10 +133,10 @@ export class ModbusPduRequest {
 /**
  * Modbus PDU response.
  */
-export class ModbusPduResponse {
+export class PduResponse {
   public constructor(
     public functionCode: number,
-    public data: ModbusData,
+    public data: any,
     public buffer: Buffer,
   ) { }
 }
@@ -155,7 +144,7 @@ export class ModbusPduResponse {
 /**
  * Modbus PDU exception.
  */
-export class ModbusPduException {
+export class PduException {
   public constructor(
     public functionCode: number,
     public exceptionFunctionCode: number,

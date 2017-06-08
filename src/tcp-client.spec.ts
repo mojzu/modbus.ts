@@ -1,13 +1,13 @@
 /// <reference types="jasmine" />
 import { Observable } from "./rx";
 import "rxjs/add/observable/forkJoin";
-import { IModbusTcpClientOptions, ModbusTcpClient } from "./tcp-client";
-import { ModbusTcpServer } from "./tcp-server";
+import { ITcpClientOptions, TcpClient } from "./tcp-client";
+import { TcpServer } from "./tcp-server";
 
-function create(port = 502, namespace = 1): [ModbusTcpServer, ModbusTcpClient] {
-  const server = new ModbusTcpServer(`mbtcps:${namespace}`);
-  const options: IModbusTcpClientOptions = { host: "localhost", port };
-  const client = new ModbusTcpClient(options, `mbtcpc:${namespace}`);
+function create(port = 502, namespace = 1): [TcpServer, TcpClient] {
+  const server = new TcpServer(`mbtcps:${namespace}`);
+  const options: ITcpClientOptions = { host: "localhost", port };
+  const client = new TcpClient(options, `mbtcpc:${namespace}`);
   return [server, client];
 }
 

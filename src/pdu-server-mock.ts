@@ -1,21 +1,21 @@
-import { ModbusPduServer } from "./pdu-server";
+import { PduServer } from "./pdu-server";
 
-export class ModbusPduMockServer extends ModbusPduServer {
+export class PduMockServer extends PduServer {
 
   public readCoils(startingAddress: number, quantityOfCoils: number): boolean[] {
-    return this._readBits(startingAddress, quantityOfCoils);
+    return this.readBits(startingAddress, quantityOfCoils);
   }
 
   public readDiscreteInputs(startingAddress: number, quantityOfInputs: number): boolean[] {
-    return this._readBits(startingAddress, quantityOfInputs);
+    return this.readBits(startingAddress, quantityOfInputs);
   }
 
   public readHoldingRegisters(startingAddress: number, quantityOfRegisters: number): number[] {
-    return this._readRegisters(startingAddress, quantityOfRegisters);
+    return this.readRegisters(startingAddress, quantityOfRegisters);
   }
 
   public readInputRegisters(startingAddress: number, quantityOfRegisters: number): number[] {
-    return this._readRegisters(startingAddress, quantityOfRegisters);
+    return this.readRegisters(startingAddress, quantityOfRegisters);
   }
 
   public writeSingleCoil(outputAddress: number, outputValue: boolean): boolean {
@@ -34,7 +34,7 @@ export class ModbusPduMockServer extends ModbusPduServer {
     return registerValues.length;
   }
 
-  private _readBits(startingAddress: number, quantityOfBits: number): boolean[] {
+  protected readBits(startingAddress: number, quantityOfBits: number): boolean[] {
     const values: boolean[] = [];
     for (let i = 0; i < quantityOfBits; i++) {
       values.push((i % 2) === 0);
@@ -42,7 +42,7 @@ export class ModbusPduMockServer extends ModbusPduServer {
     return values;
   }
 
-  private _readRegisters(startingAddress: number, quantityOfRegisters: number): number[] {
+  protected readRegisters(startingAddress: number, quantityOfRegisters: number): number[] {
     const values: number[] = [];
     for (let i = 0; i < quantityOfRegisters; i++) {
       values.push(0xAFAF);

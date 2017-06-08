@@ -1,9 +1,8 @@
-import { ModbusData } from "./pdu";
 
 /**
  * Modbus TCP request.
  */
-export class ModbusTcpRequest {
+export class TcpRequest {
   public constructor(
     public transactionId: number,
     public functionCode: number,
@@ -14,11 +13,11 @@ export class ModbusTcpRequest {
 /**
  * Modbus TCP response.
  */
-export class ModbusTcpResponse {
+export class TcpResponse {
   public constructor(
     public transactionId: number,
     public functionCode: number,
-    public data: ModbusData,
+    public data: any,
     public buffer: Buffer,
   ) { }
 }
@@ -26,7 +25,7 @@ export class ModbusTcpResponse {
 /**
  * Modbus PDU exception.
  */
-export class ModbusTcpException {
+export class TcpException {
   public constructor(
     public transactionId: number,
     public functionCode: number,
@@ -34,11 +33,4 @@ export class ModbusTcpException {
     public exceptionCode: number,
     public buffer: Buffer,
   ) { }
-}
-
-/**
- * Modbus TCP client error codes.
- */
-export enum ModbusTcpClientError {
-  NotConnected,
 }
