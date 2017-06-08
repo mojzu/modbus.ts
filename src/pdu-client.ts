@@ -1,5 +1,4 @@
 /* tslint:disable:no-bitwise */
-import * as node from "./node";
 import * as pdu from "./pdu";
 
 /**
@@ -20,7 +19,7 @@ export class PduClient {
     pdu.validAddress(startingAddress + quantityOfCoils);
 
     const functionCode = pdu.FunctionCode.ReadCoils;
-    const buffer = node.Buffer.alloc(5, 0);
+    const buffer = Buffer.alloc(5, 0);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(startingAddress, 1);
     buffer.writeUInt16BE(quantityOfCoils, 3);
@@ -40,7 +39,7 @@ export class PduClient {
     pdu.validAddress(startingAddress + quantityOfInputs);
 
     const functionCode = pdu.FunctionCode.ReadDiscreteInputs;
-    const buffer = node.Buffer.alloc(5, 0);
+    const buffer = Buffer.alloc(5, 0);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(startingAddress, 1);
     buffer.writeUInt16BE(quantityOfInputs, 3);
@@ -60,7 +59,7 @@ export class PduClient {
     pdu.validAddress(startingAddress + quantityOfRegisters);
 
     const functionCode = pdu.FunctionCode.ReadHoldingRegisters;
-    const buffer = node.Buffer.alloc(5, 0);
+    const buffer = Buffer.alloc(5, 0);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(startingAddress, 1);
     buffer.writeUInt16BE(quantityOfRegisters, 3);
@@ -80,7 +79,7 @@ export class PduClient {
     pdu.validAddress(startingAddress + quantityOfRegisters);
 
     const functionCode = pdu.FunctionCode.ReadInputRegisters;
-    const buffer = node.Buffer.alloc(5, 0);
+    const buffer = Buffer.alloc(5, 0);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(startingAddress, 1);
     buffer.writeUInt16BE(quantityOfRegisters, 3);
@@ -98,7 +97,7 @@ export class PduClient {
     pdu.validAddress(outputAddress);
 
     const functionCode = pdu.FunctionCode.WriteSingleCoil;
-    const buffer = node.Buffer.alloc(5, 0);
+    const buffer = Buffer.alloc(5, 0);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(outputAddress, 1);
     buffer.writeUInt16BE((!!outputValue ? 0xFF00 : 0x0000), 3);
@@ -117,7 +116,7 @@ export class PduClient {
     pdu.validRegister(registerValue);
 
     const functionCode = pdu.FunctionCode.WriteSingleRegister;
-    const buffer = node.Buffer.alloc(5, 0);
+    const buffer = Buffer.alloc(5, 0);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(registerAddress, 1);
     buffer.writeUInt16BE(registerValue, 3);
@@ -138,7 +137,7 @@ export class PduClient {
 
     const functionCode = pdu.FunctionCode.WriteMultipleCoils;
     const [byteCount, byteValues] = pdu.bitsToBytes(outputValues);
-    const buffer = node.Buffer.alloc(6 + byteCount, 0);
+    const buffer = Buffer.alloc(6 + byteCount, 0);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(startingAddress, 1);
     buffer.writeUInt16BE(outputValues.length, 3);
@@ -166,7 +165,7 @@ export class PduClient {
 
     const functionCode = pdu.FunctionCode.WriteMultipleRegisters;
     const byteCount = registerValues.length * 2;
-    const buffer = node.Buffer.alloc(6 + byteCount, 0);
+    const buffer = Buffer.alloc(6 + byteCount, 0);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(startingAddress, 1);
     buffer.writeUInt16BE(registerValues.length, 3);

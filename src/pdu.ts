@@ -1,20 +1,20 @@
 /* tslint:disable:no-bitwise no-empty-interface */
-import * as node from "./node";
+import { assert } from "./node";
 
 export function validAddress(value: number): void {
-  node.assert((0x0 <= value) && (value <= 0xFFFF), `Invalid address: ${value}`);
+  assert((0x0 <= value) && (value <= 0xFFFF), `Invalid address: ${value}`);
 }
 
 export function validRegister(value: number): void {
-  node.assert((0x0 <= value) && (value <= 0xFFFF), `Invalid register value: ${value}`);
+  assert((0x0 <= value) && (value <= 0xFFFF), `Invalid register value: ${value}`);
 }
 
 export function validQuantityOfBits(value: number, maximum = 0x7D0): void {
-  node.assert((0x1 <= value) && (value <= maximum), `Invalid quantity of bits: ${value}`);
+  assert((0x1 <= value) && (value <= maximum), `Invalid quantity of bits: ${value}`);
 }
 
 export function validQuantityOfRegisters(value: number, maximum = 0x7D): void {
-  node.assert((0x1 <= value) && (value <= maximum), `Invalid quantity of registers: ${value}`);
+  assert((0x1 <= value) && (value <= maximum), `Invalid quantity of registers: ${value}`);
 }
 
 export function bitsToBytes(values: boolean[]): [number, number[]] {

@@ -1,8 +1,18 @@
-import * as node from "./node";
-import * as rx from "./rx";
+import { Socket, createConnection, debug } from "./node";
+import { Observable, Subject, BehaviorSubject, TimeoutError } from "./rx";
 import * as pdu from "./pdu";
 import { PduClient } from "./pdu-client";
 import * as tcp from "./tcp";
+
+// Socket event wrapper to differentiate between types.
+interface ISocketEvent {
+  name: string;
+  [key: string]: any;
+}
+
+export const TIMEOUT_ERROR = "TimeoutError";
+export const CONNECTION_ERROR = "ConnectionError";
+export const NOT_CONNECTED_ERROR = "NotConnectedError";
 
 /**
  * Modbus TCP client options.
@@ -11,15 +21,6 @@ export interface ITcpClientOptions {
   host: string;
   port?: number;
   unitId?: number;
-}
-
-/**
- * Modbus TCP client connect result.
- */
-export interface ITcpClientConnect {
-  connected: boolean;
-  retries: number;
-  error?: string;
 }
 
 /**
@@ -36,28 +37,20 @@ export class TcpClient {
   private _transactionId = 0;
   private _protocolId = 0;
 
-  private _socket: node.Socket | null;
-  private _close: rx.Observable<boolean>;
-  private _connect: rx.Observable<any>;
-  private _data: rx.Observable<Buffer>;
+  private _socket: Socket | null;
+  private _connected = new BehaviorSubject<boolean>(false);
+  private _disconnect = new Subject<void>();
+  private _error = new BehaviorSubject<any>(null);
 
-  private _connected = new rx.BehaviorSubject<boolean>(false);
-  private _disconnect = new rx.Subject<boolean>();
-  private _retries = 0;
-  private _error: any;
+  private _buffer = Buffer.alloc(0);
+  private _receive = new Subject<tcp.TcpResponse | tcp.TcpException>();
 
-  // Response buffer/emitter.
-  private _buffer = node.Buffer.alloc(0);
-  private _receive = new rx.Subject<tcp.TcpResponse | tcp.TcpException>();
-
-  // Client received/transmitted metrics.
   private _bytesReceived = 0;
   private _bytesTransmitted = 0;
   private _packetsReceived = 0;
   private _packetsTransmitted = 0;
-
-  /** Client debug interface. */
-  public get debug(): any { return this._debug; }
+  // TODO: Subscribable for transmitted/received monitoring.
+  // TODO: Use socket bytes read/written properties.
 
   /** Host the client will connect to. */
   public get host(): string { return this._host; }
@@ -68,11 +61,14 @@ export class TcpClient {
   /** Identifier of a remote slave. */
   public get unitId(): number { return this._unitId; }
 
-  /** Returns true if client is connected to host:port. */
+  /** Subscribable client connection state. */
+  public get connected(): Observable<boolean> { return this._connected; }
+
+  /** Returns true if client is connected. */
   public get isConnected(): boolean { return this._connected.value; }
 
-  /** Returns most recent error code returned by client socket. */
-  public get errorCode(): string | null { return (this._error != null) ? (this._error.code || null) : null; }
+  /** Last error code returned by client socket. */
+  public get errorCode(): string | null { return (this._error.value != null) ? (this._error.value.code || null) : null; }
 
   /** Number of bytes received by client. */
   public get bytesReceived(): number { return this._bytesReceived; }
@@ -86,153 +82,154 @@ export class TcpClient {
   /** Number of packets transmitted by client. */
   public get packetsTransmitted(): number { return this._packetsTransmitted; }
 
-  public constructor(options: ITcpClientOptions, namespace = "mbtcpc") {
+  public constructor(options: ITcpClientOptions, namespace = "mbtcp") {
     // TODO: Options argument validation.
     this._host = options.host;
     this._port = options.port || 502;
     this._unitId = options.unitId || 1;
-    this._debug = node.debug(namespace);
+    this._debug = debug(namespace);
   }
 
   /**
    * Connect the client to configured host:port.
-   * Emits incremental results based on number of retries.
-   * TODO: Add timeout argument.
-   * @param retry Number of reconnection attempts (1 - 10).
+   * @param timeout Number of seconds to wait for connection (1 - 30).
    */
-  public connect(retry = 1): rx.Observable<ITcpClientConnect> {
-    retry = Math.min(10, Math.max(1, Number(retry)));
-    this.debug(`connect ${this._host}:${this._port}`);
+  public connect(timeout = 5): Observable<void> {
+    // Convert timeout to milliseconds in range for rxjs.
+    timeout = Math.min(30, Math.max(1, Number(timeout))) * 1000;
 
+    // TODO: Add retry operator logic?
     return this.disconnect()
       .switchMap(() => {
-        // (Re)create socket.
-        // Error listener required to prevent process exiting.
-        this._socket = node.createConnection(this._connectionOptions);
-        this._socket.on("error", (error) => { this._error = error; });
+        this.debug(`connect ${this._host}:${this._port}`);
 
-        // Reset retry counter, receive buffer.
-        this._retries = 0;
-        this._buffer = node.Buffer.alloc(0);
+        // (Re)create socket, reset receive buffer.
+        // Error listener required to prevent process exit.
+        this._socket = createConnection(this.connectionOptions);
+        this._socket.on("error", (error) => { this._error.next(error); });
+        this._buffer = Buffer.alloc(0);
 
         // Map socket events to observables.
         // Observables are completed with a disconnect event.
-        this._close = rx.Observable.fromEvent(this._socket, "close").take(retry).takeUntil(this._disconnect);
-        this._connect = rx.Observable.fromEvent(this._socket, "connect").takeUntil(this._disconnect);
-        this._data = rx.Observable.fromEvent(this._socket, "data").takeUntil(this._disconnect);
+        // TODO: Listen to: drain, end, error, lookup, timeout?
+        const socketClose: Observable<ISocketEvent> = Observable.fromEvent(this._socket, "close")
+          .takeUntil(this._disconnect)
+          .mergeMap((hadError) => Observable.of({ name: "close", hadError }));
 
-        this._close
-          // Socket only attempts reconnection until a connection is made.
-          .takeWhile(() => !this.isConnected)
-          .subscribe(() => {
-            // Increment retry counter.
-            this._retries += 1;
+        const socketConnect: Observable<ISocketEvent> = Observable.fromEvent(this._socket, "connect")
+          .takeUntil(this._disconnect)
+          .mergeMap(() => Observable.of({ name: "connect" }));
 
-            // Retry socket connection on close event up to limit.
-            setTimeout(() => {
-              if (this._socket != null) {
-                this._socket.connect(this._port, this._host);
-                this._buffer = node.Buffer.alloc(0);
-              }
-            }, 500);
-          });
+        const socketData: Observable<Buffer> = Observable.fromEvent(this._socket, "data")
+          .takeUntil(this._disconnect);
 
-        this._data
-          .subscribe((data) => {
+        socketData
+          .subscribe((buffer) => {
             // Receive data into internal buffer and process.
-            this._buffer = this._receiveData(this._buffer, data);
+            this._buffer = this.receiveData(this._buffer, buffer);
           });
 
-        // Wait for close/connect events up to maximum number of retries.
-        // Observable continues emiting until connected.
-        return rx.Observable.race(this._close, this._connect)
-          .take(retry)
-          .takeWhile(() => !this.isConnected)
-          .switchMap((hadError) => {
-            // Undefined argument if connect finished first.
-            this._connected.next(hadError == null);
-
-            const result: ITcpClientConnect = {
-              connected: this.isConnected,
-              retries: this._retries,
-            };
-
-            // Error code only applicable if not connected.
-            const errorCode = this.errorCode;
-            if (!this.isConnected && (errorCode != null)) {
-              result.error = errorCode;
+        // Wait for a close or connect event.
+        return Observable.race(socketClose, socketConnect)
+          .takeUntil(this._disconnect)
+          .timeout(timeout)
+          .catch((error) => this.handleTimeoutError(error))
+          .switchMap((event: ISocketEvent) => {
+            // Return or throw based on event type.
+            if (event.name === "connect") {
+              this._connected.next(true);
+              return Observable.of(undefined);
             }
-
-            this.debug(`connect '${result.connected}' '${result.retries}/${retry}' '${result.error}'`);
-            return rx.Observable.of(result);
+            return Observable.throw(CONNECTION_ERROR);
           });
       });
   }
 
   /** Disconnect the client from the configured host:port, if connected. */
-  public disconnect(): rx.Observable<void> {
+  public disconnect(): Observable<void> {
     if (this._socket != null) {
-      this.debug(`disconnect`);
+      this.debug("disconnect");
+      // Complete event handlers.
       this._disconnect.next();
       this._connected.next(false);
       this._socket.end();
+      // TODO: Timer for socket destruction?
       this._socket.destroy();
       this._socket = null;
     }
-    return rx.Observable.of(undefined);
+    return Observable.of(undefined);
   }
 
-  public readCoils(startingAddress: number, quantityOfCoils: number, timeout = 5000): rx.Observable<tcp.TcpResponse> {
+  public readCoils(startingAddress: number, quantityOfCoils: number, timeout = 5000): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.readCoils(startingAddress, quantityOfCoils);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
-    return this._writeRequest(request, timeout);
+    return this.writeRequest(request, timeout);
   }
 
-  public readDiscreteInputs(startingAddress: number, quantityOfInputs: number, timeout = 5000): rx.Observable<tcp.TcpResponse> {
+  public readDiscreteInputs(startingAddress: number, quantityOfInputs: number, timeout = 5000): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.readDiscreteInputs(startingAddress, quantityOfInputs);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
-    return this._writeRequest(request, timeout);
+    return this.writeRequest(request, timeout);
   }
 
-  public readHoldingRegisters(startingAddress: number, quantityOfRegisters: number, timeout = 5000): rx.Observable<tcp.TcpResponse> {
+  public readHoldingRegisters(startingAddress: number, quantityOfRegisters: number, timeout = 5000): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.readHoldingRegisters(startingAddress, quantityOfRegisters);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
-    return this._writeRequest(request, timeout);
+    return this.writeRequest(request, timeout);
   }
 
-  public readInputRegisters(startingAddress: number, quantityOfRegisters: number, timeout = 5000): rx.Observable<tcp.TcpResponse> {
+  public readInputRegisters(startingAddress: number, quantityOfRegisters: number, timeout = 5000): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.readInputRegisters(startingAddress, quantityOfRegisters);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
-    return this._writeRequest(request, timeout);
+    return this.writeRequest(request, timeout);
   }
 
-  public writeSingleCoil(outputAddress: number, outputValue: boolean, timeout = 5000): rx.Observable<tcp.TcpResponse> {
+  public writeSingleCoil(outputAddress: number, outputValue: boolean, timeout = 5000): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.writeSingleCoil(outputAddress, outputValue);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
-    return this._writeRequest(request, timeout);
+    return this.writeRequest(request, timeout);
   }
 
-  public writeSingleRegister(registerAddress: number, registerValue: number, timeout = 5000): rx.Observable<tcp.TcpResponse> {
+  public writeSingleRegister(registerAddress: number, registerValue: number, timeout = 5000): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.writeSingleRegister(registerAddress, registerValue);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
-    return this._writeRequest(request, timeout);
+    return this.writeRequest(request, timeout);
   }
 
-  public writeMultipleCoils(startingAddress: number, outputValues: boolean[], timeout = 5000): rx.Observable<tcp.TcpResponse> {
+  public writeMultipleCoils(startingAddress: number, outputValues: boolean[], timeout = 5000): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.writeMultipleCoils(startingAddress, outputValues);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
-    return this._writeRequest(request, timeout);
+    return this.writeRequest(request, timeout);
   }
 
-  public writeMultipleRegisters(startingAddress: number, registerValues: number[], timeout = 5000): rx.Observable<tcp.TcpResponse> {
+  public writeMultipleRegisters(startingAddress: number, registerValues: number[], timeout = 5000): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.writeMultipleRegisters(startingAddress, registerValues);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
-    return this._writeRequest(request, timeout);
+    return this.writeRequest(request, timeout);
+  }
+
+  /** Client internal debugging interface. */
+  protected get debug(): any { return this._debug; }
+
+  /** Node socket connection options. */
+  protected get connectionOptions() { return { host: this._host, port: this._port }; }
+
+  protected get nextTransactionId(): number {
+    this._transactionId = (this._transactionId + 1) % 0xFFFF;
+    return this._transactionId;
+  }
+
+  /** Convert observable timeout error objects to strings. */
+  protected handleTimeoutError(error: any): Observable<void> {
+    if (error instanceof TimeoutError) {
+      return Observable.throw(TIMEOUT_ERROR);
+    }
+    return Observable.throw(error);
   }
 
   protected aduHeader(functionCode: number, request: Buffer): tcp.TcpRequest {
-    const buffer = node.Buffer.concat([node.Buffer.alloc(7, 0), request]);
-    const transactionId = this._nextTransactionId;
+    const buffer = Buffer.concat([Buffer.alloc(7, 0), request]);
+    const transactionId = this.nextTransactionId;
 
     buffer.writeUInt16BE(transactionId, 0);
     buffer.writeUInt16BE(this._protocolId, 2);
@@ -242,18 +239,9 @@ export class TcpClient {
     return new tcp.TcpRequest(transactionId, functionCode, buffer);
   }
 
-  private get _connectionOptions(): { port: number, host: string } {
-    return { port: this._port, host: this._host };
-  }
-
-  private get _nextTransactionId(): number {
-    this._transactionId = (this._transactionId + 1) % 0xFFFF;
-    return this._transactionId;
-  }
-
-  private _writeRequest(request: tcp.TcpRequest, timeout = 5000): rx.Observable<tcp.TcpResponse> {
+  protected writeRequest(request: tcp.TcpRequest, timeout = 5000): Observable<tcp.TcpResponse> {
     if ((this._socket == null) || (!this.isConnected)) {
-      return rx.Observable.throw("NotConnected");
+      return Observable.throw(NOT_CONNECTED_ERROR);
     }
 
     this._socket.write(request.buffer);
@@ -262,24 +250,48 @@ export class TcpClient {
 
     // Wait for response received with same transaction identifier.
     // TODO: Use other data segments to identify packets.
+    // TODO: Add retry operator logic?
     return this._receive
       .filter((response) => (response.transactionId === request.transactionId))
       .take(1)
       .timeout(timeout)
+      .catch(this.handleTimeoutError.bind(this))
       .switchMap((response) => {
         if (response instanceof tcp.TcpResponse) {
-          return rx.Observable.of(response);
+          return Observable.of(response);
         } else {
-          return rx.Observable.throw(response);
+          return Observable.throw(response);
         }
       });
   }
 
-  private _receiveData(buffer: Buffer, data: Buffer): Buffer {
-    this._bytesReceived += data.length;
-    buffer = node.Buffer.concat([buffer, data]);
+  protected parsePacket(transactionId: number, pduBuffer: Buffer, aduBuffer: Buffer): tcp.TcpResponse | tcp.TcpException | null {
+    const pduResponse = this._pdu.parseResponse(pduBuffer);
+    let response: tcp.TcpResponse | tcp.TcpException | null = null;
 
-    // TODO: Split into pdu/tcp process.
+    if (pduResponse instanceof pdu.PduResponse) {
+      response = new tcp.TcpResponse(
+        transactionId,
+        pduResponse.functionCode,
+        pduResponse.data,
+        aduBuffer,
+      );
+    } else if (pduResponse instanceof pdu.PduException) {
+      response = new tcp.TcpException(
+        transactionId,
+        pduResponse.functionCode,
+        pduResponse.exceptionFunctionCode,
+        pduResponse.exceptionCode,
+        aduBuffer,
+      );
+    }
+
+    return response;
+  }
+
+  protected receiveData(buffer: Buffer, data: Buffer): Buffer {
+    this._bytesReceived += data.length;
+    buffer = Buffer.concat([buffer, data]);
 
     // Check if buffer may contain MBAP header.
     if (buffer.length >= 7) {
@@ -296,28 +308,10 @@ export class TcpClient {
         const pduBuffer = aduBuffer.slice(7);
 
         // Parse PDU slice of buffer.
-        const pduResponse = this._pdu.parseResponse(pduBuffer);
-        if (pduResponse instanceof pdu.PduResponse) {
-
-          // Response received.
-          this._receive.next(new tcp.TcpResponse(
-            transactionId,
-            pduResponse.functionCode,
-            pduResponse.data,
-            aduBuffer,
-          ));
-
-        } else if (pduResponse instanceof pdu.PduException) {
-
-          // Exception received.
-          this._receive.next(new tcp.TcpException(
-            transactionId,
-            pduResponse.functionCode,
-            pduResponse.exceptionFunctionCode,
-            pduResponse.exceptionCode,
-            aduBuffer,
-          ));
-
+        // Inheritors may overwrite this function to implement their own handlers.
+        const response = this.parsePacket(transactionId, pduBuffer, aduBuffer);
+        if (response != null) {
+          this._receive.next(response);
         }
 
         // Return buffer with packet removed.
