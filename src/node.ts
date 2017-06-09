@@ -1,4 +1,5 @@
 /// <reference types="node" />
+// Node and other dependencies.
 import * as assert from "assert";
 export { assert };
 import { Buffer } from "buffer";

@@ -4,14 +4,13 @@ import * as pdu from "./pdu";
 import { PduClient } from "./pdu-client";
 import * as tcp from "./tcp";
 
-// Socket event wrapper to differentiate between types.
-interface ISocketEvent {
-  name: string;
-  [key: string]: any;
-}
-
+/** Client timed out error. */
 export const TIMEOUT_ERROR = "TimeoutError";
+
+/** Client connection to host failed error. */
 export const CONNECTION_ERROR = "ConnectionError";
+
+/** Client is not connected to host error. */
 export const NOT_CONNECTED_ERROR = "NotConnectedError";
 
 /**
@@ -45,18 +44,18 @@ export class TcpClient {
   private _buffer = Buffer.alloc(0);
   private _receive = new Subject<tcp.TcpResponse | tcp.TcpException>();
 
-  private _bytesReceived = 0;
-  private _bytesTransmitted = 0;
   private _packetsReceived = 0;
   private _packetsTransmitted = 0;
   // TODO: Subscribable for transmitted/received monitoring.
-  // TODO: Use socket bytes read/written properties.
 
   /** Host the client will connect to. */
   public get host(): string { return this._host; }
 
   /** Port the client will connect to. */
   public get port(): number { return this._port; }
+
+  /** Host:port the client will connect to. */
+  public get address(): string { return `${this.host}:${this.port}`; }
 
   /** Identifier of a remote slave. */
   public get unitId(): number { return this._unitId; }
@@ -71,10 +70,10 @@ export class TcpClient {
   public get errorCode(): string | null { return (this._error.value != null) ? (this._error.value.code || null) : null; }
 
   /** Number of bytes received by client. */
-  public get bytesReceived(): number { return this._bytesReceived; }
+  public get bytesReceived(): number { return (this._socket != null) ? this._socket.bytesRead : 0; }
 
   /** Number of bytes transmitted by client. */
-  public get bytesTransmitted(): number { return this._bytesTransmitted; }
+  public get bytesTransmitted(): number { return (this._socket != null) ? this._socket.bytesWritten : 0; }
 
   /** Number of packets recevied by client. */
   public get packetsReceived(): number { return this._packetsReceived; }
@@ -95,13 +94,12 @@ export class TcpClient {
    * @param timeout Number of seconds to wait for connection (1 - 30).
    */
   public connect(timeout = 5): Observable<void> {
-    // Convert timeout to milliseconds in range for rxjs.
-    timeout = Math.min(30, Math.max(1, Number(timeout))) * 1000;
+    timeout = this.validTimeout(timeout);
 
     // TODO: Add retry operator logic?
     return this.disconnect()
       .switchMap(() => {
-        this.debug(`connect ${this._host}:${this._port}`);
+        this.debug(`connect ${this.address}`);
 
         // (Re)create socket, reset receive buffer.
         // Error listener required to prevent process exit.
@@ -112,11 +110,11 @@ export class TcpClient {
         // Map socket events to observables.
         // Observables are completed with a disconnect event.
         // TODO: Listen to: drain, end, error, lookup, timeout?
-        const socketClose: Observable<ISocketEvent> = Observable.fromEvent(this._socket, "close")
+        const socketClose = Observable.fromEvent(this._socket, "close")
           .takeUntil(this._disconnect)
           .mergeMap((hadError) => Observable.of({ name: "close", hadError }));
 
-        const socketConnect: Observable<ISocketEvent> = Observable.fromEvent(this._socket, "connect")
+        const socketConnect = Observable.fromEvent(this._socket, "connect")
           .takeUntil(this._disconnect)
           .mergeMap(() => Observable.of({ name: "connect" }));
 
@@ -134,7 +132,7 @@ export class TcpClient {
           .takeUntil(this._disconnect)
           .timeout(timeout)
           .catch((error) => this.handleTimeoutError(error))
-          .switchMap((event: ISocketEvent) => {
+          .switchMap((event: { name: string }) => {
             // Return or throw based on event type.
             if (event.name === "connect") {
               this._connected.next(true);
@@ -148,7 +146,7 @@ export class TcpClient {
   /** Disconnect the client from the configured host:port, if connected. */
   public disconnect(): Observable<void> {
     if (this._socket != null) {
-      this.debug("disconnect");
+      this.debug(`disconnect ${this.address}`);
       // Complete event handlers.
       this._disconnect.next();
       this._connected.next(false);
@@ -239,13 +237,16 @@ export class TcpClient {
     return new tcp.TcpRequest(transactionId, functionCode, buffer);
   }
 
-  protected writeRequest(request: tcp.TcpRequest, timeout = 5000): Observable<tcp.TcpResponse> {
+  protected writeRequest(request: tcp.TcpRequest, timeout = 5): Observable<tcp.TcpResponse> {
+    timeout = this.validTimeout(timeout);
+
+    // Throw error if socket is not created and connected.
     if ((this._socket == null) || (!this.isConnected)) {
       return Observable.throw(NOT_CONNECTED_ERROR);
     }
 
+    this.debug(`transmit ${request}`);
     this._socket.write(request.buffer);
-    this._bytesTransmitted += request.buffer.length;
     this._packetsTransmitted += 1;
 
     // Wait for response received with same transaction identifier.
@@ -290,7 +291,6 @@ export class TcpClient {
   }
 
   protected receiveData(buffer: Buffer, data: Buffer): Buffer {
-    this._bytesReceived += data.length;
     buffer = Buffer.concat([buffer, data]);
 
     // Check if buffer may contain MBAP header.
@@ -311,6 +311,7 @@ export class TcpClient {
         // Inheritors may overwrite this function to implement their own handlers.
         const response = this.parsePacket(transactionId, pduBuffer, aduBuffer);
         if (response != null) {
+          this.debug(`receive ${response}`);
           this._receive.next(response);
         }
 
