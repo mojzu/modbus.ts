@@ -1,10 +1,11 @@
 /// <reference types="jasmine" />
 import { Observable } from "./rx";
+import * as pdu from "./pdu";
 import { CONNECTION_ERROR, ITcpClientOptions, TcpClient } from "./tcp-client";
-import { TcpServer } from "./tcp-server";
+import { TcpMockServer } from "./tcp-server-mock";
 
-function create(port = 502, namespace = 1): [TcpServer, TcpClient] {
-  const server = new TcpServer(`mbtcps:${namespace}`);
+function create(port = 502, namespace = 1): [TcpMockServer, TcpClient] {
+  const server = new TcpMockServer(port, `mbtcps:${namespace}`);
   const options: ITcpClientOptions = { host: "localhost", port };
   const client = new TcpClient(options, `mbtcpc:${namespace}`);
   return [server, client];
@@ -17,9 +18,6 @@ describe("Modbus TCP Client", () => {
 
     client.connect()
       .subscribe({
-        next: () => {
-          fail();
-        },
         error: (error) => {
           expect(error).toEqual(CONNECTION_ERROR);
           done();
@@ -33,7 +31,7 @@ describe("Modbus TCP Client", () => {
 
   it("Connects to open server port", (done) => {
     const [server, client] = create(5022, 2);
-    server.open(5022)
+    server.open()
       .subscribe(() => {
         client.connect()
           .switchMap(() => {
@@ -43,16 +41,39 @@ describe("Modbus TCP Client", () => {
             );
           })
           .subscribe({
-            next: () => {
-              fail();
-            },
             error: (error) => {
               fail(error);
               done();
             },
-            complete: () => {
+            complete: () => done(),
+          });
+      });
+  });
+
+  it("Reads coils from server", (done) => {
+    const [server, client] = create(5023, 3);
+    server.open()
+      .subscribe(() => {
+        client.connect()
+          .switchMap(() => {
+            return client.readCoils(0x1000, 4);
+          })
+          .switchMap((response) => {
+            const data: pdu.IReadCoils = response.data;
+            expect(response.functionCode).toEqual(pdu.FunctionCode.ReadCoils);
+            expect(data.bytes).toEqual(1);
+            expect(data.values).toEqual([true, false, true, false, false, false, false, false]);
+            return Observable.forkJoin(
+              client.disconnect(),
+              server.close(),
+            );
+          })
+          .subscribe({
+            error: (error) => {
+              fail(error);
               done();
             },
+            complete: () => done(),
           });
       });
   });
