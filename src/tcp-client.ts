@@ -158,48 +158,104 @@ export class TcpClient {
     return Observable.of(undefined);
   }
 
+  /**
+   * This function code is used to read from 1 to 2000 contiguous status
+   * of coils in a remote device.
+   * @param startingAddress Starting address.
+   * @param quantityOfCoils Quantity of coils.
+   * @param timeout Milliseconds to wait for response.
+   */
   public readCoils(startingAddress: number, quantityOfCoils: number, timeout = 5000): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.readCoils(startingAddress, quantityOfCoils);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this.writeRequest(request, timeout);
   }
 
+  /**
+   * This function code is used to read from 1 to 2000 contiguous status
+   * of discrete inputs in a remote device.
+   * @param startingAddress Starting address.
+   * @param quantityOfInputs Quantity of inputs.
+   * @param timeout Milliseconds to wait for response.
+   */
   public readDiscreteInputs(startingAddress: number, quantityOfInputs: number, timeout = 5000): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.readDiscreteInputs(startingAddress, quantityOfInputs);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this.writeRequest(request, timeout);
   }
 
+  /**
+   * This function code is used to read  the contents of a contiguous block
+   * of holding registers in a remote device.
+   * @param startingAddress Starting address.
+   * @param quantityOfRegisters Quantity of registers.
+   * @param timeout Milliseconds to wait for response.
+   */
   public readHoldingRegisters(startingAddress: number, quantityOfRegisters: number, timeout = 5000): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.readHoldingRegisters(startingAddress, quantityOfRegisters);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this.writeRequest(request, timeout);
   }
 
+  /**
+   * This function code is used to read from 1 to 125 contiguous input
+   * registers in a remote device.
+   * @param startingAddress Starting address.
+   * @param quantityOfRegisters Quantity of registers.
+   * @param timeout Milliseconds to wait for response.
+   */
   public readInputRegisters(startingAddress: number, quantityOfRegisters: number, timeout = 5000): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.readInputRegisters(startingAddress, quantityOfRegisters);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this.writeRequest(request, timeout);
   }
 
+  /**
+   * This function code is used to write a single output to either ON
+   * or OFF in a remote device.
+   * @param outputAddress Output address.
+   * @param outputValue  Output value.
+   * @param timeout Milliseconds to wait for response.
+   */
   public writeSingleCoil(outputAddress: number, outputValue: boolean, timeout = 5000): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.writeSingleCoil(outputAddress, outputValue);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this.writeRequest(request, timeout);
   }
 
+  /**
+   * This function code is used to write a single holding register
+   * in a remote device.
+   * @param registerAddress Register address.
+   * @param registerValue Register value.
+   * @param timeout Milliseconds to wait for response.
+   */
   public writeSingleRegister(registerAddress: number, registerValue: number, timeout = 5000): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.writeSingleRegister(registerAddress, registerValue);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this.writeRequest(request, timeout);
   }
 
+  /**
+   * This function code is used to force each coil in a sequence of coils to
+   * either ON or OFF in a remote device.
+   * @param startingAddress Starting address.
+   * @param outputValues Output values.
+   * @param timeout Milliseconds to wait for response.
+   */
   public writeMultipleCoils(startingAddress: number, outputValues: boolean[], timeout = 5000): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.writeMultipleCoils(startingAddress, outputValues);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this.writeRequest(request, timeout);
   }
 
+  /**
+   * This function code is used to write a block of contiguous registers
+   * (1 to 123 registers) in a remote device.
+   * @param startingAddress Starting address.
+   * @param registerValues Register values.
+   * @param timeout Milliseconds to wait for response.
+   */
   public writeMultipleRegisters(startingAddress: number, registerValues: number[], timeout = 5000): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.writeMultipleRegisters(startingAddress, registerValues);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
@@ -215,6 +271,14 @@ export class TcpClient {
   protected get nextTransactionId(): number {
     this._transactionId = (this._transactionId + 1) % 0xFFFF;
     return this._transactionId;
+  }
+
+  /**
+   * Convert timeout in seconds to milliseconds.
+   * @param value Timeout value in seconds (1 - 30).
+   */
+  protected validTimeout(value: number): number {
+    return Math.min(30, Math.max(1, Number(value))) * 1000;
   }
 
   /** Convert observable timeout error objects to strings. */
