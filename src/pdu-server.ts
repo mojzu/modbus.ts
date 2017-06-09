@@ -1,9 +1,7 @@
 import { Buffer } from "./node";
 import * as pdu from "./pdu";
 
-/**
- * Modbus PDU request or exception.
- */
+/** Modbus PDU response or exception. */
 export type PduServerResponse = pdu.PduResponse | pdu.PduException;
 
 /**

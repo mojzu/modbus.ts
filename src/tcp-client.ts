@@ -298,7 +298,7 @@ export class TcpClient {
     buffer.writeUInt16BE((request.length + 1), 4);
     buffer.writeUInt8(this._unitId, 6);
 
-    return new tcp.TcpRequest(transactionId, functionCode, buffer);
+    return new tcp.TcpRequest(transactionId, this._unitId, functionCode, buffer);
   }
 
   protected writeRequest(request: tcp.TcpRequest, timeout = 5): Observable<tcp.TcpResponse> {
@@ -330,13 +330,19 @@ export class TcpClient {
       });
   }
 
-  protected parsePacket(transactionId: number, pduBuffer: Buffer, aduBuffer: Buffer): tcp.TcpResponse | tcp.TcpException | null {
+  protected parsePacket(
+    transactionId: number,
+    unitId: number,
+    pduBuffer: Buffer,
+    aduBuffer: Buffer,
+  ): tcp.TcpResponse | tcp.TcpException | null {
     const pduResponse = this._pdu.parseResponse(pduBuffer);
     let response: tcp.TcpResponse | tcp.TcpException | null = null;
 
     if (pduResponse instanceof pdu.PduResponse) {
       response = new tcp.TcpResponse(
         transactionId,
+        unitId,
         pduResponse.functionCode,
         pduResponse.data,
         aduBuffer,
@@ -344,6 +350,7 @@ export class TcpClient {
     } else if (pduResponse instanceof pdu.PduException) {
       response = new tcp.TcpException(
         transactionId,
+        unitId,
         pduResponse.functionCode,
         pduResponse.exceptionFunctionCode,
         pduResponse.exceptionCode,
@@ -369,11 +376,12 @@ export class TcpClient {
 
         const aduBuffer = buffer.slice(0, responseLength);
         const transactionId = aduBuffer.readUInt16BE(0);
+        const unitId = aduBuffer.readUInt8(6);
         const pduBuffer = aduBuffer.slice(7);
 
         // Parse PDU slice of buffer.
         // Inheritors may overwrite this function to implement their own handlers.
-        const response = this.parsePacket(transactionId, pduBuffer, aduBuffer);
+        const response = this.parsePacket(transactionId, unitId, pduBuffer, aduBuffer);
         if (response != null) {
           this.debug(`receive ${response}`);
           this._receive.next(response);
