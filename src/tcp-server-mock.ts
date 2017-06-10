@@ -1,4 +1,4 @@
-import { TcpServer } from "./tcp-server"
+import { TcpServer } from "./tcp-server";
 
 export class TcpMockServer extends TcpServer {
 
