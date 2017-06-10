@@ -1,8 +1,8 @@
 /// <reference types="jasmine" />
-import { Observable } from "./rx";
-import * as pdu from "./pdu";
-import { CONNECTION_ERROR, ITcpClientOptions, TcpClient } from "./tcp-client";
-import { TcpMockServer } from "./tcp-server-mock";
+import { Observable } from "../rx";
+import * as pdu from "../pdu/pdu";
+import { CONNECTION_ERROR, ITcpClientOptions, TcpClient } from "./client";
+import { TcpMockServer } from "./server-mock";
 
 function create(port = 502, namespace = 1): [TcpMockServer, TcpClient] {
   const server = new TcpMockServer(port, `mbtcps:${namespace}`);

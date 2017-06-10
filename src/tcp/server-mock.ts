@@ -1,6 +1,6 @@
-import { PduServer } from "./pdu-server";
+import { TcpServer } from "./server";
 
-export class PduMockServer extends PduServer {
+export class TcpMockServer extends TcpServer {
 
   public readCoils(startingAddress: number, quantityOfCoils: number): boolean[] {
     return this.readBits(startingAddress, quantityOfCoils);

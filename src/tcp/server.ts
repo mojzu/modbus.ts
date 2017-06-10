@@ -1,7 +1,7 @@
-import { Observable, Subject } from "./rx";
-import { Server, createServer, debug } from "./node";
-import * as pdu from "./pdu";
-import { PduServer } from "./pdu-server";
+import { Observable, Subject } from "../rx";
+import { Server, createServer, debug } from "../node";
+import * as pdu from "../pdu/pdu";
+import { PduServer } from "../pdu/server";
 import * as tcp from "./tcp";
 
 /** Modbus TCP observable response or exception. */

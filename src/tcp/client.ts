@@ -1,7 +1,7 @@
-import { Socket, createConnection, debug } from "./node";
-import { Observable, Subject, BehaviorSubject, TimeoutError } from "./rx";
-import * as pdu from "./pdu";
-import { PduClient } from "./pdu-client";
+import { Socket, createConnection, debug } from "../node";
+import { Observable, Subject, BehaviorSubject, TimeoutError } from "../rx";
+import * as pdu from "../pdu/pdu";
+import { PduClient } from "../pdu/client";
 import * as tcp from "./tcp";
 
 /** Client timed out error. */

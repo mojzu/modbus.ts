@@ -1,5 +1,5 @@
 /* tslint:disable:no-bitwise no-empty-interface */
-import { assert } from "./node";
+import { assert } from "../node";
 
 export function validAddress(value: number): void {
   assert((0x0 <= value) && (value <= 0xFFFF), `Invalid address: ${value}`);
