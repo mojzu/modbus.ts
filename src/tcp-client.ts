@@ -165,7 +165,7 @@ export class TcpClient {
    * @param quantityOfCoils Quantity of coils.
    * @param timeout Milliseconds to wait for response.
    */
-  public readCoils(startingAddress: number, quantityOfCoils: number, timeout = 5000): Observable<tcp.TcpResponse> {
+  public readCoils(startingAddress: number, quantityOfCoils: number, timeout = 5): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.readCoils(startingAddress, quantityOfCoils);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this.writeRequest(request, timeout);
@@ -178,7 +178,7 @@ export class TcpClient {
    * @param quantityOfInputs Quantity of inputs.
    * @param timeout Milliseconds to wait for response.
    */
-  public readDiscreteInputs(startingAddress: number, quantityOfInputs: number, timeout = 5000): Observable<tcp.TcpResponse> {
+  public readDiscreteInputs(startingAddress: number, quantityOfInputs: number, timeout = 5): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.readDiscreteInputs(startingAddress, quantityOfInputs);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this.writeRequest(request, timeout);
@@ -191,7 +191,7 @@ export class TcpClient {
    * @param quantityOfRegisters Quantity of registers.
    * @param timeout Milliseconds to wait for response.
    */
-  public readHoldingRegisters(startingAddress: number, quantityOfRegisters: number, timeout = 5000): Observable<tcp.TcpResponse> {
+  public readHoldingRegisters(startingAddress: number, quantityOfRegisters: number, timeout = 5): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.readHoldingRegisters(startingAddress, quantityOfRegisters);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this.writeRequest(request, timeout);
@@ -204,7 +204,7 @@ export class TcpClient {
    * @param quantityOfRegisters Quantity of registers.
    * @param timeout Milliseconds to wait for response.
    */
-  public readInputRegisters(startingAddress: number, quantityOfRegisters: number, timeout = 5000): Observable<tcp.TcpResponse> {
+  public readInputRegisters(startingAddress: number, quantityOfRegisters: number, timeout = 5): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.readInputRegisters(startingAddress, quantityOfRegisters);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this.writeRequest(request, timeout);
@@ -217,7 +217,7 @@ export class TcpClient {
    * @param outputValue  Output value.
    * @param timeout Milliseconds to wait for response.
    */
-  public writeSingleCoil(outputAddress: number, outputValue: boolean, timeout = 5000): Observable<tcp.TcpResponse> {
+  public writeSingleCoil(outputAddress: number, outputValue: boolean, timeout = 5): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.writeSingleCoil(outputAddress, outputValue);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this.writeRequest(request, timeout);
@@ -230,7 +230,7 @@ export class TcpClient {
    * @param registerValue Register value.
    * @param timeout Milliseconds to wait for response.
    */
-  public writeSingleRegister(registerAddress: number, registerValue: number, timeout = 5000): Observable<tcp.TcpResponse> {
+  public writeSingleRegister(registerAddress: number, registerValue: number, timeout = 5): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.writeSingleRegister(registerAddress, registerValue);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this.writeRequest(request, timeout);
@@ -243,7 +243,7 @@ export class TcpClient {
    * @param outputValues Output values.
    * @param timeout Milliseconds to wait for response.
    */
-  public writeMultipleCoils(startingAddress: number, outputValues: boolean[], timeout = 5000): Observable<tcp.TcpResponse> {
+  public writeMultipleCoils(startingAddress: number, outputValues: boolean[], timeout = 5): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.writeMultipleCoils(startingAddress, outputValues);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this.writeRequest(request, timeout);
@@ -256,7 +256,7 @@ export class TcpClient {
    * @param registerValues Register values.
    * @param timeout Milliseconds to wait for response.
    */
-  public writeMultipleRegisters(startingAddress: number, registerValues: number[], timeout = 5000): Observable<tcp.TcpResponse> {
+  public writeMultipleRegisters(startingAddress: number, registerValues: number[], timeout = 5): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.writeMultipleRegisters(startingAddress, registerValues);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this.writeRequest(request, timeout);
