@@ -16,9 +16,10 @@ describe("Modbus TCP Client", () => {
   it("Fails to connect to closed server port after retries", (done) => {
     const [, client] = create(1122, 1);
 
-    client.connect()
+    client.connect(5, 3)
       .subscribe({
         error: (error) => {
+          expect(client.isConnected).toEqual(false);
           expect(error).toEqual(CONNECTION_ERROR);
           done();
         },
@@ -35,6 +36,7 @@ describe("Modbus TCP Client", () => {
       .subscribe(() => {
         client.connect()
           .switchMap(() => {
+            expect(client.isConnected).toEqual(true);
             return Observable.forkJoin(
               client.disconnect(),
               server.close(),

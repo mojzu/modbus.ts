@@ -91,15 +91,19 @@ export class TcpClient {
 
   /**
    * Connect the client to configured host:port.
+   * Observable will call next if connection successful, and complete when
+   * disconnected by socket closing or by a call to 'disconnect' method.
+   * An error code string will be thrown if connection failed.
    * @param timeout Number of seconds to wait for connection (1 - 30).
+   * @param retry Number of connection retries (0 - 5).
    */
-  public connect(timeout = 5): Observable<void> {
+  public connect(timeout = 5, retry = 0): Observable<void> {
     timeout = this.validTimeout(timeout);
+    retry = this.validRetry(retry);
 
-    // TODO: Add retry operator logic?
     return this.disconnect()
       .switchMap(() => {
-        this.debug(`connect ${this.address}`);
+        this.debug(`connect: ${this.address}`);
 
         // (Re)create socket, reset receive buffer.
         // Error listener required to prevent process exit.
@@ -136,17 +140,34 @@ export class TcpClient {
             // Return or throw based on event type.
             if (event.name === "connect") {
               this._connected.next(true);
+              this.debug(`connected`);
               return Observable.of(undefined);
             }
+            this.debug(`error: ${CONNECTION_ERROR}`);
             return Observable.throw(CONNECTION_ERROR);
-          });
+          })
+          // Delay to prevent case where rapid disconnection
+          // causes observables not to call next.
+          .delay(50);
+      })
+      // Retry up to limit with delay between attempts.
+      .retryWhen((errors) => {
+        return errors
+          .scan((errorCount, error) => {
+            if (errorCount >= retry) {
+              throw error;
+            }
+            this.disconnect();
+            return errorCount + 1;
+          }, 1)
+          .delay(500);
       });
   }
 
   /** Disconnect the client from the configured host:port, if connected. */
   public disconnect(): Observable<void> {
     if (this._socket != null) {
-      this.debug(`disconnect ${this.address}`);
+      this.debug(`disconnect: ${this.address}`);
       // Complete event handlers.
       this._disconnect.next();
       this._connected.next(false);
@@ -281,9 +302,14 @@ export class TcpClient {
     return Math.min(30, Math.max(1, Number(value))) * 1000;
   }
 
+  protected validRetry(value: number): number {
+    return Math.min(5, Math.max(0, Number(value)));
+  }
+
   /** Convert observable timeout error objects to strings. */
   protected handleTimeoutError(error: any): Observable<void> {
     if (error instanceof TimeoutError) {
+      this.debug(`error: ${TIMEOUT_ERROR}`);
       return Observable.throw(TIMEOUT_ERROR);
     }
     return Observable.throw(error);
@@ -306,10 +332,11 @@ export class TcpClient {
 
     // Throw error if socket is not created and connected.
     if ((this._socket == null) || (!this.isConnected)) {
+      this.debug(`error: ${NOT_CONNECTED_ERROR}`);
       return Observable.throw(NOT_CONNECTED_ERROR);
     }
 
-    this.debug(`transmit ${request}`);
+    this.debug(`transmit: ${request}`);
     this._socket.write(request.buffer);
     this._packetsTransmitted += 1;
 
@@ -383,7 +410,7 @@ export class TcpClient {
         // Inheritors may overwrite this function to implement their own handlers.
         const response = this.parsePacket(transactionId, unitId, pduBuffer, aduBuffer);
         if (response != null) {
-          this.debug(`receive ${response}`);
+          this.debug(`receive: ${response}`);
           this._receive.next(response);
         }
 
