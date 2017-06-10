@@ -18,6 +18,7 @@ describe("Modbus TCP Client", () => {
 
     client.connect(5, 3)
       .subscribe({
+        next: () => fail(),
         error: (error) => {
           expect(client.isConnected).toEqual(false);
           expect(error).toEqual(CONNECTION_ERROR);
@@ -32,6 +33,7 @@ describe("Modbus TCP Client", () => {
 
   it("Connects to open server port", (done) => {
     const [server, client] = create(5022, 2);
+    let nextCounter = 0;
     server.open()
       .subscribe(() => {
         client.connect()
@@ -43,17 +45,24 @@ describe("Modbus TCP Client", () => {
             );
           })
           .subscribe({
+            next: () => {
+              nextCounter += 1;
+            },
             error: (error) => {
               fail(error);
               done();
             },
-            complete: () => done(),
+            complete: () => {
+              expect(nextCounter).toEqual(1);
+              done();
+            },
           });
       });
   });
 
   it("Reads coils from server", (done) => {
     const [server, client] = create(5023, 3);
+    let nextCounter = 0;
     server.open()
       .subscribe(() => {
         client.connect()
@@ -71,11 +80,17 @@ describe("Modbus TCP Client", () => {
             );
           })
           .subscribe({
+            next: () => {
+              nextCounter += 1;
+            },
             error: (error) => {
               fail(error);
               done();
             },
-            complete: () => done(),
+            complete: () => {
+              expect(nextCounter).toEqual(1);
+              done();
+            },
           });
       });
   });
