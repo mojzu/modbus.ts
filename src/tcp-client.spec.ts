@@ -95,4 +95,39 @@ describe("Modbus TCP Client", () => {
       });
   });
 
+  it("Reads discrete inputs from server", (done) => {
+    const [server, client] = create(5024, 4);
+    let nextCounter = 0;
+    server.open()
+      .subscribe(() => {
+        client.connect()
+          .switchMap(() => {
+            return client.readDiscreteInputs(0x0010, 1);
+          })
+          .switchMap((response) => {
+            const data: pdu.IReadDiscreteInputs = response.data;
+            expect(response.functionCode).toEqual(pdu.FunctionCode.ReadDiscreteInputs);
+            expect(data.bytes).toEqual(1);
+            expect(data.values).toEqual([true, false, false, false, false, false, false, false]);
+            return Observable.forkJoin(
+              client.disconnect(),
+              server.close(),
+            );
+          })
+          .subscribe({
+            next: () => {
+              nextCounter += 1;
+            },
+            error: (error) => {
+              fail(error);
+              done();
+            },
+            complete: () => {
+              expect(nextCounter).toEqual(1);
+              done();
+            },
+          });
+      });
+  });
+
 });
