@@ -7,6 +7,8 @@ describe("Modbus PDU Client", () => {
 
   // TODO: Test method argument validation.
   // TODO: Test Modbus exception handling.
+  // TODO: Test coil/input bit off handling.
+  // TODO: Test coil/input bit multiple byte handling.
   const client = new PduClient();
   const server = new PduMockServer();
 

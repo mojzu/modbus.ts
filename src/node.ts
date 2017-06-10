@@ -1,5 +1,6 @@
 /// <reference types="node" />
 // Node and other dependencies.
+// TODO: Portability layer for browser compatability?
 import * as assert from "assert";
 export { assert };
 import { Buffer } from "buffer";

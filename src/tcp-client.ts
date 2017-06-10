@@ -157,9 +157,9 @@ export class TcpClient {
             if (errorCount >= retry) {
               throw error;
             }
-            this.disconnect();
             return errorCount + 1;
           }, 1)
+          .switchMap(() => this.disconnect())
           .delay(500);
       });
   }
