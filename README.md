@@ -25,4 +25,7 @@ $ yarn run lint
 
 # Package library.
 $ yarn run pack
+
+# Release library.
+$ yarn run pack && npm publish --access=public
 ```
