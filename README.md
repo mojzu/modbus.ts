@@ -2,7 +2,7 @@
 
 [Modbus](http://www.modbus.org/) application protocol written in [TypeScript](https://www.typescriptlang.org/) for [Node.js](https://nodejs.org/en/).
 
-## Example
+## Quickstart
 
 Add `modbus.ts` as a dependency to `package.json` file.
 
@@ -72,6 +72,9 @@ $ yarn run lint
 
 # Package library.
 $ yarn run pack
+
+# Run examples.
+$ node examples/quickstart.js
 
 # Release library.
 $ yarn run pack && npm publish --access=public
