@@ -131,6 +131,42 @@ describe("Modbus TCP Client", () => {
       });
   });
 
+  it("Read coils from drop server succeeds with retries", (done) => {
+    const [server, client] = create(TcpDropMockServer);
+    let nextCounter = 0;
+    server.open()
+      .subscribe(() => {
+        client.connect()
+          .switchMap(() => {
+            return client.readCoils(0x0001, 1, 2, 3);
+          })
+          .switchMap((response) => {
+            const data: pdu.IReadCoils = response.data;
+            expect(response.functionCode).toEqual(pdu.FunctionCode.ReadCoils);
+            expect(data.bytes).toEqual(1);
+            expect(data.values).toEqual([true, false, false, false, false, false, false, false]);
+            expect(client.retries).toEqual(2);
+            return Observable.forkJoin(
+              client.disconnect(),
+              server.close(),
+            );
+          })
+          .subscribe({
+            next: () => {
+              nextCounter += 1;
+            },
+            error: (error) => {
+              fail(error);
+              done();
+            },
+            complete: () => {
+              expect(nextCounter).toEqual(1);
+              done();
+            },
+          });
+      });
+  });
+
   it("Reads discrete inputs from server", (done) => {
     const [server, client] = create(TcpMockServer);
     let nextCounter = 0;

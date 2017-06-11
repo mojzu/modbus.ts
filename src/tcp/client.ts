@@ -47,6 +47,7 @@ export class TcpClient {
   private _buffer = Buffer.alloc(0);
   private _receive = new Subject<tcp.TcpResponse | tcp.TcpException>();
 
+  private _retries = 0;
   private _packetsReceived = 0;
   private _packetsTransmitted = 0;
   // TODO: Subscribable for transmitted/received monitoring.
@@ -71,6 +72,9 @@ export class TcpClient {
 
   /** Last error code returned by client socket. */
   public get errorCode(): string | null { return (this._error.value != null) ? (this._error.value.code || null) : null; }
+
+  /** Total number of retries performed by client. */
+  public get retries(): number { return this._retries; }
 
   /** Number of bytes received by client. */
   public get bytesReceived(): number { return (this._socket != null) ? this._socket.bytesRead : 0; }
@@ -160,6 +164,7 @@ export class TcpClient {
             if (errorCount >= retry) {
               throw error;
             }
+            this._retries += 1;
             return errorCount + 1;
           }, 1)
           .switchMap(() => this.disconnect())
@@ -188,11 +193,12 @@ export class TcpClient {
    * @param startingAddress Starting address.
    * @param quantityOfCoils Quantity of coils.
    * @param timeout Number of seconds to wait for response (1 - 30).
+   * @param retry Number of retries (0 - 5).
    */
-  public readCoils(startingAddress: number, quantityOfCoils: number, timeout = 5): Observable<tcp.TcpResponse> {
+  public readCoils(startingAddress: number, quantityOfCoils: number, timeout = 5, retry = 0): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.readCoils(startingAddress, quantityOfCoils);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
-    return this.writeRequest(request, timeout);
+    return this.writeRequest(request, timeout, retry);
   }
 
   /**
@@ -201,11 +207,12 @@ export class TcpClient {
    * @param startingAddress Starting address.
    * @param quantityOfInputs Quantity of inputs.
    * @param timeout Number of seconds to wait for response (1 - 30).
+   * @param retry Number of retries (0 - 5).
    */
-  public readDiscreteInputs(startingAddress: number, quantityOfInputs: number, timeout = 5): Observable<tcp.TcpResponse> {
+  public readDiscreteInputs(startingAddress: number, quantityOfInputs: number, timeout = 5, retry = 0): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.readDiscreteInputs(startingAddress, quantityOfInputs);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
-    return this.writeRequest(request, timeout);
+    return this.writeRequest(request, timeout, retry);
   }
 
   /**
@@ -214,11 +221,12 @@ export class TcpClient {
    * @param startingAddress Starting address.
    * @param quantityOfRegisters Quantity of registers.
    * @param timeout Number of seconds to wait for response (1 - 30).
+   * @param retry Number of retries (0 - 5).
    */
-  public readHoldingRegisters(startingAddress: number, quantityOfRegisters: number, timeout = 5): Observable<tcp.TcpResponse> {
+  public readHoldingRegisters(startingAddress: number, quantityOfRegisters: number, timeout = 5, retry = 0): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.readHoldingRegisters(startingAddress, quantityOfRegisters);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
-    return this.writeRequest(request, timeout);
+    return this.writeRequest(request, timeout, retry);
   }
 
   /**
@@ -227,11 +235,12 @@ export class TcpClient {
    * @param startingAddress Starting address.
    * @param quantityOfRegisters Quantity of registers.
    * @param timeout Number of seconds to wait for response (1 - 30).
+   * @param retry Number of retries (0 - 5).
    */
-  public readInputRegisters(startingAddress: number, quantityOfRegisters: number, timeout = 5): Observable<tcp.TcpResponse> {
+  public readInputRegisters(startingAddress: number, quantityOfRegisters: number, timeout = 5, retry = 0): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.readInputRegisters(startingAddress, quantityOfRegisters);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
-    return this.writeRequest(request, timeout);
+    return this.writeRequest(request, timeout, retry);
   }
 
   /**
@@ -240,11 +249,12 @@ export class TcpClient {
    * @param outputAddress Output address.
    * @param outputValue  Output value.
    * @param timeout Number of seconds to wait for response (1 - 30).
+   * @param retry Number of retries (0 - 5).
    */
-  public writeSingleCoil(outputAddress: number, outputValue: boolean, timeout = 5): Observable<tcp.TcpResponse> {
+  public writeSingleCoil(outputAddress: number, outputValue: boolean, timeout = 5, retry = 0): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.writeSingleCoil(outputAddress, outputValue);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
-    return this.writeRequest(request, timeout);
+    return this.writeRequest(request, timeout, retry);
   }
 
   /**
@@ -253,11 +263,12 @@ export class TcpClient {
    * @param registerAddress Register address.
    * @param registerValue Register value.
    * @param timeout Number of seconds to wait for response (1 - 30).
+   * @param retry Number of retries (0 - 5).
    */
-  public writeSingleRegister(registerAddress: number, registerValue: number, timeout = 5): Observable<tcp.TcpResponse> {
+  public writeSingleRegister(registerAddress: number, registerValue: number, timeout = 5, retry = 0): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.writeSingleRegister(registerAddress, registerValue);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
-    return this.writeRequest(request, timeout);
+    return this.writeRequest(request, timeout, retry);
   }
 
   /**
@@ -266,11 +277,12 @@ export class TcpClient {
    * @param startingAddress Starting address.
    * @param outputValues Output values.
    * @param timeout Number of seconds to wait for response (1 - 30).
+   * @param retry Number of retries (0 - 5).
    */
-  public writeMultipleCoils(startingAddress: number, outputValues: boolean[], timeout = 5): Observable<tcp.TcpResponse> {
+  public writeMultipleCoils(startingAddress: number, outputValues: boolean[], timeout = 5, retry = 0): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.writeMultipleCoils(startingAddress, outputValues);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
-    return this.writeRequest(request, timeout);
+    return this.writeRequest(request, timeout, retry);
   }
 
   /**
@@ -279,11 +291,12 @@ export class TcpClient {
    * @param startingAddress Starting address.
    * @param registerValues Register values.
    * @param timeout Number of seconds to wait for response (1 - 30).
+   * @param retry Number of retries (0 - 5).
    */
-  public writeMultipleRegisters(startingAddress: number, registerValues: number[], timeout = 5): Observable<tcp.TcpResponse> {
+  public writeMultipleRegisters(startingAddress: number, registerValues: number[], timeout = 5, retry = 0): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.writeMultipleRegisters(startingAddress, registerValues);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
-    return this.writeRequest(request, timeout);
+    return this.writeRequest(request, timeout, retry);
   }
 
   /** Client internal debugging interface. */
@@ -330,34 +343,68 @@ export class TcpClient {
     return new tcp.TcpRequest(transactionId, this._unitId, functionCode, buffer);
   }
 
-  protected writeRequest(request: tcp.TcpRequest, timeout = 5): Observable<tcp.TcpResponse> {
+  protected writeRequest(request: tcp.TcpRequest, timeout = 5, retry = 0): Observable<tcp.TcpResponse> {
     timeout = this.validTimeout(timeout);
+    retry = this.validRetry(retry);
 
-    // Throw error if socket is not created and connected.
-    if ((this._socket == null) || (!this.isConnected)) {
-      this.debug(`error: ${NOT_CONNECTED_ERROR}`);
-      return Observable.throw(NOT_CONNECTED_ERROR);
-    }
-
-    this.debug(`transmit: ${request}`);
-    this._socket.write(request.buffer);
-    this._packetsTransmitted += 1;
-
-    // Wait for response received with same transaction identifier.
-    // TODO: Use other data segments to identify packets.
-    // TODO: Add retry operator logic?
-    return this._receive
-      .filter((response) => (response.transactionId === request.transactionId))
+    // Check connection status and write socket.
+    return this._connected
       .take(1)
-      .timeout(timeout)
-      .catch(this.handleTimeoutError.bind(this))
-      .switchMap((response) => {
-        if (response instanceof tcp.TcpResponse) {
-          return Observable.of(response);
-        } else {
-          return Observable.throw(response);
+      .switchMap((isConnected) => {
+        if (!isConnected) {
+          this.debug(`error: ${NOT_CONNECTED_ERROR}`);
+          return Observable.throw(NOT_CONNECTED_ERROR);
         }
+        return this.writeSocket(request);
+      })
+      .switchMap(() => {
+        // Wait for response received.
+        return this._receive
+          .filter((response) => {
+            // Match transaction and unit identifiers of incoming responses.
+            const transactionIdMatch = (response.transactionId === request.transactionId);
+            const unitIdMatch = (response.unitId === request.unitId);
+            return transactionIdMatch && unitIdMatch;
+          })
+          .take(1)
+          // Wait until timeout for response.
+          .timeout(timeout)
+          .catch(this.handleTimeoutError.bind(this))
+          .switchMap((response) => {
+            if (response instanceof tcp.TcpResponse) {
+              return Observable.of(response);
+            } else {
+              return Observable.throw(response);
+            }
+          });
+      })
+      // Retry up to limit.
+      .retryWhen((errors) => {
+        return errors
+          .scan((errorCount, error) => {
+            // If error is an exception response, throw immediately.
+            if (error instanceof tcp.TcpException) {
+              throw error;
+            }
+            // Else assume timeout and retry.
+            if (errorCount >= retry) {
+              throw error;
+            }
+            this._retries += 1;
+            return errorCount + 1;
+          }, 1)
+          // Rewrite request to socket on retry.
+          .switchMap(() => this.writeSocket(request));
       });
+  }
+
+  protected writeSocket(request: tcp.TcpRequest): Observable<void> {
+    if (this._socket != null) {
+      this.debug(`transmit: ${request}`);
+      this._socket.write(request.buffer);
+      this._packetsTransmitted += 1;
+    }
+    return Observable.of(undefined);
   }
 
   /**
