@@ -14,7 +14,7 @@ export abstract class PduServer {
    * Parse request buffer into PDU response or exception.
    * @param buffer Request buffer.
    */
-  public parseRequest(buffer: Buffer): PduServerResponse {
+  public pduRequestHandler(buffer: Buffer): PduServerResponse {
     const functionCode = buffer.readUInt8(0);
     const request = buffer.slice(1);
 

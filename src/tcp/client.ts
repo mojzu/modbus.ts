@@ -13,6 +13,9 @@ export const CONNECTION_ERROR = "ConnectionError";
 /** Client is not connected to host error. */
 export const NOT_CONNECTED_ERROR = "NotConnectedError";
 
+/** Modbus TCP client response types. */
+export type TcpClientResponse = tcp.TcpResponse | tcp.TcpException | null;
+
 /**
  * Modbus TCP client options.
  */
@@ -184,7 +187,7 @@ export class TcpClient {
    * of coils in a remote device.
    * @param startingAddress Starting address.
    * @param quantityOfCoils Quantity of coils.
-   * @param timeout Milliseconds to wait for response.
+   * @param timeout Number of seconds to wait for response (1 - 30).
    */
   public readCoils(startingAddress: number, quantityOfCoils: number, timeout = 5): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.readCoils(startingAddress, quantityOfCoils);
@@ -197,7 +200,7 @@ export class TcpClient {
    * of discrete inputs in a remote device.
    * @param startingAddress Starting address.
    * @param quantityOfInputs Quantity of inputs.
-   * @param timeout Milliseconds to wait for response.
+   * @param timeout Number of seconds to wait for response (1 - 30).
    */
   public readDiscreteInputs(startingAddress: number, quantityOfInputs: number, timeout = 5): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.readDiscreteInputs(startingAddress, quantityOfInputs);
@@ -210,7 +213,7 @@ export class TcpClient {
    * of holding registers in a remote device.
    * @param startingAddress Starting address.
    * @param quantityOfRegisters Quantity of registers.
-   * @param timeout Milliseconds to wait for response.
+   * @param timeout Number of seconds to wait for response (1 - 30).
    */
   public readHoldingRegisters(startingAddress: number, quantityOfRegisters: number, timeout = 5): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.readHoldingRegisters(startingAddress, quantityOfRegisters);
@@ -223,7 +226,7 @@ export class TcpClient {
    * registers in a remote device.
    * @param startingAddress Starting address.
    * @param quantityOfRegisters Quantity of registers.
-   * @param timeout Milliseconds to wait for response.
+   * @param timeout Number of seconds to wait for response (1 - 30).
    */
   public readInputRegisters(startingAddress: number, quantityOfRegisters: number, timeout = 5): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.readInputRegisters(startingAddress, quantityOfRegisters);
@@ -236,7 +239,7 @@ export class TcpClient {
    * or OFF in a remote device.
    * @param outputAddress Output address.
    * @param outputValue  Output value.
-   * @param timeout Milliseconds to wait for response.
+   * @param timeout Number of seconds to wait for response (1 - 30).
    */
   public writeSingleCoil(outputAddress: number, outputValue: boolean, timeout = 5): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.writeSingleCoil(outputAddress, outputValue);
@@ -249,7 +252,7 @@ export class TcpClient {
    * in a remote device.
    * @param registerAddress Register address.
    * @param registerValue Register value.
-   * @param timeout Milliseconds to wait for response.
+   * @param timeout Number of seconds to wait for response (1 - 30).
    */
   public writeSingleRegister(registerAddress: number, registerValue: number, timeout = 5): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.writeSingleRegister(registerAddress, registerValue);
@@ -262,7 +265,7 @@ export class TcpClient {
    * either ON or OFF in a remote device.
    * @param startingAddress Starting address.
    * @param outputValues Output values.
-   * @param timeout Milliseconds to wait for response.
+   * @param timeout Number of seconds to wait for response (1 - 30).
    */
   public writeMultipleCoils(startingAddress: number, outputValues: boolean[], timeout = 5): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.writeMultipleCoils(startingAddress, outputValues);
@@ -275,7 +278,7 @@ export class TcpClient {
    * (1 to 123 registers) in a remote device.
    * @param startingAddress Starting address.
    * @param registerValues Register values.
-   * @param timeout Milliseconds to wait for response.
+   * @param timeout Number of seconds to wait for response (1 - 30).
    */
   public writeMultipleRegisters(startingAddress: number, registerValues: number[], timeout = 5): Observable<tcp.TcpResponse> {
     const pdu = this._pdu.writeMultipleRegisters(startingAddress, registerValues);
@@ -357,13 +360,16 @@ export class TcpClient {
       });
   }
 
-  protected parsePacket(
-    transactionId: number,
-    unitId: number,
-    pduBuffer: Buffer,
-    aduBuffer: Buffer,
-  ): tcp.TcpResponse | tcp.TcpException | null {
-    const pduResponse = this._pdu.parseResponse(pduBuffer);
+  /**
+   * Parse buffer into response.
+   * Inheritors may overwrite this function to implement their own response handler.
+   * @param transactionId Header transaction identifier.
+   * @param unitId Header unit identifier.
+   * @param pduBuffer Response with header removed.
+   * @param aduBuffer Response including header.
+   */
+  protected responseHandler(transactionId: number, unitId: number, pduBuffer: Buffer, aduBuffer: Buffer): TcpClientResponse {
+    const pduResponse = this._pdu.responseHandler(pduBuffer);
     let response: tcp.TcpResponse | tcp.TcpException | null = null;
 
     if (pduResponse instanceof pdu.PduResponse) {
@@ -388,6 +394,11 @@ export class TcpClient {
     return response;
   }
 
+  /**
+   * Receive data into buffer, parse responses using response handler.
+   * @param buffer Existing data buffer.
+   * @param data Received data buffer.
+   */
   protected receiveData(buffer: Buffer, data: Buffer): Buffer {
     buffer = Buffer.concat([buffer, data]);
 
@@ -406,9 +417,8 @@ export class TcpClient {
         const unitId = aduBuffer.readUInt8(6);
         const pduBuffer = aduBuffer.slice(7);
 
-        // Parse PDU slice of buffer.
-        // Inheritors may overwrite this function to implement their own handlers.
-        const response = this.parsePacket(transactionId, unitId, pduBuffer, aduBuffer);
+        // Parse buffer into response.
+        const response = this.responseHandler(transactionId, unitId, pduBuffer, aduBuffer);
         if (response != null) {
           this.debug(`receive: ${response}`);
           this._receive.next(response);

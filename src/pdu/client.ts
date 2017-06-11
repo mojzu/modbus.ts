@@ -182,7 +182,7 @@ export class PduClient {
    * Parse response buffer into PDU response or exception.
    * @param buffer Response buffer.
    */
-  public parseResponse(buffer: Buffer): pdu.PduResponse | pdu.PduException {
+  public responseHandler(buffer: Buffer): pdu.PduResponse | pdu.PduException {
     const functionCode = buffer.readUInt8(0);
     const response = buffer.slice(1);
 

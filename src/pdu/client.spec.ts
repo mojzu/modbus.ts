@@ -13,36 +13,36 @@ describe("Modbus PDU Client", () => {
   const server = new PduMockServer();
 
   const readCoilsRequest = client.readCoils(0x0020, 5);
-  const readCoilsServerResponse = server.parseRequest(readCoilsRequest.buffer);
-  const readCoilsClientResponse = client.parseResponse(readCoilsServerResponse.buffer);
+  const readCoilsServerResponse = server.pduRequestHandler(readCoilsRequest.buffer);
+  const readCoilsClientResponse = client.responseHandler(readCoilsServerResponse.buffer);
 
   const readDiscreteInputsRequest = client.readDiscreteInputs(0x0040, 4);
-  const readDiscreteInputsServerResponse = server.parseRequest(readDiscreteInputsRequest.buffer);
-  const readDiscreteInputsClientResponse = client.parseResponse(readDiscreteInputsServerResponse.buffer);
+  const readDiscreteInputsServerResponse = server.pduRequestHandler(readDiscreteInputsRequest.buffer);
+  const readDiscreteInputsClientResponse = client.responseHandler(readDiscreteInputsServerResponse.buffer);
 
   const readHoldingRegistersRequest = client.readHoldingRegisters(0xFF00, 2);
-  const readHoldingRegistersServerResponse = server.parseRequest(readHoldingRegistersRequest.buffer);
-  const readHoldingRegistersClientResponse = client.parseResponse(readHoldingRegistersServerResponse.buffer);
+  const readHoldingRegistersServerResponse = server.pduRequestHandler(readHoldingRegistersRequest.buffer);
+  const readHoldingRegistersClientResponse = client.responseHandler(readHoldingRegistersServerResponse.buffer);
 
   const readInputRegistersRequest = client.readInputRegisters(0xAFAF, 1);
-  const readInputRegistersServerResponse = server.parseRequest(readInputRegistersRequest.buffer);
-  const readInputRegistersClientResponse = client.parseResponse(readInputRegistersServerResponse.buffer);
+  const readInputRegistersServerResponse = server.pduRequestHandler(readInputRegistersRequest.buffer);
+  const readInputRegistersClientResponse = client.responseHandler(readInputRegistersServerResponse.buffer);
 
   const writeSingleCoilRequest = client.writeSingleCoil(0x00FF, true);
-  const writeSingleCoilServerResponse = server.parseRequest(writeSingleCoilRequest.buffer);
-  const writeSingleCoilClientResponse = client.parseResponse(writeSingleCoilServerResponse.buffer);
+  const writeSingleCoilServerResponse = server.pduRequestHandler(writeSingleCoilRequest.buffer);
+  const writeSingleCoilClientResponse = client.responseHandler(writeSingleCoilServerResponse.buffer);
 
   const writeSingleRegisterRequest = client.writeSingleRegister(0x4000, 0xABCD);
-  const writeSingleRegisterServerResponse = server.parseRequest(writeSingleRegisterRequest.buffer);
-  const writeSingleRegisterClientResponse = client.parseResponse(writeSingleRegisterServerResponse.buffer);
+  const writeSingleRegisterServerResponse = server.pduRequestHandler(writeSingleRegisterRequest.buffer);
+  const writeSingleRegisterClientResponse = client.responseHandler(writeSingleRegisterServerResponse.buffer);
 
   const writeMultipleCoilsRequest = client.writeMultipleCoils(0x2000, [true, false, true, false]);
-  const writeMultipleCoilsServerResponse = server.parseRequest(writeMultipleCoilsRequest.buffer);
-  const writeMultipleCoilsClientResponse = client.parseResponse(writeMultipleCoilsServerResponse.buffer);
+  const writeMultipleCoilsServerResponse = server.pduRequestHandler(writeMultipleCoilsRequest.buffer);
+  const writeMultipleCoilsClientResponse = client.responseHandler(writeMultipleCoilsServerResponse.buffer);
 
   const writeMultipleRegistersRequest = client.writeMultipleRegisters(0x2000, [0x0001, 0x0002, 0x0003]);
-  const writeMultipleRegistersServerResponse = server.parseRequest(writeMultipleRegistersRequest.buffer);
-  const writeMultipleRegistersClientResponse = client.parseResponse(writeMultipleRegistersServerResponse.buffer);
+  const writeMultipleRegistersServerResponse = server.pduRequestHandler(writeMultipleRegistersRequest.buffer);
+  const writeMultipleRegistersClientResponse = client.responseHandler(writeMultipleRegistersServerResponse.buffer);
 
   it("Read coils request", () => {
     const buffer = readCoilsRequest.buffer;

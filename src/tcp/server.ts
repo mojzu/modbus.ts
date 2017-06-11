@@ -5,7 +5,7 @@ import { PduServer } from "../pdu/server";
 import * as tcp from "./tcp";
 
 /** Modbus TCP observable response or exception. */
-export type TcpServerResponse = Observable<tcp.TcpResponse | tcp.TcpException>;
+export type TcpServerResponse = tcp.TcpResponse | tcp.TcpException | null;
 
 /**
  * Modbus TCP server.
@@ -105,7 +105,7 @@ export abstract class TcpServer extends PduServer {
 
         // Parse PDU slice of buffer.
         // Inheritors may overwrite this function to implement their own handling.
-        const response = this.parsePacket(transactionId, unitId, pduBuffer);
+        const response = this.tcpRequestHandler(transactionId, unitId, pduBuffer);
         if (response != null) {
           transmit.next(response);
         }
@@ -119,9 +119,9 @@ export abstract class TcpServer extends PduServer {
     return buffer;
   }
 
-  protected parsePacket(transactionId: number, unitId: number, pduBuffer: Buffer): tcp.TcpResponse | tcp.TcpException | null {
-    const pduResponse = this.parseRequest(pduBuffer);
-    let response: tcp.TcpResponse | tcp.TcpException | null = null;
+  protected tcpRequestHandler(transactionId: number, unitId: number, pduBuffer: Buffer): TcpServerResponse {
+    const pduResponse = this.pduRequestHandler(pduBuffer);
+    let response: TcpServerResponse = null;
 
     if (pduResponse instanceof pdu.PduResponse) {
       response = new tcp.TcpResponse(
