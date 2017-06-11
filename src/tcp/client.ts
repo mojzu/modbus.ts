@@ -50,7 +50,6 @@ export class TcpClient {
   private _retries = 0;
   private _packetsReceived = 0;
   private _packetsTransmitted = 0;
-  // TODO: Subscribable for transmitted/received monitoring.
 
   /** Host the client will connect to. */
   public get host(): string { return this._host; }

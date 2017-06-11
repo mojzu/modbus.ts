@@ -22,7 +22,6 @@ describe("Modbus TCP Client", () => {
   // TODO: Test TcpClient method requests/exceptions.
   // TODO: Test bytes/packets transmitted/received counters.
   // TODO: Test TcpClient argument validation.
-  // TODO: Test TcpClient connect/disconnect/timeout/retry functionality.
 
   it("Fails to connect to closed server port after retries", (done) => {
     const [, client] = create(TcpMockServer);

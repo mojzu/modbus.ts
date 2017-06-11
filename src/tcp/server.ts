@@ -20,7 +20,6 @@ export abstract class TcpServer extends PduServer {
 
   private _packetsReceived = 0;
   private _packetsTransmitted = 0;
-  // TODO: Subscribable for transmitted/received monitoring.
 
   /** Port the server will listen on. */
   public get port(): number { return this._port; }
