@@ -28,4 +28,5 @@ $ yarn run pack
 
 # Release library.
 $ yarn run pack && npm publish --access=public
+$ git push origin master --tags
 ```
