@@ -74,10 +74,10 @@ export class TcpDropMockServer extends TcpMockServer {
   private _dropCounter = 0;
 
   protected writeResponse(socket: Socket, packet: Buffer): void {
+    this._dropCounter += 1;
     if ((this._dropCounter % 3) === 0) {
       socket.write(packet);
     }
-    this._dropCounter += 1;
   }
 
 }

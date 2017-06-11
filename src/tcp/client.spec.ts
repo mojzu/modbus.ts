@@ -1,11 +1,17 @@
 /// <reference types="jasmine" />
 import { Observable } from "../rx";
 import * as pdu from "../pdu/pdu";
-import { CONNECTION_ERROR, ITcpClientOptions, TcpClient } from "./client";
-import { TcpMockServer } from "./server-mock";
+import { CONNECTION_ERROR, TIMEOUT_ERROR, ITcpClientOptions, TcpClient } from "./client";
+import { TcpServer } from "./server";
+import { TcpMockServer, TcpSlowMockServer, TcpDropMockServer } from "./server-mock";
 
-function create(port = 502, namespace = 1): [TcpMockServer, TcpClient] {
-  const server = new TcpMockServer(port, `server:${namespace}`);
+let nextPort = 5020;
+let nextNamespace = 0;
+
+function create(serverClass: any): [TcpServer, TcpClient] {
+  const port = nextPort++;
+  const namespace = nextNamespace++;
+  const server = new serverClass(port, `server:${namespace}`);
   const options: ITcpClientOptions = { host: "localhost", port };
   const client = new TcpClient(options, `client:${namespace}`);
   return [server, client];
@@ -19,7 +25,7 @@ describe("Modbus TCP Client", () => {
   // TODO: Test TcpClient connect/disconnect/timeout/retry functionality.
 
   it("Fails to connect to closed server port after retries", (done) => {
-    const [, client] = create(1122, 1);
+    const [, client] = create(TcpMockServer);
 
     client.connect(5, 3)
       .subscribe({
@@ -37,7 +43,7 @@ describe("Modbus TCP Client", () => {
   });
 
   it("Connects to open server port", (done) => {
-    const [server, client] = create(5022, 2);
+    const [server, client] = create(TcpMockServer);
     let nextCounter = 0;
     server.open()
       .subscribe(() => {
@@ -66,7 +72,7 @@ describe("Modbus TCP Client", () => {
   });
 
   it("Reads coils from server", (done) => {
-    const [server, client] = create(5023, 3);
+    const [server, client] = create(TcpMockServer);
     let nextCounter = 0;
     server.open()
       .subscribe(() => {
@@ -100,8 +106,33 @@ describe("Modbus TCP Client", () => {
       });
   });
 
+  it("Read coils from slow server causes timeout error", (done) => {
+    const [server, client] = create(TcpSlowMockServer);
+    server.open()
+      .subscribe(() => {
+        client.connect()
+          .switchMap(() => {
+            return client.readCoils(0x0001, 1, 1);
+          })
+          .switchMap((response) => {
+            return Observable.forkJoin(
+              client.disconnect(),
+              server.close(),
+            );
+          })
+          .subscribe({
+            next: () => fail(),
+            error: (error) => {
+              expect(error).toEqual(TIMEOUT_ERROR);
+              done();
+            },
+            complete: () => done(),
+          });
+      });
+  });
+
   it("Reads discrete inputs from server", (done) => {
-    const [server, client] = create(5024, 4);
+    const [server, client] = create(TcpMockServer);
     let nextCounter = 0;
     server.open()
       .subscribe(() => {
