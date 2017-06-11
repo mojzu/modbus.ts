@@ -1,5 +1,5 @@
 import { Observable, Subject } from "../rx";
-import { Server, createServer, debug } from "../node";
+import { Socket, Server, createServer, debug } from "../node";
 import * as pdu from "../pdu/pdu";
 import { PduServer } from "../pdu/server";
 import * as tcp from "./tcp";
@@ -25,28 +25,28 @@ export abstract class TcpServer extends PduServer {
   /** Port the server will listen on. */
   public get port(): number { return this._port; }
 
-  public constructor(port?: number, namespace = "mbtcps") {
+  public constructor(port?: number, namespace = "mbtcp") {
     super();
     this._port = port || 502;
     this._debug = debug(namespace);
   }
 
   public open(): Observable<void> {
-    this.debug(`open ${this.port}`);
+    this.debug(`open: ${this.port}`);
 
     // (Re)create server instance.
     this._server = createServer((socket) => {
       const socketAddress = socket.address();
       const address = `${socketAddress.address}:${socketAddress.port}`;
       const transmit = new Subject<tcp.TcpResponse | tcp.TcpException>();
-      this.debug(`connect ${address}`);
+      this.debug(`connect: ${address}`);
 
       // Map socket close event to observable.
       // Close event will complete other socket observables.
       const socketClose = Observable.fromEvent(socket, "close").take(1);
       socketClose
         .subscribe(() => {
-          this.debug(`disconnect ${address}`);
+          this.debug(`disconnect: ${address}`);
           transmit.complete();
         });
 
@@ -61,9 +61,9 @@ export abstract class TcpServer extends PduServer {
       // Transmit responses by writing to socket.
       transmit.takeUntil(socketClose)
         .subscribe((response) => {
-          this.debug(`transmit ${response}`);
+          this.debug(`transmit: ${response}`);
           const packet = this.aduHeader(response);
-          socket.write(packet);
+          this.writeResponse(socket, packet);
           this._packetsTransmitted += 1;
         });
     });
@@ -107,6 +107,7 @@ export abstract class TcpServer extends PduServer {
         // Inheritors may overwrite this function to implement their own handling.
         const response = this.tcpRequestHandler(transactionId, unitId, pduBuffer);
         if (response != null) {
+          this.debug(`receive: ${response}`);
           transmit.next(response);
         }
 
@@ -152,6 +153,10 @@ export abstract class TcpServer extends PduServer {
     buffer.writeUInt16BE((response.buffer.length + 1), 4);
     buffer.writeUInt8(response.unitId, 6);
     return buffer;
+  }
+
+  protected writeResponse(socket: Socket, packet: Buffer): void {
+    socket.write(packet);
   }
 
 }

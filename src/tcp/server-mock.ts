@@ -1,3 +1,4 @@
+import { Socket } from "../node";
 import { TcpServer } from "./server";
 
 export class TcpMockServer extends TcpServer {
@@ -48,6 +49,35 @@ export class TcpMockServer extends TcpServer {
       values.push(0xAFAF);
     }
     return values;
+  }
+
+}
+
+/**
+ * Emulate a Modbus TCP server with slow response time.
+ */
+export class TcpSlowMockServer extends TcpMockServer {
+
+  protected writeResponse(socket: Socket, packet: Buffer): void {
+    setTimeout(() => {
+      socket.write(packet);
+    }, 3000);
+  }
+
+}
+
+/**
+ * Emulate a Modbus TCP server which drops 2/3 of packets.
+ */
+export class TcpDropMockServer extends TcpMockServer {
+
+  private _dropCounter = 0;
+
+  protected writeResponse(socket: Socket, packet: Buffer): void {
+    if ((this._dropCounter % 3) === 0) {
+      socket.write(packet);
+    }
+    this._dropCounter += 1;
   }
 
 }

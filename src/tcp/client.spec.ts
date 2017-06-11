@@ -5,9 +5,9 @@ import { CONNECTION_ERROR, ITcpClientOptions, TcpClient } from "./client";
 import { TcpMockServer } from "./server-mock";
 
 function create(port = 502, namespace = 1): [TcpMockServer, TcpClient] {
-  const server = new TcpMockServer(port, `mbtcps:${namespace}`);
+  const server = new TcpMockServer(port, `server:${namespace}`);
   const options: ITcpClientOptions = { host: "localhost", port };
-  const client = new TcpClient(options, `mbtcpc:${namespace}`);
+  const client = new TcpClient(options, `client:${namespace}`);
   return [server, client];
 }
 
