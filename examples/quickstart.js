@@ -12,11 +12,11 @@ server.open()
     // Connect client to server.
     client.connect()
       .switchMap(() => {
-        // Make requests to server.
+        // Make request(s) to server.
         return client.readHoldingRegisters(0x1000, 1);
       })
       .switchMap((response) => {
-        // Handle server response.
+        // Handle server response(s).
         console.log(response.data);
 
         // Disconnect client.
