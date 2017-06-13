@@ -48,6 +48,8 @@ export class TcpClient {
   private _receive = new Subject<tcp.TcpResponse | tcp.TcpException>();
 
   private _retries = 0;
+  private _bytesReceived = 0;
+  private _bytesTransmitted = 0;
   private _packetsReceived = 0;
   private _packetsTransmitted = 0;
 
@@ -76,10 +78,10 @@ export class TcpClient {
   public get retries(): number { return this._retries; }
 
   /** Number of bytes received by client. */
-  public get bytesReceived(): number { return (this._socket != null) ? this._socket.bytesRead : 0; }
+  public get bytesReceived(): number { return this._bytesReceived; }
 
   /** Number of bytes transmitted by client. */
-  public get bytesTransmitted(): number { return (this._socket != null) ? this._socket.bytesWritten : 0; }
+  public get bytesTransmitted(): number { return this._bytesTransmitted; }
 
   /** Number of packets recevied by client. */
   public get packetsReceived(): number { return this._packetsReceived; }
@@ -401,6 +403,7 @@ export class TcpClient {
     if (this._socket != null) {
       this.debug(`transmit: ${request}`);
       this._socket.write(request.buffer);
+      this._bytesTransmitted += request.buffer.length;
       this._packetsTransmitted += 1;
     }
     return Observable.of(undefined);
@@ -447,6 +450,7 @@ export class TcpClient {
    */
   protected receiveData(buffer: Buffer, data: Buffer): Buffer {
     buffer = Buffer.concat([buffer, data]);
+    this._bytesReceived += data.length;
 
     // Check if buffer may contain MBAP header.
     if (buffer.length >= 7) {

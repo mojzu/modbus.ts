@@ -99,6 +99,10 @@ describe("Modbus TCP Client", () => {
             },
             complete: () => {
               expect(nextCounter).toEqual(1);
+              expect(client.bytesReceived).toBeGreaterThan(0);
+              expect(client.bytesTransmitted).toBeGreaterThan(0);
+              expect(client.packetsReceived).toEqual(1);
+              expect(client.packetsTransmitted).toEqual(1);
               done();
             },
           });
