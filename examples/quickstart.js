@@ -2,8 +2,8 @@
 var modbus = require("../dist");
 
 // Create mock server and client instances.
-var server = new modbus.TcpMockServer(5022);
-var client = new modbus.TcpClient({ host: "localhost", port: 5022 });
+var server = new modbus.TcpMockServer(5022, "server");
+var client = new modbus.TcpClient({ host: "localhost", port: 5022 }, "client");
 
 // Open server for connections.
 server.open()
