@@ -5,8 +5,28 @@ import * as pdu from "./pdu";
  * Modbus PDU client.
  * Request factory for supported function codes.
  * TODO: Implement more Modbus function codes.
+ * TODO: Make functions static methods.
  */
 export class PduClient {
+
+  /**
+   * Create a new PDU exception.
+   * @param functionCode Function code.
+   * @param exceptionCode Exception code.
+   */
+  public static createException(functionCode: pdu.FunctionCode, exceptionCode: pdu.ExceptionCode): pdu.PduException {
+    const exceptionFunctionCode = functionCode + 0x80;
+    const buffer = Buffer.alloc(2, 0);
+    buffer.writeUInt8(exceptionFunctionCode, 0);
+    buffer.writeUInt8(exceptionCode, 1);
+
+    return new pdu.PduException(
+      functionCode,
+      functionCode + 0x80,
+      exceptionCode,
+      buffer,
+    );
+  }
 
   /**
    * This function code is used to read from 1 to 2000 contiguous status
