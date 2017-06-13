@@ -130,11 +130,11 @@ export class TcpClient {
           .takeUntil(this._disconnect)
           .mergeMap(() => Observable.of({ name: "connect" }));
 
-        const socketData: Observable<Buffer> = Observable.fromEvent(this._socket, "data")
+        const socketData: Observable<any> = Observable.fromEvent(this._socket, "data")
           .takeUntil(this._disconnect);
 
         socketData
-          .subscribe((buffer) => {
+          .subscribe((buffer: Buffer) => {
             // Receive data into internal buffer and process.
             this._buffer = this.receiveData(this._buffer, buffer);
           });

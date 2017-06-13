@@ -51,9 +51,9 @@ export abstract class TcpServer extends PduServer {
 
       // Receive data into buffer and process.
       let buffer = Buffer.alloc(0);
-      const socketData: Observable<Buffer> = Observable.fromEvent(socket, "data").takeUntil(socketClose);
+      const socketData: Observable<any> = Observable.fromEvent(socket, "data").takeUntil(socketClose);
       socketData
-        .subscribe((data) => {
+        .subscribe((data: Buffer) => {
           buffer = this.receiveData(buffer, data, transmit);
         });
 
