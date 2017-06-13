@@ -1,4 +1,4 @@
-// var modbus = require("../modbus.ts");
+// var modbus = require("modbus.ts");
 var modbus = require("../dist");
 
 // Create mock server and client instances.
