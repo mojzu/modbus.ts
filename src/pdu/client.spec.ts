@@ -5,8 +5,6 @@ import { PduMockServer } from "./server-mock";
 
 describe("Modbus PDU Client", () => {
 
-  // TODO: Test method argument validation.
-  // TODO: Test Modbus exception handling.
   // TODO: Test coil/input bit off handling.
   // TODO: Test coil/input bit multiple byte handling.
   const client = new PduClient();
@@ -51,6 +49,24 @@ describe("Modbus PDU Client", () => {
     expect(buffer.readUInt16BE(3)).toEqual(5);
   });
 
+  it("Read coils starting address argument validation", () => {
+    try {
+      client.readCoils(0xFF0000, 1);
+      fail();
+    } catch (error) {
+      expect(error.name).toEqual("AssertionError");
+    }
+  });
+
+  it("Read coils quantity of coils argument validation", () => {
+    try {
+      client.readCoils(0x0000, -1);
+      fail();
+    } catch (error) {
+      expect(error.name).toEqual("AssertionError");
+    }
+  });
+
   it("Read coils server response", () => {
     const buffer = readCoilsServerResponse.buffer;
     expect(buffer.readUInt8(0)).toEqual(pdu.FunctionCode.ReadCoils);
@@ -66,6 +82,13 @@ describe("Modbus PDU Client", () => {
     } else {
       fail(readCoilsClientResponse);
     }
+  });
+
+  it("Read coils exception parsed by client", () => {
+    const exception = PduClient.createException(pdu.FunctionCode.ReadCoils, pdu.ExceptionCode.IllegalDataAddress);
+    const clientResponse = client.responseHandler(exception.buffer);
+    expect(clientResponse instanceof pdu.PduException).toEqual(true);
+    expect(clientResponse.functionCode).toEqual(pdu.FunctionCode.ReadCoils);
   });
 
   it("Read discrete inputs request", () => {

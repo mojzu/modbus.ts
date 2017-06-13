@@ -20,7 +20,6 @@ function create(serverClass: any): [TcpServer, TcpClient] {
 describe("Modbus TCP Client", () => {
 
   // TODO: Test TcpClient method requests/exceptions.
-  // TODO: Test bytes/packets transmitted/received counters.
   // TODO: Test TcpClient argument validation.
 
   it("Fails to connect to closed server port after retries", (done) => {
@@ -199,6 +198,45 @@ describe("Modbus TCP Client", () => {
             },
             complete: () => {
               expect(nextCounter).toEqual(1);
+              done();
+            },
+          });
+      });
+  });
+
+  it("Reads holding registers from server", (done) => {
+    const [server, client] = create(TcpMockServer);
+    let nextCounter = 0;
+    server.open()
+      .subscribe(() => {
+        client.connect()
+          .switchMap(() => {
+            return client.readHoldingRegisters(0x0010, 2);
+          })
+          .switchMap((response) => {
+            const data: pdu.IReadHoldingRegisters = response.data;
+            expect(response.functionCode).toEqual(pdu.FunctionCode.ReadHoldingRegisters);
+            expect(data.bytes).toEqual(4);
+            expect(data.values).toEqual([0xAFAF, 0xAFAF]);
+            return Observable.forkJoin(
+              client.disconnect(),
+              server.close(),
+            );
+          })
+          .subscribe({
+            next: () => {
+              nextCounter += 1;
+            },
+            error: (error) => {
+              fail(error);
+              done();
+            },
+            complete: () => {
+              expect(nextCounter).toEqual(1);
+              expect(client.bytesReceived).toBeGreaterThan(0);
+              expect(client.bytesTransmitted).toBeGreaterThan(0);
+              expect(client.packetsReceived).toEqual(1);
+              expect(client.packetsTransmitted).toEqual(1);
               done();
             },
           });
