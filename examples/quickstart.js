@@ -15,15 +15,12 @@ server.open()
         // Make request(s) to server.
         return client.readHoldingRegisters(0x1000, 1);
       })
-      .switchMap((response) => {
+      .subscribe((response) => {
         // Handle server response(s).
         console.log(response.data);
 
-        // Disconnect client.
-        return client.disconnect();
-      })
-      .subscribe(() => {
-        // Close server.
+        // Disconnect client, close server.
+        client.disconnect();
         server.close();
       });
 

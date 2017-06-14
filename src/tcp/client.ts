@@ -40,8 +40,8 @@ export class TcpClient {
   private _protocolId = 0;
 
   private _socket: Socket | null;
-  private _connected = new BehaviorSubject<boolean>(false);
-  private _disconnect = new Subject<void>();
+  private _state = false;
+  private _stateSubject = new Subject<boolean>();
   private _error = new BehaviorSubject<any>(null);
 
   private _buffer = Buffer.alloc(0);
@@ -65,14 +65,17 @@ export class TcpClient {
   /** Identifier of a remote slave. */
   public get unitId(): number { return this._unitId; }
 
-  /** Subscribable client connection state. */
-  public get connected(): Observable<boolean> { return this._connected; }
+  /** Socket state stream. */
+  public get state(): Observable<boolean> { return this._stateSubject; }
 
   /** Returns true if client is connected. */
-  public get isConnected(): boolean { return this._connected.value; }
+  public get isConnected(): boolean { return this._state; }
+
+  /** Socket errors stream. */
+  public get error(): Observable<any> { return this._error; }
 
   /** Last error code returned by client socket. */
-  public get errorCode(): string | null { return (this._error.value != null) ? (this._error.value.code || null) : null; }
+  public get errorCode(): string | null { return ((this._error.value != null) ? (this._error.value.code || null) : null); }
 
   /** Total number of retries performed by client. */
   public get retries(): number { return this._retries; }
@@ -89,103 +92,117 @@ export class TcpClient {
   /** Number of packets transmitted by client. */
   public get packetsTransmitted(): number { return this._packetsTransmitted; }
 
-  public constructor(options: ITcpClientOptions, namespace = "mbtcp") {
+  /**
+   * Create TCP client instance.
+   * @param options Client options.
+   * @param namespace Optional debug namespace.
+   */
+  public constructor(options: ITcpClientOptions, namespace?: string) {
     // TODO: Options argument validation.
     this._host = options.host;
     this._port = options.port || 502;
     this._unitId = options.unitId || 1;
-    this._debug = debug(namespace);
+    if (namespace != null) {
+      this._debug = debug(namespace);
+    }
   }
 
   /**
    * Connect the client to configured host:port.
-   * Observable will call next if connection successful, and complete when
-   * disconnected by socket closing or by a call to 'disconnect' method.
-   * An error code string will be thrown if connection failed.
-   * @param timeout Number of seconds to wait for connection (1 - 30).
-   * @param retry Number of connection retries (0 - 5).
+   * Observable will call next after connected, throw an error if
+   * connection fails and complete when 'disconnect' is called.
+   * TODO: Implement connection timeout.
    */
-  public connect(timeout = 5, retry = 0): Observable<void> {
+  public connect(timeout = 5): Observable<boolean> {
+    // Validate timeout argument and ensure client disconnected.
     timeout = this.validTimeout(timeout);
-    retry = this.validRetry(retry);
+    this.disconnect();
 
-    return this.disconnect()
-      .switchMap(() => {
-        this.debug(`connect: ${this.address}`);
+    this.debug(`connect: ${this.address}`);
+    // (Re)create socket, reset receive buffer.
+    // Error listener required to prevent process exit.
+    this._socket = createConnection(this.connectionOptions);
+    this._socket.on("error", (error) => { this._error.next(error); });
+    this._buffer = Buffer.alloc(0);
 
-        // (Re)create socket, reset receive buffer.
-        // Error listener required to prevent process exit.
-        this._socket = createConnection(this.connectionOptions);
-        this._socket.on("error", (error) => { this._error.next(error); });
-        this._buffer = Buffer.alloc(0);
+    // Filter state to create observables.
+    const connected = this.state.filter((v) => v);
+    const disconnected = this.state.filter((v) => !v);
 
-        // Map socket events to observables.
-        // Observables are completed with a disconnect event.
-        // TODO: Listen to: drain, end, error, lookup, timeout?
-        const socketClose = Observable.fromEvent(this._socket, "close")
-          .takeUntil(this._disconnect)
-          .mergeMap((hadError) => Observable.of({ name: "close", hadError }));
+    // Map socket events to observables.
+    // Observables are completed with a disconnect event.
+    // TODO: Listen to: drain, end, error, lookup, timeout?
+    const socketClose = Observable.fromEvent(this._socket, "close")
+      .takeUntil(disconnected)
+      .mergeMap((hadError) => Observable.of({ name: "close", hadError }));
 
-        const socketConnect = Observable.fromEvent(this._socket, "connect")
-          .takeUntil(this._disconnect)
-          .mergeMap(() => Observable.of({ name: "connect" }));
+    const socketConnect = Observable.fromEvent(this._socket, "connect")
+      .takeUntil(disconnected)
+      .mergeMap(() => Observable.of({ name: "connect", hadError: false }));
 
-        const socketData: Observable<any> = Observable.fromEvent(this._socket, "data")
-          .takeUntil(this._disconnect);
+    const socketData = Observable.fromEvent(this._socket, "data")
+      .takeUntil(disconnected);
 
-        socketData
-          .subscribe((buffer: Buffer) => {
-            // Receive data into internal buffer and process.
-            this._buffer = this.receiveData(this._buffer, buffer);
-          });
-
-        // Wait for a close or connect event.
-        return Observable.race(socketClose, socketConnect)
-          .takeUntil(this._disconnect)
-          .timeout(timeout)
-          .catch((error) => this.handleTimeoutError(error))
-          .switchMap((event: { name: string }) => {
-            // Return or throw based on event type.
-            if (event.name === "connect") {
-              this._connected.next(true);
-              this.debug(`connected`);
-              return Observable.of(undefined);
-            }
-            this.debug(`error: ${CONNECTION_ERROR}`);
-            return Observable.throw(CONNECTION_ERROR);
-          })
-          // Delay to prevent case where rapid disconnection
-          // causes observables not to call next.
-          .delay(50);
-      })
-      // Retry up to limit with delay between attempts.
-      .retryWhen((errors) => {
-        return errors
-          .scan((errorCount, error) => {
-            if (errorCount >= retry) {
-              throw error;
-            }
-            this._retries += 1;
-            return errorCount + 1;
-          }, 1)
-          .switchMap(() => this.disconnect())
-          .delay(500);
+    Observable.race(socketClose, socketConnect)
+      .subscribe((value) => {
+        if (value.name === "connect") {
+          this.setState(true);
+        } else if (value.name === "close") {
+          this.setState(false, false, CONNECTION_ERROR);
+        }
       });
+
+    socketData
+      .subscribe((buffer: Buffer) => {
+        // Receive data into internal buffer and process.
+        this._buffer = this.receiveData(this._buffer, buffer);
+      });
+
+    return connected
+      .finally(() => this.disconnect());
+
+    // TODO: Clean up.
+    // return this.disconnect()
+    //   .switchMap(() => {
+
+    //     // Wait for a close or connect event.
+    //     return Observable.race(socketClose, socketConnect)
+    //       .takeUntil(this._disconnect)
+    //       .timeout(timeout)
+    //       .catch((error) => this.handleTimeoutError(error))
+    //       .switchMap((event: { name: string }) => {
+    //         // Return or throw based on event type.
+    //         if (event.name === "connect") {
+    //           this._connected.next(true);
+    //           this.debug(`connected`);
+    //           return Observable.of(undefined);
+    //         }
+    //         this.debug(`error: ${CONNECTION_ERROR}`);
+    //         return Observable.throw(CONNECTION_ERROR);
+    //       })
+    //       // Delay to prevent case where rapid disconnection
+    //       // causes observables not to call next.
+    //       .delay(50);
+    //   })
+    //   // Retry up to limit with delay between attempts.
+    //   .retryWhen((errors) => {
+    //     return errors
+    //       .scan((errorCount, error) => {
+    //         if (errorCount >= retry) {
+    //           throw error;
+    //         }
+    //         this._retries += 1;
+    //         return errorCount + 1;
+    //       }, 1)
+    //       .switchMap(() => this.disconnect())
+    //       .delay(500);
+    //   });
   }
 
   /** Disconnect the client from the configured host:port, if connected. */
-  public disconnect(): Observable<void> {
-    if (this._socket != null) {
-      this.debug(`disconnect: ${this.address}`);
-      // Complete event handlers.
-      this._disconnect.next();
-      this._connected.next(false);
-      this._socket.end();
-      // TODO: Timer for socket destruction?
-      this._socket.destroy();
-      this._socket = null;
-    }
-    return Observable.of(undefined);
+  public disconnect(): void {
+    this.setState(false, true);
+    this.destroySocket();
   }
 
   /**
@@ -301,14 +318,39 @@ export class TcpClient {
   }
 
   /** Client internal debugging interface. */
-  protected get debug(): any { return this._debug; }
+  protected get debug(): any { return ((this._debug != null) ? this._debug : () => { }); }
 
   /** Node socket connection options. */
   protected get connectionOptions() { return { host: this._host, port: this._port }; }
 
+  /** Get next transaction identifier. */
   protected get nextTransactionId(): number {
     this._transactionId = (this._transactionId + 1) % 0xFFFF;
     return this._transactionId;
+  }
+
+  /** Set client socket state. */
+  protected setState(state: boolean, complete = false, error?: string): void {
+    this._state = state;
+    this._stateSubject.next(this._state);
+    if (complete) {
+      this._stateSubject.complete();
+      this._stateSubject = new Subject<boolean>();
+    }
+    if (error != null) {
+      this._stateSubject.error(CONNECTION_ERROR);
+    }
+  }
+
+  /** Destroy client socket. */
+  protected destroySocket(): void {
+    if (this._socket != null) {
+      this.debug(`disconnect: ${this.address}`);
+      this._socket.end();
+      // TODO: Timer for socket destruction?
+      this._socket.destroy();
+      this._socket = null;
+    }
   }
 
   /**
@@ -348,36 +390,26 @@ export class TcpClient {
     timeout = this.validTimeout(timeout);
     retry = this.validRetry(retry);
 
-    // Check connection status and write socket.
-    return this._connected
-      .take(1)
-      .switchMap((isConnected) => {
-        if (!isConnected) {
-          this.debug(`error: ${NOT_CONNECTED_ERROR}`);
-          return Observable.throw(NOT_CONNECTED_ERROR);
-        }
-        return this.writeSocket(request);
+    this.writeSocket(request);
+
+    // Wait for response received.
+    return this._receive
+      .filter((response) => {
+        // Match transaction and unit identifiers of incoming responses.
+        const transactionIdMatch = (response.transactionId === request.transactionId);
+        const unitIdMatch = (response.unitId === request.unitId);
+        return transactionIdMatch && unitIdMatch;
       })
-      .switchMap(() => {
-        // Wait for response received.
-        return this._receive
-          .filter((response) => {
-            // Match transaction and unit identifiers of incoming responses.
-            const transactionIdMatch = (response.transactionId === request.transactionId);
-            const unitIdMatch = (response.unitId === request.unitId);
-            return transactionIdMatch && unitIdMatch;
-          })
-          .take(1)
-          // Wait until timeout for response.
-          .timeout(timeout)
-          .catch(this.handleTimeoutError.bind(this))
-          .switchMap((response) => {
-            if (response instanceof tcp.TcpResponse) {
-              return Observable.of(response);
-            } else {
-              return Observable.throw(response);
-            }
-          });
+      .take(1)
+      // Wait until timeout for response.
+      .timeout(timeout)
+      .catch(this.handleTimeoutError.bind(this))
+      .switchMap((response) => {
+        if (response instanceof tcp.TcpResponse) {
+          return Observable.of(response);
+        } else {
+          return Observable.throw(response);
+        }
       })
       // Retry up to limit.
       .retryWhen((errors) => {
@@ -397,6 +429,20 @@ export class TcpClient {
           // Rewrite request to socket on retry.
           .switchMap(() => this.writeSocket(request));
       });
+
+    // TODO: Clean up.
+    // // Check connection status and write socket.
+    // return this.state
+    //   .take(1)
+    //   .switchMap((isConnected) => {
+    //     if (!isConnected) {
+    //       this.debug(`error: ${NOT_CONNECTED_ERROR}`);
+    //       return Observable.throw(NOT_CONNECTED_ERROR);
+    //     }
+    //     return this.writeSocket(request);
+    //   })
+    //   .switchMap(() => {
+    //   })
   }
 
   protected writeSocket(request: tcp.TcpRequest): Observable<void> {
