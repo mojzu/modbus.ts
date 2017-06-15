@@ -3,7 +3,7 @@ import { Observable } from "../rx";
 import * as pdu from "../pdu/pdu";
 import { CONNECTION_ERROR, TIMEOUT_ERROR, ITcpClientOptions, TcpClient } from "./client";
 import { TcpServer } from "./server";
-import { TcpMockServer, TcpSlowMockServer } from "./server-mock";
+import { TcpMockServer, TcpSlowMockServer, TcpDropMockServer } from "./server-mock";
 
 let nextPort = 5020;
 let nextNamespace = 0;
@@ -49,6 +49,34 @@ describe("Modbus TCP Client", () => {
           .switchMap(() => {
             expect(client.isConnected).toEqual(true);
             return Observable.of(undefined);
+          })
+          .subscribe({
+            next: () => {
+              nextCounter += 1;
+              client.disconnect();
+              server.close();
+            },
+            error: (error) => {
+              fail(error);
+              done();
+            },
+            complete: () => {
+              expect(nextCounter).toEqual(1);
+              done();
+            },
+          });
+      });
+  });
+
+  it("Disconnects from server after inactivity timeout", (done) => {
+    const [server, client] = create(TcpMockServer);
+    let nextCounter = 0;
+    server.open()
+      .subscribe(() => {
+        client.connect(1)
+          .switchMap(() => {
+            expect(client.isConnected).toEqual(true);
+            return Observable.of(undefined).delay(2000);
           })
           .subscribe({
             next: () => {
@@ -128,40 +156,40 @@ describe("Modbus TCP Client", () => {
       });
   });
 
-  // it("Read coils from drop server succeeds with retries", (done) => {
-  //   const [server, client] = create(TcpDropMockServer);
-  //   let nextCounter = 0;
-  //   server.open()
-  //     .subscribe(() => {
-  //       client.connect()
-  //         .switchMap(() => {
-  //           return client.readCoils(0x0001, 1, 2, 3);
-  //         })
-  //         .switchMap((response) => {
-  //           const data: pdu.IReadCoils = response.data;
-  //           expect(response.functionCode).toEqual(pdu.FunctionCode.ReadCoils);
-  //           expect(data.bytes).toEqual(1);
-  //           expect(data.values).toEqual([true, false, false, false, false, false, false, false]);
-  //           expect(client.retries).toEqual(2);
-  //           return Observable.of(undefined);
-  //         })
-  //         .subscribe({
-  //           next: () => {
-  //             nextCounter += 1;
-  //             client.disconnect();
-  //             server.close();
-  //           },
-  //           error: (error) => {
-  //             fail(error);
-  //             done();
-  //           },
-  //           complete: () => {
-  //             expect(nextCounter).toEqual(1);
-  //             done();
-  //           },
-  //         });
-  //     });
-  // });
+  it("Read coils from drop server succeeds with retries", (done) => {
+    const [server, client] = create(TcpDropMockServer);
+    let nextCounter = 0;
+    server.open()
+      .subscribe(() => {
+        client.connect()
+          .switchMap(() => {
+            return client.readCoils(0x0001, 1, 2, 3);
+          })
+          .switchMap((response) => {
+            const data: pdu.IReadCoils = response.data;
+            expect(response.functionCode).toEqual(pdu.FunctionCode.ReadCoils);
+            expect(data.bytes).toEqual(1);
+            expect(data.values).toEqual([true, false, false, false, false, false, false, false]);
+            expect(client.retries).toEqual(2);
+            return Observable.of(undefined);
+          })
+          .subscribe({
+            next: () => {
+              nextCounter += 1;
+              client.disconnect();
+              server.close();
+            },
+            error: (error) => {
+              fail(error);
+              done();
+            },
+            complete: () => {
+              expect(nextCounter).toEqual(1);
+              done();
+            },
+          });
+      });
+  });
 
   it("Reads discrete inputs from server", (done) => {
     const [server, client] = create(TcpMockServer);
