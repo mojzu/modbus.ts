@@ -265,4 +265,16 @@ describe("Modbus PDU Client", () => {
     }
   });
 
+  it("Exception for unsupported function code", () => {
+    const buffer = Buffer.from([pdu.FunctionCode.Mei]);
+    const clientResponse = PduClient.responseHandler(buffer);
+    if (clientResponse instanceof pdu.PduException) {
+      expect(clientResponse.functionCode).toEqual(pdu.FunctionCode.Mei);
+      expect(clientResponse.exceptionFunctionCode).toEqual(pdu.FunctionCode.Mei + 0x80);
+      expect(clientResponse.exceptionCode).toEqual(pdu.ExceptionCode.IllegalFunctionCode);
+    } else {
+      fail(clientResponse);
+    }
+  });
+
 });
