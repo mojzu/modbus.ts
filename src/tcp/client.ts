@@ -30,7 +30,6 @@ export interface ITcpClientOptions {
  */
 export class TcpClient {
 
-  private _pdu = new PduClient();
   private _debug: any;
 
   private _host: string;
@@ -214,7 +213,7 @@ export class TcpClient {
    * @param retry Number of retries (0 - 5).
    */
   public readCoils(startingAddress: number, quantityOfCoils: number, timeout = 5, retry = 0): Observable<tcp.TcpResponse> {
-    const pdu = this._pdu.readCoils(startingAddress, quantityOfCoils);
+    const pdu = PduClient.readCoils(startingAddress, quantityOfCoils);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this.writeRequest(request, timeout, retry);
   }
@@ -228,7 +227,7 @@ export class TcpClient {
    * @param retry Number of retries (0 - 5).
    */
   public readDiscreteInputs(startingAddress: number, quantityOfInputs: number, timeout = 5, retry = 0): Observable<tcp.TcpResponse> {
-    const pdu = this._pdu.readDiscreteInputs(startingAddress, quantityOfInputs);
+    const pdu = PduClient.readDiscreteInputs(startingAddress, quantityOfInputs);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this.writeRequest(request, timeout, retry);
   }
@@ -242,7 +241,7 @@ export class TcpClient {
    * @param retry Number of retries (0 - 5).
    */
   public readHoldingRegisters(startingAddress: number, quantityOfRegisters: number, timeout = 5, retry = 0): Observable<tcp.TcpResponse> {
-    const pdu = this._pdu.readHoldingRegisters(startingAddress, quantityOfRegisters);
+    const pdu = PduClient.readHoldingRegisters(startingAddress, quantityOfRegisters);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this.writeRequest(request, timeout, retry);
   }
@@ -256,7 +255,7 @@ export class TcpClient {
    * @param retry Number of retries (0 - 5).
    */
   public readInputRegisters(startingAddress: number, quantityOfRegisters: number, timeout = 5, retry = 0): Observable<tcp.TcpResponse> {
-    const pdu = this._pdu.readInputRegisters(startingAddress, quantityOfRegisters);
+    const pdu = PduClient.readInputRegisters(startingAddress, quantityOfRegisters);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this.writeRequest(request, timeout, retry);
   }
@@ -270,7 +269,7 @@ export class TcpClient {
    * @param retry Number of retries (0 - 5).
    */
   public writeSingleCoil(outputAddress: number, outputValue: boolean, timeout = 5, retry = 0): Observable<tcp.TcpResponse> {
-    const pdu = this._pdu.writeSingleCoil(outputAddress, outputValue);
+    const pdu = PduClient.writeSingleCoil(outputAddress, outputValue);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this.writeRequest(request, timeout, retry);
   }
@@ -284,7 +283,7 @@ export class TcpClient {
    * @param retry Number of retries (0 - 5).
    */
   public writeSingleRegister(registerAddress: number, registerValue: number, timeout = 5, retry = 0): Observable<tcp.TcpResponse> {
-    const pdu = this._pdu.writeSingleRegister(registerAddress, registerValue);
+    const pdu = PduClient.writeSingleRegister(registerAddress, registerValue);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this.writeRequest(request, timeout, retry);
   }
@@ -298,7 +297,7 @@ export class TcpClient {
    * @param retry Number of retries (0 - 5).
    */
   public writeMultipleCoils(startingAddress: number, outputValues: boolean[], timeout = 5, retry = 0): Observable<tcp.TcpResponse> {
-    const pdu = this._pdu.writeMultipleCoils(startingAddress, outputValues);
+    const pdu = PduClient.writeMultipleCoils(startingAddress, outputValues);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this.writeRequest(request, timeout, retry);
   }
@@ -312,7 +311,7 @@ export class TcpClient {
    * @param retry Number of retries (0 - 5).
    */
   public writeMultipleRegisters(startingAddress: number, registerValues: number[], timeout = 5, retry = 0): Observable<tcp.TcpResponse> {
-    const pdu = this._pdu.writeMultipleRegisters(startingAddress, registerValues);
+    const pdu = PduClient.writeMultipleRegisters(startingAddress, registerValues);
     const request = this.aduHeader(pdu.functionCode, pdu.buffer);
     return this.writeRequest(request, timeout, retry);
   }
@@ -464,7 +463,7 @@ export class TcpClient {
    * @param aduBuffer Response including header.
    */
   protected responseHandler(transactionId: number, unitId: number, pduBuffer: Buffer, aduBuffer: Buffer): TcpClientResponse {
-    const pduResponse = this._pdu.responseHandler(pduBuffer);
+    const pduResponse = PduClient.responseHandler(pduBuffer);
     let response: tcp.TcpResponse | tcp.TcpException | null = null;
 
     if (pduResponse instanceof pdu.PduResponse) {

@@ -7,40 +7,39 @@ describe("Modbus PDU Client", () => {
 
   // TODO: Test coil/input bit off handling.
   // TODO: Test coil/input bit multiple byte handling.
-  const client = new PduClient();
   const server = new PduMockServer();
 
-  const readCoilsRequest = client.readCoils(0x0020, 5);
+  const readCoilsRequest = PduClient.readCoils(0x0020, 5);
   const readCoilsServerResponse = server.pduRequestHandler(readCoilsRequest.buffer);
-  const readCoilsClientResponse = client.responseHandler(readCoilsServerResponse.buffer);
+  const readCoilsClientResponse = PduClient.responseHandler(readCoilsServerResponse.buffer);
 
-  const readDiscreteInputsRequest = client.readDiscreteInputs(0x0040, 4);
+  const readDiscreteInputsRequest = PduClient.readDiscreteInputs(0x0040, 4);
   const readDiscreteInputsServerResponse = server.pduRequestHandler(readDiscreteInputsRequest.buffer);
-  const readDiscreteInputsClientResponse = client.responseHandler(readDiscreteInputsServerResponse.buffer);
+  const readDiscreteInputsClientResponse = PduClient.responseHandler(readDiscreteInputsServerResponse.buffer);
 
-  const readHoldingRegistersRequest = client.readHoldingRegisters(0xFF00, 2);
+  const readHoldingRegistersRequest = PduClient.readHoldingRegisters(0xFF00, 2);
   const readHoldingRegistersServerResponse = server.pduRequestHandler(readHoldingRegistersRequest.buffer);
-  const readHoldingRegistersClientResponse = client.responseHandler(readHoldingRegistersServerResponse.buffer);
+  const readHoldingRegistersClientResponse = PduClient.responseHandler(readHoldingRegistersServerResponse.buffer);
 
-  const readInputRegistersRequest = client.readInputRegisters(0xAFAF, 1);
+  const readInputRegistersRequest = PduClient.readInputRegisters(0xAFAF, 1);
   const readInputRegistersServerResponse = server.pduRequestHandler(readInputRegistersRequest.buffer);
-  const readInputRegistersClientResponse = client.responseHandler(readInputRegistersServerResponse.buffer);
+  const readInputRegistersClientResponse = PduClient.responseHandler(readInputRegistersServerResponse.buffer);
 
-  const writeSingleCoilRequest = client.writeSingleCoil(0x00FF, true);
+  const writeSingleCoilRequest = PduClient.writeSingleCoil(0x00FF, true);
   const writeSingleCoilServerResponse = server.pduRequestHandler(writeSingleCoilRequest.buffer);
-  const writeSingleCoilClientResponse = client.responseHandler(writeSingleCoilServerResponse.buffer);
+  const writeSingleCoilClientResponse = PduClient.responseHandler(writeSingleCoilServerResponse.buffer);
 
-  const writeSingleRegisterRequest = client.writeSingleRegister(0x4000, 0xABCD);
+  const writeSingleRegisterRequest = PduClient.writeSingleRegister(0x4000, 0xABCD);
   const writeSingleRegisterServerResponse = server.pduRequestHandler(writeSingleRegisterRequest.buffer);
-  const writeSingleRegisterClientResponse = client.responseHandler(writeSingleRegisterServerResponse.buffer);
+  const writeSingleRegisterClientResponse = PduClient.responseHandler(writeSingleRegisterServerResponse.buffer);
 
-  const writeMultipleCoilsRequest = client.writeMultipleCoils(0x2000, [true, false, true, false]);
+  const writeMultipleCoilsRequest = PduClient.writeMultipleCoils(0x2000, [true, false, true, false]);
   const writeMultipleCoilsServerResponse = server.pduRequestHandler(writeMultipleCoilsRequest.buffer);
-  const writeMultipleCoilsClientResponse = client.responseHandler(writeMultipleCoilsServerResponse.buffer);
+  const writeMultipleCoilsClientResponse = PduClient.responseHandler(writeMultipleCoilsServerResponse.buffer);
 
-  const writeMultipleRegistersRequest = client.writeMultipleRegisters(0x2000, [0x0001, 0x0002, 0x0003]);
+  const writeMultipleRegistersRequest = PduClient.writeMultipleRegisters(0x2000, [0x0001, 0x0002, 0x0003]);
   const writeMultipleRegistersServerResponse = server.pduRequestHandler(writeMultipleRegistersRequest.buffer);
-  const writeMultipleRegistersClientResponse = client.responseHandler(writeMultipleRegistersServerResponse.buffer);
+  const writeMultipleRegistersClientResponse = PduClient.responseHandler(writeMultipleRegistersServerResponse.buffer);
 
   it("Read coils request", () => {
     const buffer = readCoilsRequest.buffer;
@@ -51,7 +50,7 @@ describe("Modbus PDU Client", () => {
 
   it("Read coils starting address argument validation", () => {
     try {
-      client.readCoils(0xFF0000, 1);
+      PduClient.readCoils(0xFF0000, 1);
       fail();
     } catch (error) {
       expect(error.name).toEqual("AssertionError");
@@ -60,7 +59,7 @@ describe("Modbus PDU Client", () => {
 
   it("Read coils quantity of coils argument validation", () => {
     try {
-      client.readCoils(0x0000, -1);
+      PduClient.readCoils(0x0000, -1);
       fail();
     } catch (error) {
       expect(error.name).toEqual("AssertionError");
@@ -86,7 +85,7 @@ describe("Modbus PDU Client", () => {
 
   it("Read coils exception parsed by client", () => {
     const exception = PduClient.createException(pdu.FunctionCode.ReadCoils, pdu.ExceptionCode.IllegalDataAddress);
-    const clientResponse = client.responseHandler(exception.buffer);
+    const clientResponse = PduClient.responseHandler(exception.buffer);
     expect(clientResponse instanceof pdu.PduException).toEqual(true);
     expect(clientResponse.functionCode).toEqual(pdu.FunctionCode.ReadCoils);
   });

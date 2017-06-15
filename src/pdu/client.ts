@@ -1,6 +1,5 @@
 /* tslint:disable:no-bitwise */
 import * as pdu from "./pdu";
-
 /**
  * Modbus PDU client.
  * Request factory for supported function codes.
@@ -34,7 +33,7 @@ export class PduClient {
    * @param startingAddress Starting address.
    * @param quantityOfCoils Quantity of coils.
    */
-  public readCoils(startingAddress: number, quantityOfCoils: number): pdu.PduRequest {
+  public static readCoils(startingAddress: number, quantityOfCoils: number): pdu.PduRequest {
     pdu.validAddress(startingAddress);
     pdu.validQuantityOfBits(quantityOfCoils);
     pdu.validAddress(startingAddress + quantityOfCoils);
@@ -54,7 +53,7 @@ export class PduClient {
    * @param startingAddress Starting address.
    * @param quantityOfInputs Quantity of inputs.
    */
-  public readDiscreteInputs(startingAddress: number, quantityOfInputs: number): pdu.PduRequest {
+  public static readDiscreteInputs(startingAddress: number, quantityOfInputs: number): pdu.PduRequest {
     pdu.validAddress(startingAddress);
     pdu.validQuantityOfBits(quantityOfInputs);
     pdu.validAddress(startingAddress + quantityOfInputs);
@@ -74,7 +73,7 @@ export class PduClient {
    * @param startingAddress Starting address.
    * @param quantityOfRegisters Quantity of registers.
    */
-  public readHoldingRegisters(startingAddress: number, quantityOfRegisters: number): pdu.PduRequest {
+  public static readHoldingRegisters(startingAddress: number, quantityOfRegisters: number): pdu.PduRequest {
     pdu.validAddress(startingAddress);
     pdu.validQuantityOfRegisters(quantityOfRegisters);
     pdu.validAddress(startingAddress + quantityOfRegisters);
@@ -94,7 +93,7 @@ export class PduClient {
    * @param startingAddress Starting address.
    * @param quantityOfRegisters Quantity of registers.
    */
-  public readInputRegisters(startingAddress: number, quantityOfRegisters: number): pdu.PduRequest {
+  public static readInputRegisters(startingAddress: number, quantityOfRegisters: number): pdu.PduRequest {
     pdu.validAddress(startingAddress);
     pdu.validQuantityOfRegisters(quantityOfRegisters);
     pdu.validAddress(startingAddress + quantityOfRegisters);
@@ -114,7 +113,7 @@ export class PduClient {
    * @param outputAddress Output address.
    * @param outputValue  Output value.
    */
-  public writeSingleCoil(outputAddress: number, outputValue: boolean): pdu.PduRequest {
+  public static writeSingleCoil(outputAddress: number, outputValue: boolean): pdu.PduRequest {
     pdu.validAddress(outputAddress);
 
     const functionCode = pdu.FunctionCode.WriteSingleCoil;
@@ -132,7 +131,7 @@ export class PduClient {
    * @param registerAddress Register address.
    * @param registerValue Register value.
    */
-  public writeSingleRegister(registerAddress: number, registerValue: number): pdu.PduRequest {
+  public static writeSingleRegister(registerAddress: number, registerValue: number): pdu.PduRequest {
     pdu.validAddress(registerAddress);
     pdu.validRegister(registerValue);
 
@@ -151,7 +150,7 @@ export class PduClient {
    * @param startingAddress Starting address.
    * @param outputValues Output values.
    */
-  public writeMultipleCoils(startingAddress: number, outputValues: boolean[]): pdu.PduRequest {
+  public static writeMultipleCoils(startingAddress: number, outputValues: boolean[]): pdu.PduRequest {
     pdu.validAddress(startingAddress);
     pdu.validQuantityOfBits(outputValues.length, 0x7B0);
     pdu.validAddress(startingAddress + outputValues.length);
@@ -176,7 +175,7 @@ export class PduClient {
    * @param startingAddress Starting address.
    * @param registerValues Register values.
    */
-  public writeMultipleRegisters(startingAddress: number, registerValues: number[]): pdu.PduRequest {
+  public static writeMultipleRegisters(startingAddress: number, registerValues: number[]): pdu.PduRequest {
     pdu.validAddress(startingAddress);
     pdu.validQuantityOfRegisters(registerValues.length, 0x7B);
     pdu.validAddress(startingAddress + registerValues.length);
@@ -202,7 +201,7 @@ export class PduClient {
    * Parse response buffer into PDU response or exception.
    * @param buffer Response buffer.
    */
-  public responseHandler(buffer: Buffer): pdu.PduResponse | pdu.PduException {
+  public static responseHandler(buffer: Buffer): pdu.PduResponse | pdu.PduException {
     const functionCode = buffer.readUInt8(0);
     const response = buffer.slice(1);
 
@@ -215,25 +214,25 @@ export class PduClient {
     switch (functionCode) {
       case pdu.FunctionCode.ReadCoils:
       case pdu.FunctionCode.ReadDiscreteInputs: {
-        const data = this.parseReadBits(response);
+        const data = PduClient.readBitsResponseHandler(response);
         return new pdu.PduResponse(functionCode, data, buffer);
       }
       case pdu.FunctionCode.ReadHoldingRegisters:
       case pdu.FunctionCode.ReadInputRegisters: {
-        const data = this.parseReadRegisters(response);
+        const data = PduClient.readRegistersResponseHandler(response);
         return new pdu.PduResponse(functionCode, data, buffer);
       }
       case pdu.FunctionCode.WriteSingleCoil: {
-        const data = this.parseWriteBit(response);
+        const data = PduClient.writeBitResponseHandler(response);
         return new pdu.PduResponse(functionCode, data, buffer);
       }
       case pdu.FunctionCode.WriteSingleRegister: {
-        const data = this.parseWriteRegister(response);
+        const data = PduClient.writeRegisterResponseHandler(response);
         return new pdu.PduResponse(functionCode, data, buffer);
       }
       case pdu.FunctionCode.WriteMultipleCoils:
       case pdu.FunctionCode.WriteMultipleRegisters: {
-        const data = this.parseWriteMultiple(response);
+        const data = PduClient.writeMultipleResponseHandler(response);
         return new pdu.PduResponse(functionCode, data, buffer);
       }
       default: {
@@ -245,7 +244,7 @@ export class PduClient {
     }
   }
 
-  protected parseReadBits(buffer: Buffer): pdu.IReadBits {
+  public static readBitsResponseHandler(buffer: Buffer): pdu.IReadBits {
     const bytes = buffer.readUInt8(0);
     const values: boolean[] = [];
     for (let i = 0; i < bytes; i++) {
@@ -257,7 +256,7 @@ export class PduClient {
     return { bytes, values };
   }
 
-  protected parseReadRegisters(buffer: Buffer): pdu.IReadRegisters {
+  public static readRegistersResponseHandler(buffer: Buffer): pdu.IReadRegisters {
     const bytes = buffer.readUInt8(0);
     const values: number[] = [];
     for (let i = 0; i < (bytes / 2); i++) {
@@ -266,19 +265,19 @@ export class PduClient {
     return { bytes, values };
   }
 
-  protected parseWriteBit(buffer: Buffer): pdu.IWriteBit {
+  public static writeBitResponseHandler(buffer: Buffer): pdu.IWriteBit {
     const address = buffer.readUInt16BE(0);
     const value = (buffer.readUInt16BE(2) === 0xFF00) ? true : false;
     return { address, value };
   }
 
-  protected parseWriteRegister(buffer: Buffer): pdu.IWriteRegister {
+  public static writeRegisterResponseHandler(buffer: Buffer): pdu.IWriteRegister {
     const address = buffer.readUInt16BE(0);
     const value = buffer.readUInt16BE(2);
     return { address, value };
   }
 
-  protected parseWriteMultiple(buffer: Buffer): pdu.IWriteMultiple {
+  public static writeMultipleResponseHandler(buffer: Buffer): pdu.IWriteMultiple {
     const address = buffer.readUInt16BE(0);
     const quantity = buffer.readUInt16BE(2);
     return { address, quantity };
