@@ -386,8 +386,8 @@ export class TcpClient {
       .retryWhen((errors) => {
         return errors
           .scan((errorCount, error) => {
-            // If error is a timeout, retry up to limit.
-            if (error instanceof TimeoutError) {
+            // If client is still connected and error is a timeout, retry up to limit.
+            if (this.isConnected && (error instanceof TimeoutError)) {
               if (errorCount >= retry) {
                 throw TIMEOUT_ERROR;
               }
