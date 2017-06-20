@@ -1,7 +1,7 @@
 # Modbus.ts
 
-[![npm](https://img.shields.io/npm/v/npm.svg?style=flat-square)](https://www.npmjs.com/package/modbus.ts)
-[![npm](https://img.shields.io/npm/l/express.svg?style=flat-square)](https://github.com/mojzu/modbus.ts/blob/master/LICENCE)
+[![npm](https://img.shields.io/npm/v/modbus.ts.svg?style=flat-square)](https://www.npmjs.com/package/modbus.ts)
+[![npm](https://img.shields.io/npm/l/modbus.ts.svg?style=flat-square)](https://github.com/mojzu/modbus.ts/blob/master/LICENCE)
 
 [Modbus](http://www.modbus.org/) application protocol written in [TypeScript](https://www.typescriptlang.org/) for [Node.js](https://nodejs.org/en/).
 
