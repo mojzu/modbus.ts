@@ -53,7 +53,7 @@ describe("Modbus PDU Client", () => {
       PduClient.readCoils(0xFF0000, 1);
       fail();
     } catch (error) {
-      expect(error.name).toEqual("AssertionError");
+      expect(error instanceof Error).toEqual(true);
     }
   });
 
@@ -62,7 +62,7 @@ describe("Modbus PDU Client", () => {
       PduClient.readCoils(0x0000, -1);
       fail();
     } catch (error) {
-      expect(error.name).toEqual("AssertionError");
+      expect(error instanceof Error).toEqual(true);
     }
   });
 
