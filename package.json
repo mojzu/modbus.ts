@@ -1,6 +1,6 @@
 {
   "name": "modbus.ts",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Modbus application protocol",
   "license": "Unlicense",
   "author": "mojzu <mail@mojzu.net>",
@@ -24,8 +24,8 @@
     "rxjs": "^5.4.1"
   },
   "devDependencies": {
-    "@types/jasmine": "^2.5.52",
-    "@types/node": "^8.0.1",
+    "@types/jasmine": "^2.5.53",
+    "@types/node": "^8.0.2",
     "istanbul": "^0.4.5",
     "jasmine": "^2.6.0",
     "rimraf": "^2.6.1",

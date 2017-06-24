@@ -6,7 +6,7 @@ jasmine.loadConfig({
   spec_dir: 'dist',
   spec_files: [
     // // Run individual tests by specifying file paths here.
-    // 'src/pdu-client.spec.js',
+    // 'pdu/client.spec.js',
 
     // Run all tests.
     '**/*[spec].js',

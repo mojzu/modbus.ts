@@ -4,7 +4,6 @@ import * as pdu from "./pdu";
  * Modbus PDU client.
  * Request factory for supported function codes.
  * TODO: Implement more Modbus function codes.
- * TODO: Make functions static methods.
  */
 export class PduClient {
 
