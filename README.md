@@ -7,6 +7,8 @@
 
 [Modbus](http://www.modbus.org/) application protocol written in [TypeScript](https://www.typescriptlang.org/) for [Node.js](https://nodejs.org/en/).
 
+-   [Documentation](https://mojzu.github.io/modbus.ts/)
+
 ## Quickstart
 
 Modbus TCP client communicating with mock server example.
@@ -76,5 +78,7 @@ $ node examples/quickstart.js
 $ yarn run pack && npm publish --access=public
 $ git push origin master --tags
 ```
+
+Set [GitHub](https://github.com/) repository pages source to `/docs`.
 
 Add [Code Climate](https://codeclimate.com/) repository token to [Travis CI](https://travis-ci.org/) in `Settings -> Environment Variables`.
