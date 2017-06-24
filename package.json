@@ -9,11 +9,12 @@
   "typings": "./dist/index.d.ts",
   "scripts": {
     "clean": "rimraf coverage dist",
-    "distclean": "npm run clean && rimraf node_modules",
+    "distclean": "npm run clean && rimraf node_modules docs",
     "test": "npm run tsc && istanbul cover test.js -x \"**/*.spec.js\"",
     "lint": "tslint -p tsconfig.json --type-check",
     "pack": "npm run tsc && npm pack",
-    "tsc": "npm run clean && tsc"
+    "tsc": "npm run clean && tsc",
+    "docs": "typedoc --out docs ."
   },
   "files": [
     "dist"
@@ -30,6 +31,7 @@
     "rimraf": "^2.6.1",
     "tslint": "^5.4.3",
     "tslint-eslint-rules": "^4.1.1",
+    "typedoc": "^0.7.1",
     "typescript": "^2.3.4"
   }
 }

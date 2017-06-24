@@ -63,6 +63,9 @@ $ yarn run test
 # Run linter.
 $ yarn run lint
 
+# Build documentation.
+$ yarn run docs
+
 # Package library.
 $ yarn run pack
 
