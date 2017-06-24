@@ -10,8 +10,7 @@
   "scripts": {
     "clean": "rimraf coverage dist",
     "distclean": "npm run clean && rimraf node_modules",
-    "test": "npm run tsc && node test.js",
-    "coverage": "npm run tsc && istanbul cover test.js -x \"**/*.spec.js\"",
+    "test": "npm run tsc && istanbul cover test.js -x \"**/*.spec.js\"",
     "lint": "tslint -p tsconfig.json --type-check",
     "pack": "npm run tsc && npm pack",
     "tsc": "npm run clean && tsc"

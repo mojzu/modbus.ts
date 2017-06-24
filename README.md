@@ -55,11 +55,8 @@ $ yarn run clean
 # Clean Node modules directory.
 $ yarn run distclean
 
-# Run tests.
-$ yarn run test
-
 # Run tests with coverage.
-$ yarn run coverage
+$ yarn run test
 
 # Run linter.
 $ yarn run lint
