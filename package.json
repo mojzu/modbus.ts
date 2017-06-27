@@ -25,13 +25,13 @@
   },
   "devDependencies": {
     "@types/jasmine": "^2.5.53",
-    "@types/node": "^8.0.2",
+    "@types/node": "^8.0.4",
     "istanbul": "^0.4.5",
     "jasmine": "^2.6.0",
     "rimraf": "^2.6.1",
     "tslint": "^5.4.3",
     "tslint-eslint-rules": "^4.1.1",
     "typedoc": "^0.7.1",
-    "typescript": "^2.3.4"
+    "typescript": "~2.3.4"
   }
 }
