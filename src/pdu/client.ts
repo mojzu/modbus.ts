@@ -1,5 +1,6 @@
 /* tslint:disable:no-bitwise */
 import * as pdu from "./pdu";
+
 /**
  * Modbus PDU client.
  * Request factory for supported function codes.
@@ -13,7 +14,7 @@ export class PduClient {
    * @param exceptionCode Exception code.
    */
   public static createException(functionCode: pdu.FunctionCode, exceptionCode: pdu.ExceptionCode): pdu.PduException {
-    const exceptionFunctionCode = functionCode + 0x80;
+    const exceptionFunctionCode = (functionCode + 0x80) % 0xFF;
     const buffer = Buffer.allocUnsafe(2);
     buffer.writeUInt8(exceptionFunctionCode, 0);
     buffer.writeUInt8(exceptionCode, 1);
@@ -207,7 +208,7 @@ export class PduClient {
     if (functionCode >= 0x80) {
       // Buffer contains an exception response.
       const exceptionCode = buffer.readUInt8(1);
-      return new pdu.PduException((functionCode - 0x80), functionCode, exceptionCode, buffer);
+      return PduClient.createException((functionCode - 0x80), exceptionCode);
     }
 
     switch (functionCode) {
@@ -236,9 +237,7 @@ export class PduClient {
       }
       default: {
         // Unsupported function code, convert to exception.
-        const exceptionFunctionCode = (functionCode + 0x80) % 0xFF;
-        const exceptionCode = pdu.ExceptionCode.IllegalFunctionCode;
-        return new pdu.PduException(functionCode, exceptionFunctionCode, exceptionCode, buffer);
+        return PduClient.createException(functionCode, pdu.ExceptionCode.IllegalFunctionCode);
       }
     }
   }
