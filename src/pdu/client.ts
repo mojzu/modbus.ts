@@ -14,7 +14,7 @@ export class PduClient {
    */
   public static createException(functionCode: pdu.FunctionCode, exceptionCode: pdu.ExceptionCode): pdu.PduException {
     const exceptionFunctionCode = functionCode + 0x80;
-    const buffer = Buffer.alloc(2, 0);
+    const buffer = Buffer.allocUnsafe(2);
     buffer.writeUInt8(exceptionFunctionCode, 0);
     buffer.writeUInt8(exceptionCode, 1);
 
@@ -38,7 +38,7 @@ export class PduClient {
     pdu.validAddress(startingAddress + quantityOfCoils);
 
     const functionCode = pdu.FunctionCode.ReadCoils;
-    const buffer = Buffer.alloc(5, 0);
+    const buffer = Buffer.allocUnsafe(5);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(startingAddress, 1);
     buffer.writeUInt16BE(quantityOfCoils, 3);
@@ -58,7 +58,7 @@ export class PduClient {
     pdu.validAddress(startingAddress + quantityOfInputs);
 
     const functionCode = pdu.FunctionCode.ReadDiscreteInputs;
-    const buffer = Buffer.alloc(5, 0);
+    const buffer = Buffer.allocUnsafe(5);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(startingAddress, 1);
     buffer.writeUInt16BE(quantityOfInputs, 3);
@@ -78,7 +78,7 @@ export class PduClient {
     pdu.validAddress(startingAddress + quantityOfRegisters);
 
     const functionCode = pdu.FunctionCode.ReadHoldingRegisters;
-    const buffer = Buffer.alloc(5, 0);
+    const buffer = Buffer.allocUnsafe(5);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(startingAddress, 1);
     buffer.writeUInt16BE(quantityOfRegisters, 3);
@@ -98,7 +98,7 @@ export class PduClient {
     pdu.validAddress(startingAddress + quantityOfRegisters);
 
     const functionCode = pdu.FunctionCode.ReadInputRegisters;
-    const buffer = Buffer.alloc(5, 0);
+    const buffer = Buffer.allocUnsafe(5);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(startingAddress, 1);
     buffer.writeUInt16BE(quantityOfRegisters, 3);
@@ -116,7 +116,7 @@ export class PduClient {
     pdu.validAddress(outputAddress);
 
     const functionCode = pdu.FunctionCode.WriteSingleCoil;
-    const buffer = Buffer.alloc(5, 0);
+    const buffer = Buffer.allocUnsafe(5);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(outputAddress, 1);
     buffer.writeUInt16BE((!!outputValue ? 0xFF00 : 0x0000), 3);
@@ -135,7 +135,7 @@ export class PduClient {
     pdu.validRegister(registerValue);
 
     const functionCode = pdu.FunctionCode.WriteSingleRegister;
-    const buffer = Buffer.alloc(5, 0);
+    const buffer = Buffer.allocUnsafe(5);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(registerAddress, 1);
     buffer.writeUInt16BE(registerValue, 3);
@@ -156,7 +156,7 @@ export class PduClient {
 
     const functionCode = pdu.FunctionCode.WriteMultipleCoils;
     const [byteCount, byteValues] = pdu.bitsToBytes(outputValues);
-    const buffer = Buffer.alloc(6 + byteCount, 0);
+    const buffer = Buffer.allocUnsafe(6 + byteCount);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(startingAddress, 1);
     buffer.writeUInt16BE(outputValues.length, 3);
@@ -184,7 +184,7 @@ export class PduClient {
 
     const functionCode = pdu.FunctionCode.WriteMultipleRegisters;
     const byteCount = registerValues.length * 2;
-    const buffer = Buffer.alloc(6 + byteCount, 0);
+    const buffer = Buffer.allocUnsafe(6 + byteCount);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(startingAddress, 1);
     buffer.writeUInt16BE(registerValues.length, 3);

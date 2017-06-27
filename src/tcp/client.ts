@@ -40,7 +40,7 @@ export class TcpClient {
   private _stateSubject = new Subject<boolean>();
   private _error = new BehaviorSubject<any>(null);
 
-  private _buffer = Buffer.alloc(0);
+  private _buffer = Buffer.allocUnsafe(0);
   private _receive = new Subject<tcp.TcpResponse | tcp.TcpException>();
   private _transmit = new Subject<tcp.TcpRequest>();
 
@@ -121,7 +121,7 @@ export class TcpClient {
     // Error listener required to prevent process exit.
     this._socket = createConnection(this.connectionOptions);
     this._socket.on("error", (error) => { this._error.next(error); });
-    this._buffer = Buffer.alloc(0);
+    this._buffer = Buffer.allocUnsafe(0);
 
     // Will emit next(false) and complete with call to 'disconnect' method.
     // Will emit next(false) and error if socket closes.
@@ -354,7 +354,7 @@ export class TcpClient {
 
   /** Construct and prepend MBAP header to PDU request buffer. */
   protected aduHeader(functionCode: number, request: Buffer): tcp.TcpRequest {
-    const buffer = Buffer.concat([Buffer.alloc(7, 0), request]);
+    const buffer = Buffer.concat([Buffer.allocUnsafe(7), request]);
     const transactionId = this.nextTransactionId;
 
     buffer.writeUInt16BE(transactionId, 0);

@@ -76,7 +76,7 @@ export abstract class PduServer {
     const values: boolean[] = getValues(startingAddress, quantityOfBits);
     const [bytes, byteValues] = pdu.bitsToBytes(values);
 
-    const buffer = Buffer.alloc(2 + bytes, 0);
+    const buffer = Buffer.allocUnsafe(2 + bytes);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt8(bytes, 1);
     byteValues.map((value, index) => {
@@ -93,7 +93,7 @@ export abstract class PduServer {
     const values: number[] = getValues(startingAddress, quantityOfRegisters);
     const bytes = values.length * 2;
 
-    const buffer = Buffer.alloc(2 + bytes, 0);
+    const buffer = Buffer.allocUnsafe(2 + bytes);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt8(bytes, 1);
     values.map((value, index) => {
@@ -109,7 +109,7 @@ export abstract class PduServer {
     const outputValue = request.readUInt16BE(2) === 0xFF00;
     const value = this.writeSingleCoil(address, outputValue);
 
-    const buffer = Buffer.alloc(5, 0);
+    const buffer = Buffer.allocUnsafe(5);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(address, 1);
     buffer.writeUInt16BE(value ? 0xFF00 : 0x0, 3);
@@ -123,7 +123,7 @@ export abstract class PduServer {
     const outputValue = request.readUInt16BE(2);
     const value = this.writeSingleRegister(address, outputValue);
 
-    const buffer = Buffer.alloc(5, 0);
+    const buffer = Buffer.allocUnsafe(5);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(address, 1);
     buffer.writeUInt16BE(value, 3);
@@ -138,7 +138,7 @@ export abstract class PduServer {
     const bitValues = pdu.bytesToBits(quantityOfBits, request.slice(5));
     const quantity = this.writeMultipleCoils(address, bitValues);
 
-    const buffer = Buffer.alloc(5, 0);
+    const buffer = Buffer.allocUnsafe(5);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(address, 1);
     buffer.writeUInt16BE(quantity, 3);
@@ -156,7 +156,7 @@ export abstract class PduServer {
     }
     const quantity = this.writeMultipleRegisters(address, registerValues);
 
-    const buffer = Buffer.alloc(5, 0);
+    const buffer = Buffer.allocUnsafe(5);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(address, 1);
     buffer.writeUInt16BE(quantity, 3);

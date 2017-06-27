@@ -50,7 +50,7 @@ export abstract class TcpServer extends PduServer {
         });
 
       // Receive data into buffer and process.
-      let buffer = Buffer.alloc(0);
+      let buffer = Buffer.allocUnsafe(0);
       const socketData: Observable<any> = Observable.fromEvent(socket, "data").takeUntil(socketClose);
       socketData
         .subscribe((data: Buffer) => {
@@ -146,7 +146,7 @@ export abstract class TcpServer extends PduServer {
   }
 
   protected aduHeader(response: tcp.TcpResponse | tcp.TcpException): Buffer {
-    const buffer = Buffer.concat([Buffer.alloc(7, 0), response.buffer]);
+    const buffer = Buffer.concat([Buffer.allocUnsafe(7), response.buffer]);
     buffer.writeUInt16BE(response.transactionId, 0);
     buffer.writeUInt16BE(this._protocolId, 2);
     buffer.writeUInt16BE((response.buffer.length + 1), 4);
