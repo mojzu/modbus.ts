@@ -56,7 +56,7 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_tcp_client_.html">&quot;tcp/client&quot;</a>
+					<a href="../modules/_tcp_client_.html">&quot;tcp/Client&quot;</a>
 				</li>
 				<li>
 					<a href="_tcp_client_.tcpclient.html">TcpClient</a>
@@ -94,12 +94,13 @@
 								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_tcp_client_.tcpclient.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
+						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_tcp_client_.tcpclient.html#_buffer" class="tsd-kind-icon">_buffer</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_tcp_client_.tcpclient.html#_bytesreceived" class="tsd-kind-icon">_bytes<wbr>Received</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_tcp_client_.tcpclient.html#_bytestransmitted" class="tsd-kind-icon">_bytes<wbr>Transmitted</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_tcp_client_.tcpclient.html#_connected" class="tsd-kind-icon">_connected</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_tcp_client_.tcpclient.html#_debug" class="tsd-kind-icon">_debug</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_tcp_client_.tcpclient.html#_error" class="tsd-kind-icon">_error</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_tcp_client_.tcpclient.html#_host" class="tsd-kind-icon">_host</a></li>
@@ -108,13 +109,16 @@
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_tcp_client_.tcpclient.html#_port" class="tsd-kind-icon">_port</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_tcp_client_.tcpclient.html#_protocolid" class="tsd-kind-icon">_protocol<wbr>Id</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_tcp_client_.tcpclient.html#_receive" class="tsd-kind-icon">_receive</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_tcp_client_.tcpclient.html#_retries" class="tsd-kind-icon">_retries</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_tcp_client_.tcpclient.html#_retry" class="tsd-kind-icon">_retry</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_tcp_client_.tcpclient.html#_retrywhen" class="tsd-kind-icon">_retry<wbr>When</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_tcp_client_.tcpclient.html#_socket" class="tsd-kind-icon">_socket</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_tcp_client_.tcpclient.html#_state" class="tsd-kind-icon">_state</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_tcp_client_.tcpclient.html#_statesubject" class="tsd-kind-icon">_state<wbr>Subject</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_tcp_client_.tcpclient.html#_timeout" class="tsd-kind-icon">_timeout</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_tcp_client_.tcpclient.html#_transactionid" class="tsd-kind-icon">_transaction<wbr>Id</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_tcp_client_.tcpclient.html#_transmit" class="tsd-kind-icon">_transmit</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_tcp_client_.tcpclient.html#_unitid" class="tsd-kind-icon">_unit<wbr>Id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="_tcp_client_.tcpclient.html#default_port" class="tsd-kind-icon">DEFAULT_<wbr>PORT</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="_tcp_client_.tcpclient.html#default_retry" class="tsd-kind-icon">DEFAULT_<wbr>RETRY</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="_tcp_client_.tcpclient.html#default_timeout" class="tsd-kind-icon">DEFAULT_<wbr>TIMEOUT</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -123,6 +127,7 @@
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_tcp_client_.tcpclient.html#address" class="tsd-kind-icon">address</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_tcp_client_.tcpclient.html#bytesreceived" class="tsd-kind-icon">bytes<wbr>Received</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_tcp_client_.tcpclient.html#bytestransmitted" class="tsd-kind-icon">bytes<wbr>Transmitted</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_tcp_client_.tcpclient.html#connected" class="tsd-kind-icon">connected</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-protected"><a href="_tcp_client_.tcpclient.html#connectionoptions" class="tsd-kind-icon">connection<wbr>Options</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-protected"><a href="_tcp_client_.tcpclient.html#debug" class="tsd-kind-icon">debug</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_tcp_client_.tcpclient.html#error" class="tsd-kind-icon">error</a></li>
@@ -133,8 +138,9 @@
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_tcp_client_.tcpclient.html#packetsreceived" class="tsd-kind-icon">packets<wbr>Received</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_tcp_client_.tcpclient.html#packetstransmitted" class="tsd-kind-icon">packets<wbr>Transmitted</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_tcp_client_.tcpclient.html#port" class="tsd-kind-icon">port</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_tcp_client_.tcpclient.html#retries" class="tsd-kind-icon">retries</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_tcp_client_.tcpclient.html#state" class="tsd-kind-icon">state</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-protected"><a href="_tcp_client_.tcpclient.html#retry" class="tsd-kind-icon">retry</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-protected"><a href="_tcp_client_.tcpclient.html#retrywhen" class="tsd-kind-icon">retry<wbr>When</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-protected"><a href="_tcp_client_.tcpclient.html#timeout" class="tsd-kind-icon">timeout</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_tcp_client_.tcpclient.html#unitid" class="tsd-kind-icon">unit<wbr>Id</a></li>
 							</ul>
 						</section>
@@ -143,6 +149,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="_tcp_client_.tcpclient.html#aduheader" class="tsd-kind-icon">adu<wbr>Header</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_tcp_client_.tcpclient.html#connect" class="tsd-kind-icon">connect</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="_tcp_client_.tcpclient.html#defaultretrywhen" class="tsd-kind-icon">default<wbr>Retry<wbr>When</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="_tcp_client_.tcpclient.html#destroysocket" class="tsd-kind-icon">destroy<wbr>Socket</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_tcp_client_.tcpclient.html#disconnect" class="tsd-kind-icon">disconnect</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_tcp_client_.tcpclient.html#readcoils" class="tsd-kind-icon">read<wbr>Coils</a></li>
@@ -151,6 +158,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_tcp_client_.tcpclient.html#readinputregisters" class="tsd-kind-icon">read<wbr>Input<wbr>Registers</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="_tcp_client_.tcpclient.html#receivedata" class="tsd-kind-icon">receive<wbr>Data</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="_tcp_client_.tcpclient.html#responsehandler" class="tsd-kind-icon">response<wbr>Handler</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="_tcp_client_.tcpclient.html#retrywhencallback" class="tsd-kind-icon">retry<wbr>When<wbr>Callback</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="_tcp_client_.tcpclient.html#setsocketstate" class="tsd-kind-icon">set<wbr>Socket<wbr>State</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="_tcp_client_.tcpclient.html#validretry" class="tsd-kind-icon">valid<wbr>Retry</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="_tcp_client_.tcpclient.html#validtimeout" class="tsd-kind-icon">valid<wbr>Timeout</a></li>
@@ -160,6 +168,12 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_tcp_client_.tcpclient.html#writesinglecoil" class="tsd-kind-icon">write<wbr>Single<wbr>Coil</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_tcp_client_.tcpclient.html#writesingleregister" class="tsd-kind-icon">write<wbr>Single<wbr>Register</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="_tcp_client_.tcpclient.html#writesocket" class="tsd-kind-icon">write<wbr>Socket</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Object literals</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-object-literal tsd-parent-kind-class tsd-is-static"><a href="_tcp_client_.tcpclient.html#error-1" class="tsd-kind-icon">ERROR</a></li>
 							</ul>
 						</section>
 					</div>
@@ -177,7 +191,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L90">tcp/client.ts:90</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L141">tcp/Client.ts:141</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -191,7 +205,7 @@
 									<h5>options: <a href="../interfaces/_tcp_client_.itcpclientoptions.html" class="tsd-signature-type">ITcpClientOptions</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
-											<p>Client options.</p>
+											<p>Client and default request options.</p>
 										</div>
 									</div>
 								</li>
@@ -209,7 +223,7 @@
 					</ul>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="_buffer" class="tsd-anchor"></a>
@@ -217,7 +231,7 @@
 					<div class="tsd-signature tsd-kind-icon">_buffer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol"> =&nbsp;Buffer.allocUnsafe(0)</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L43">tcp/client.ts:43</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L64">tcp/Client.ts:64</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -227,7 +241,7 @@
 					<div class="tsd-signature tsd-kind-icon">_bytes<wbr>Received<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L48">tcp/client.ts:48</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L68">tcp/Client.ts:68</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -237,17 +251,27 @@
 					<div class="tsd-signature tsd-kind-icon">_bytes<wbr>Transmitted<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L49">tcp/client.ts:49</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L69">tcp/Client.ts:69</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="_connected" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _connected</h3>
+					<div class="tsd-signature tsd-kind-icon">_connected<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">BehaviorSubject</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;new BehaviorSubject&lt;boolean&gt;(false)</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L61">tcp/Client.ts:61</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="_debug" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _debug</h3>
-					<div class="tsd-signature tsd-kind-icon">_debug<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<div class="tsd-signature tsd-kind-icon">_debug<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">IDebugger</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L30">tcp/client.ts:30</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L48">tcp/Client.ts:48</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -257,7 +281,7 @@
 					<div class="tsd-signature tsd-kind-icon">_error<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">BehaviorSubject</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;new BehaviorSubject&lt;any&gt;(null)</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L41">tcp/client.ts:41</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L62">tcp/Client.ts:62</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -267,7 +291,7 @@
 					<div class="tsd-signature tsd-kind-icon">_host<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L32">tcp/client.ts:32</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L54">tcp/Client.ts:54</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -277,7 +301,7 @@
 					<div class="tsd-signature tsd-kind-icon">_packets<wbr>Received<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L50">tcp/client.ts:50</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L70">tcp/Client.ts:70</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -287,7 +311,7 @@
 					<div class="tsd-signature tsd-kind-icon">_packets<wbr>Transmitted<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L51">tcp/client.ts:51</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L71">tcp/Client.ts:71</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -297,7 +321,7 @@
 					<div class="tsd-signature tsd-kind-icon">_port<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L33">tcp/client.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L55">tcp/Client.ts:55</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -307,7 +331,7 @@
 					<div class="tsd-signature tsd-kind-icon">_protocol<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L36">tcp/client.ts:36</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L58">tcp/Client.ts:58</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -317,17 +341,27 @@
 					<div class="tsd-signature tsd-kind-icon">_receive<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Subject</span><span class="tsd-signature-symbol">&lt;</span><a href="_tcp_tcp_.tcpresponse.html" class="tsd-signature-type">TcpResponse</a><span class="tsd-signature-symbol"> | </span><a href="_tcp_tcp_.tcpexception.html" class="tsd-signature-type">TcpException</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;new Subject&lt;tcp.TcpResponse | tcp.TcpException&gt;()</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L44">tcp/client.ts:44</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L65">tcp/Client.ts:65</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="_retries" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _retries</h3>
-					<div class="tsd-signature tsd-kind-icon">_retries<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
+					<a name="_retry" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _retry</h3>
+					<div class="tsd-signature tsd-kind-icon">_retry<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L47">tcp/client.ts:47</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L50">tcp/Client.ts:50</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="_retrywhen" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _retry<wbr>When</h3>
+					<div class="tsd-signature tsd-kind-icon">_retry<wbr>When<span class="tsd-signature-symbol">:</span> <a href="../modules/_tcp_client_.html#tcpclientretrywhen" class="tsd-signature-type">TcpClientRetryWhen</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L52">tcp/Client.ts:52</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -337,27 +371,17 @@
 					<div class="tsd-signature tsd-kind-icon">_socket<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Socket</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L38">tcp/client.ts:38</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L60">tcp/Client.ts:60</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="_state" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _state</h3>
-					<div class="tsd-signature tsd-kind-icon">_state<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
+					<a name="_timeout" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _timeout</h3>
+					<div class="tsd-signature tsd-kind-icon">_timeout<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L39">tcp/client.ts:39</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="_statesubject" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _state<wbr>Subject</h3>
-					<div class="tsd-signature tsd-kind-icon">_state<wbr>Subject<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Subject</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;new Subject&lt;boolean&gt;()</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L40">tcp/client.ts:40</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L51">tcp/Client.ts:51</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -367,7 +391,7 @@
 					<div class="tsd-signature tsd-kind-icon">_transaction<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L35">tcp/client.ts:35</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L57">tcp/Client.ts:57</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -377,7 +401,7 @@
 					<div class="tsd-signature tsd-kind-icon">_transmit<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Subject</span><span class="tsd-signature-symbol">&lt;</span><a href="_tcp_tcp_.tcprequest.html" class="tsd-signature-type">TcpRequest</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;new Subject&lt;tcp.TcpRequest&gt;()</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L45">tcp/client.ts:45</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L66">tcp/Client.ts:66</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -387,7 +411,37 @@
 					<div class="tsd-signature tsd-kind-icon">_unit<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L34">tcp/client.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L56">tcp/Client.ts:56</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
+					<a name="default_port" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> DEFAULT_<wbr>PORT</h3>
+					<div class="tsd-signature tsd-kind-icon">DEFAULT_<wbr>PORT<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;502</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L40">tcp/Client.ts:40</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
+					<a name="default_retry" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> DEFAULT_<wbr>RETRY</h3>
+					<div class="tsd-signature tsd-kind-icon">DEFAULT_<wbr>RETRY<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L38">tcp/Client.ts:38</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
+					<a name="default_timeout" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> DEFAULT_<wbr>TIMEOUT</h3>
+					<div class="tsd-signature tsd-kind-icon">DEFAULT_<wbr>TIMEOUT<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;5000</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L39">tcp/Client.ts:39</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -404,7 +458,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L60">tcp/client.ts:60</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L80">tcp/Client.ts:80</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -426,7 +480,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L81">tcp/client.ts:81</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L106">tcp/Client.ts:106</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -448,7 +502,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L84">tcp/client.ts:84</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L109">tcp/Client.ts:109</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -457,6 +511,28 @@
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="connected" class="tsd-anchor"></a>
+					<h3>connected</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> connected<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L86">tcp/Client.ts:86</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Socket connected state stream.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -470,7 +546,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L303">tcp/client.ts:303</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L135">tcp/Client.ts:135</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -494,13 +570,13 @@
 					<a name="debug" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> debug</h3>
 					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-protected">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> debug<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> debug<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IDebugger</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L300">tcp/client.ts:300</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L118">tcp/Client.ts:118</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -508,7 +584,7 @@
 									<p>Client internal debugging interface.</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IDebugger</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -522,7 +598,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L72">tcp/client.ts:72</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L92">tcp/Client.ts:92</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -544,7 +620,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L75">tcp/client.ts:75</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L95">tcp/Client.ts:95</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -569,7 +645,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L54">tcp/client.ts:54</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L74">tcp/Client.ts:74</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -591,7 +667,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L69">tcp/client.ts:69</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L89">tcp/Client.ts:89</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -613,7 +689,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L350">tcp/client.ts:350</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L138">tcp/Client.ts:138</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -635,7 +711,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L87">tcp/client.ts:87</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L112">tcp/Client.ts:112</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -657,7 +733,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L90">tcp/client.ts:90</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L115">tcp/Client.ts:115</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -679,7 +755,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L57">tcp/client.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L77">tcp/Client.ts:77</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -691,47 +767,69 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
-					<a name="retries" class="tsd-anchor"></a>
-					<h3>retries</h3>
-					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> retries<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-protected">
+					<a name="retry" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> retry</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> retry<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L78">tcp/client.ts:78</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L126">tcp/Client.ts:126</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Total number of retries performed by client.</p>
+									<p>Default number of retries performed during requests.</p>
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
-					<a name="state" class="tsd-anchor"></a>
-					<h3>state</h3>
-					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> state<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-protected">
+					<a name="retrywhen" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> retry<wbr>When</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> retryWhen<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/_tcp_client_.html#tcpclientretrywhen" class="tsd-signature-type">TcpClientRetryWhen</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L66">tcp/client.ts:66</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L132">tcp/Client.ts:132</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Socket state stream.</p>
+									<p>Default retryWhen callback of requests.</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="../modules/_tcp_client_.html#tcpclientretrywhen" class="tsd-signature-type">TcpClientRetryWhen</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-protected">
+					<a name="timeout" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> timeout</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> timeout<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L129">tcp/Client.ts:129</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Default timeout of requests.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -745,7 +843,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L63">tcp/client.ts:63</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L83">tcp/Client.ts:83</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -770,7 +868,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L356">tcp/client.ts:356</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L435">tcp/Client.ts:435</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -795,13 +893,13 @@
 					<a name="connect" class="tsd-anchor"></a>
 					<h3>connect</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">connect<span class="tsd-signature-symbol">(</span>timeout<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">connect<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_tcp_client_.itcpclientrequestoptions.html" class="tsd-signature-type">ITcpClientRequestOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L114">tcp/client.ts:114</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L169">tcp/Client.ts:169</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -815,13 +913,53 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> timeout: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;30</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <a href="../interfaces/_tcp_client_.itcpclientrequestoptions.html" class="tsd-signature-type">ITcpClientRequestOptions</a><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Seconds of socket inactivty which causes timeout error.</p>
+										<p>Request options.</p>
 									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+					<a name="defaultretrywhen" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> default<wbr>Retry<wbr>When</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">default<wbr>Retry<wbr>When<span class="tsd-signature-symbol">(</span>client<span class="tsd-signature-symbol">: </span><a href="_tcp_client_.tcpclient.html" class="tsd-signature-type">TcpClient</a>, request<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">tcp.TcpRequest</span>, retry<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, errorCount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, error<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L448">tcp/Client.ts:448</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Default retryWhen callback for conditional retries.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>client: <a href="_tcp_client_.tcpclient.html" class="tsd-signature-type">TcpClient</a></h5>
+								</li>
+								<li>
+									<h5>request: <span class="tsd-signature-type">tcp.TcpRequest</span></h5>
+								</li>
+								<li>
+									<h5>retry: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>errorCount: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>error: <span class="tsd-signature-type">any</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -835,7 +973,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L329">tcp/client.ts:329</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L410">tcp/Client.ts:410</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -857,7 +995,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L182">tcp/client.ts:182</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L234">tcp/Client.ts:234</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -880,13 +1018,13 @@
 					<a name="readcoils" class="tsd-anchor"></a>
 					<h3>read<wbr>Coils</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">read<wbr>Coils<span class="tsd-signature-symbol">(</span>startingAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, quantityOfCoils<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, timeout<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, retry<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">tcp.TcpResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">read<wbr>Coils<span class="tsd-signature-symbol">(</span>startingAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, quantityOfCoils<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_tcp_client_.itcpclientrequestoptions.html" class="tsd-signature-type">ITcpClientRequestOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">tcp.TcpResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L195">tcp/client.ts:195</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L246">tcp/Client.ts:246</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -910,15 +1048,9 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> timeout: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;5</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <a href="../interfaces/_tcp_client_.itcpclientrequestoptions.html" class="tsd-signature-type">ITcpClientRequestOptions</a><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Number of seconds to wait for response (1 - 30).</p>
-									</div>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> retry: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Number of retries (0 - 5).</p>
+										<p>Request options.</p>
 									</div>
 								</li>
 							</ul>
@@ -930,13 +1062,13 @@
 					<a name="readdiscreteinputs" class="tsd-anchor"></a>
 					<h3>read<wbr>Discrete<wbr>Inputs</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">read<wbr>Discrete<wbr>Inputs<span class="tsd-signature-symbol">(</span>startingAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, quantityOfInputs<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, timeout<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, retry<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">tcp.TcpResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">read<wbr>Discrete<wbr>Inputs<span class="tsd-signature-symbol">(</span>startingAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, quantityOfInputs<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_tcp_client_.itcpclientrequestoptions.html" class="tsd-signature-type">ITcpClientRequestOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">tcp.TcpResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L209">tcp/client.ts:209</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L263">tcp/Client.ts:263</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -960,15 +1092,9 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> timeout: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;5</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <a href="../interfaces/_tcp_client_.itcpclientrequestoptions.html" class="tsd-signature-type">ITcpClientRequestOptions</a><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Number of seconds to wait for response (1 - 30).</p>
-									</div>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> retry: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Number of retries (0 - 5).</p>
+										<p>Request options.</p>
 									</div>
 								</li>
 							</ul>
@@ -980,13 +1106,13 @@
 					<a name="readholdingregisters" class="tsd-anchor"></a>
 					<h3>read<wbr>Holding<wbr>Registers</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">read<wbr>Holding<wbr>Registers<span class="tsd-signature-symbol">(</span>startingAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, quantityOfRegisters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, timeout<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, retry<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">tcp.TcpResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">read<wbr>Holding<wbr>Registers<span class="tsd-signature-symbol">(</span>startingAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, quantityOfRegisters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_tcp_client_.itcpclientrequestoptions.html" class="tsd-signature-type">ITcpClientRequestOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">tcp.TcpResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L223">tcp/client.ts:223</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L280">tcp/Client.ts:280</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1010,15 +1136,9 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> timeout: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;5</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <a href="../interfaces/_tcp_client_.itcpclientrequestoptions.html" class="tsd-signature-type">ITcpClientRequestOptions</a><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Number of seconds to wait for response (1 - 30).</p>
-									</div>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> retry: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Number of retries (0 - 5).</p>
+										<p>Request options.</p>
 									</div>
 								</li>
 							</ul>
@@ -1030,13 +1150,13 @@
 					<a name="readinputregisters" class="tsd-anchor"></a>
 					<h3>read<wbr>Input<wbr>Registers</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">read<wbr>Input<wbr>Registers<span class="tsd-signature-symbol">(</span>startingAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, quantityOfRegisters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, timeout<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, retry<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">tcp.TcpResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">read<wbr>Input<wbr>Registers<span class="tsd-signature-symbol">(</span>startingAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, quantityOfRegisters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_tcp_client_.itcpclientrequestoptions.html" class="tsd-signature-type">ITcpClientRequestOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">tcp.TcpResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L237">tcp/client.ts:237</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L297">tcp/Client.ts:297</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1060,15 +1180,9 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> timeout: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;5</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <a href="../interfaces/_tcp_client_.itcpclientrequestoptions.html" class="tsd-signature-type">ITcpClientRequestOptions</a><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Number of seconds to wait for response (1 - 30).</p>
-									</div>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> retry: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Number of retries (0 - 5).</p>
+										<p>Request options.</p>
 									</div>
 								</li>
 							</ul>
@@ -1086,7 +1200,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L413">tcp/client.ts:413</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L503">tcp/Client.ts:503</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1117,7 +1231,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L452">tcp/client.ts:452</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L543">tcp/Client.ts:543</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1146,16 +1260,44 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected">
-					<a name="setsocketstate" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagProtected">Protected</span> set<wbr>Socket<wbr>State</h3>
+					<a name="retrywhencallback" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> retry<wbr>When<wbr>Callback</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Socket<wbr>State<span class="tsd-signature-symbol">(</span>state<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, complete<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, error<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">retry<wbr>When<wbr>Callback<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">?: </span><a href="../modules/_tcp_client_.html#tcpclientretrywhen" class="tsd-signature-type">TcpClientRetryWhen</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/_tcp_client_.html#tcpclientretrywhen" class="tsd-signature-type">TcpClientRetryWhen</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L316">tcp/client.ts:316</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L388">tcp/Client.ts:388</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get retry when callback.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> callback: <a href="../modules/_tcp_client_.html#tcpclientretrywhen" class="tsd-signature-type">TcpClientRetryWhen</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../modules/_tcp_client_.html#tcpclientretrywhen" class="tsd-signature-type">TcpClientRetryWhen</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+					<a name="setsocketstate" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> set<wbr>Socket<wbr>State</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Socket<wbr>State<span class="tsd-signature-symbol">(</span>connected<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, disconnect<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, error<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L393">tcp/Client.ts:393</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1166,10 +1308,10 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>state: <span class="tsd-signature-type">boolean</span></h5>
+									<h5>connected: <span class="tsd-signature-type">boolean</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> complete: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> disconnect: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> error: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
@@ -1183,13 +1325,13 @@
 					<a name="validretry" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> valid<wbr>Retry</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
-						<li class="tsd-signature tsd-kind-icon">valid<wbr>Retry<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+						<li class="tsd-signature tsd-kind-icon">valid<wbr>Retry<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L311">tcp/client.ts:311</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L376">tcp/Client.ts:376</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1200,7 +1342,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>value: <span class="tsd-signature-type">number</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> value: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -1211,13 +1353,13 @@
 					<a name="validtimeout" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> valid<wbr>Timeout</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
-						<li class="tsd-signature tsd-kind-icon">valid<wbr>Timeout<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+						<li class="tsd-signature tsd-kind-icon">valid<wbr>Timeout<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L306">tcp/client.ts:306</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L382">tcp/Client.ts:382</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1228,7 +1370,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>value: <span class="tsd-signature-type">number</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> value: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -1239,13 +1381,13 @@
 					<a name="writemultiplecoils" class="tsd-anchor"></a>
 					<h3>write<wbr>Multiple<wbr>Coils</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">write<wbr>Multiple<wbr>Coils<span class="tsd-signature-symbol">(</span>startingAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, outputValues<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">[]</span>, timeout<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, retry<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">tcp.TcpResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">write<wbr>Multiple<wbr>Coils<span class="tsd-signature-symbol">(</span>startingAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, outputValues<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">[]</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_tcp_client_.itcpclientrequestoptions.html" class="tsd-signature-type">ITcpClientRequestOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">tcp.TcpResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L279">tcp/client.ts:279</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L348">tcp/Client.ts:348</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1269,15 +1411,9 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> timeout: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;5</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <a href="../interfaces/_tcp_client_.itcpclientrequestoptions.html" class="tsd-signature-type">ITcpClientRequestOptions</a><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Number of seconds to wait for response (1 - 30).</p>
-									</div>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> retry: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Number of retries (0 - 5).</p>
+										<p>Request options.</p>
 									</div>
 								</li>
 							</ul>
@@ -1289,13 +1425,13 @@
 					<a name="writemultipleregisters" class="tsd-anchor"></a>
 					<h3>write<wbr>Multiple<wbr>Registers</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">write<wbr>Multiple<wbr>Registers<span class="tsd-signature-symbol">(</span>startingAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, registerValues<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span>, timeout<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, retry<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">tcp.TcpResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">write<wbr>Multiple<wbr>Registers<span class="tsd-signature-symbol">(</span>startingAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, registerValues<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_tcp_client_.itcpclientrequestoptions.html" class="tsd-signature-type">ITcpClientRequestOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">tcp.TcpResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L293">tcp/client.ts:293</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L365">tcp/Client.ts:365</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1319,15 +1455,9 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> timeout: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;5</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <a href="../interfaces/_tcp_client_.itcpclientrequestoptions.html" class="tsd-signature-type">ITcpClientRequestOptions</a><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Number of seconds to wait for response (1 - 30).</p>
-									</div>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> retry: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Number of retries (0 - 5).</p>
+										<p>Request options.</p>
 									</div>
 								</li>
 							</ul>
@@ -1339,13 +1469,13 @@
 					<a name="writerequest" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> write<wbr>Request</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
-						<li class="tsd-signature tsd-kind-icon">write<wbr>Request<span class="tsd-signature-symbol">(</span>request<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">tcp.TcpRequest</span>, timeout<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, retry<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">tcp.TcpResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">write<wbr>Request<span class="tsd-signature-symbol">(</span>request<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">tcp.TcpRequest</span>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/_tcp_client_.itcpclientrequestoptions.html" class="tsd-signature-type">ITcpClientRequestOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">tcp.TcpResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L369">tcp/client.ts:369</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L469">tcp/Client.ts:469</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1359,10 +1489,7 @@
 									<h5>request: <span class="tsd-signature-type">tcp.TcpRequest</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> timeout: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;5</span></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> retry: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
+									<h5>options: <a href="../interfaces/_tcp_client_.itcpclientrequestoptions.html" class="tsd-signature-type">ITcpClientRequestOptions</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">tcp.TcpResponse</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1373,13 +1500,13 @@
 					<a name="writesinglecoil" class="tsd-anchor"></a>
 					<h3>write<wbr>Single<wbr>Coil</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">write<wbr>Single<wbr>Coil<span class="tsd-signature-symbol">(</span>outputAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, outputValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, timeout<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, retry<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">tcp.TcpResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">write<wbr>Single<wbr>Coil<span class="tsd-signature-symbol">(</span>outputAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, outputValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_tcp_client_.itcpclientrequestoptions.html" class="tsd-signature-type">ITcpClientRequestOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">tcp.TcpResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L251">tcp/client.ts:251</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L314">tcp/Client.ts:314</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1403,15 +1530,9 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> timeout: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;5</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <a href="../interfaces/_tcp_client_.itcpclientrequestoptions.html" class="tsd-signature-type">ITcpClientRequestOptions</a><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Number of seconds to wait for response (1 - 30).</p>
-									</div>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> retry: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Number of retries (0 - 5).</p>
+										<p>Request options.</p>
 									</div>
 								</li>
 							</ul>
@@ -1423,13 +1544,13 @@
 					<a name="writesingleregister" class="tsd-anchor"></a>
 					<h3>write<wbr>Single<wbr>Register</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">write<wbr>Single<wbr>Register<span class="tsd-signature-symbol">(</span>registerAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, registerValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, timeout<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, retry<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">tcp.TcpResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">write<wbr>Single<wbr>Register<span class="tsd-signature-symbol">(</span>registerAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, registerValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_tcp_client_.itcpclientrequestoptions.html" class="tsd-signature-type">ITcpClientRequestOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">tcp.TcpResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L265">tcp/client.ts:265</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L331">tcp/Client.ts:331</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1453,15 +1574,9 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> timeout: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;5</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <a href="../interfaces/_tcp_client_.itcpclientrequestoptions.html" class="tsd-signature-type">ITcpClientRequestOptions</a><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Number of seconds to wait for response (1 - 30).</p>
-									</div>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> retry: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Number of retries (0 - 5).</p>
+										<p>Request options.</p>
 									</div>
 								</li>
 							</ul>
@@ -1479,7 +1594,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L339">tcp/client.ts:339</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L424">tcp/Client.ts:424</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1498,6 +1613,44 @@
 					</ul>
 				</section>
 			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Object literals</h2>
+				<section class="tsd-panel tsd-member tsd-kind-object-literal tsd-parent-kind-class tsd-is-static">
+					<a name="error-1" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> ERROR</h3>
+					<div class="tsd-signature tsd-kind-icon">ERROR<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L43">tcp/Client.ts:43</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Error codes.</p>
+						</div>
+					</div>
+					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+						<a name="error-1.connection" class="tsd-anchor"></a>
+						<h3>CONNECTION</h3>
+						<div class="tsd-signature tsd-kind-icon">CONNECTION<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;TcpClientConnectionError&quot;</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L44">tcp/Client.ts:44</a></li>
+							</ul>
+						</aside>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+						<a name="error-1.timeout-1" class="tsd-anchor"></a>
+						<h3>TIMEOUT</h3>
+						<div class="tsd-signature tsd-kind-icon">TIMEOUT<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;TcpClientTimeoutError&quot;</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L45">tcp/Client.ts:45</a></li>
+							</ul>
+						</aside>
+					</section>
+				</section>
+			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 			<nav class="tsd-navigation primary">
@@ -1506,43 +1659,52 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="../modules/_examples_quickstart_.html">"examples/quickstart"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_index_.html">"index"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_node_.html">"node"</a>
+						<a href="../modules/_pdu_client_.html">"pdu/<wbr>Client"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_pdu_client_.html">"pdu/client"</a>
+						<a href="../modules/_pdu_client_spec_.html">"pdu/<wbr>Client.spec"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_pdu_client_spec_.html">"pdu/client.spec"</a>
+						<a href="../modules/_pdu_mockserver_.html">"pdu/<wbr>Mock<wbr>Server"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_pdu_server_.html">"pdu/<wbr>Server"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_pdu_index_.html">"pdu/index"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_pdu_pdu_.html">"pdu/pdu"</a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_pdu_server_.html">"pdu/server"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_pdu_server_mock_.html">"pdu/server-<wbr>mock"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_rx_.html">"rx"</a>
-					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/_tcp_client_.html">"tcp/client"</a>
+						<a href="../modules/_tcp_client_.html">"tcp/<wbr>Client"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_tcp_client_spec_.html">"tcp/client.spec"</a>
+						<a href="../modules/_tcp_client_spec_.html">"tcp/<wbr>Client.spec"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_tcp_server_.html">"tcp/server"</a>
+						<a href="../modules/_tcp_mockserver_.html">"tcp/<wbr>Mock<wbr>Server"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_tcp_server_mock_.html">"tcp/server-<wbr>mock"</a>
+						<a href="../modules/_tcp_server_.html">"tcp/<wbr>Server"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_tcp_index_.html">"tcp/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_tcp_rx_.html">"tcp/rx"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_tcp_tcp_.html">"tcp/tcp"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_test_.html">"test"</a>
 					</li>
 				</ul>
 			</nav>
@@ -1564,6 +1726,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="_tcp_client_.tcpclient.html#_bytestransmitted" class="tsd-kind-icon">_bytes<wbr>Transmitted</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_tcp_client_.tcpclient.html#_connected" class="tsd-kind-icon">_connected</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="_tcp_client_.tcpclient.html#_debug" class="tsd-kind-icon">_debug</a>
@@ -1590,16 +1755,16 @@
 								<a href="_tcp_client_.tcpclient.html#_receive" class="tsd-kind-icon">_receive</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="_tcp_client_.tcpclient.html#_retries" class="tsd-kind-icon">_retries</a>
+								<a href="_tcp_client_.tcpclient.html#_retry" class="tsd-kind-icon">_retry</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_tcp_client_.tcpclient.html#_retrywhen" class="tsd-kind-icon">_retry<wbr>When</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="_tcp_client_.tcpclient.html#_socket" class="tsd-kind-icon">_socket</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="_tcp_client_.tcpclient.html#_state" class="tsd-kind-icon">_state</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="_tcp_client_.tcpclient.html#_statesubject" class="tsd-kind-icon">_state<wbr>Subject</a>
+								<a href="_tcp_client_.tcpclient.html#_timeout" class="tsd-kind-icon">_timeout</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="_tcp_client_.tcpclient.html#_transactionid" class="tsd-kind-icon">_transaction<wbr>Id</a>
@@ -1610,6 +1775,15 @@
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="_tcp_client_.tcpclient.html#_unitid" class="tsd-kind-icon">_unit<wbr>Id</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
+								<a href="_tcp_client_.tcpclient.html#default_port" class="tsd-kind-icon">DEFAULT_<wbr>PORT</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
+								<a href="_tcp_client_.tcpclient.html#default_retry" class="tsd-kind-icon">DEFAULT_<wbr>RETRY</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
+								<a href="_tcp_client_.tcpclient.html#default_timeout" class="tsd-kind-icon">DEFAULT_<wbr>TIMEOUT</a>
+							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="_tcp_client_.tcpclient.html#address" class="tsd-kind-icon">address</a>
 							</li>
@@ -1618,6 +1792,9 @@
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="_tcp_client_.tcpclient.html#bytestransmitted" class="tsd-kind-icon">bytes<wbr>Transmitted</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="_tcp_client_.tcpclient.html#connected" class="tsd-kind-icon">connected</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-protected">
 								<a href="_tcp_client_.tcpclient.html#connectionoptions" class="tsd-kind-icon">connection<wbr>Options</a>
@@ -1649,11 +1826,14 @@
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="_tcp_client_.tcpclient.html#port" class="tsd-kind-icon">port</a>
 							</li>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
-								<a href="_tcp_client_.tcpclient.html#retries" class="tsd-kind-icon">retries</a>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-protected">
+								<a href="_tcp_client_.tcpclient.html#retry" class="tsd-kind-icon">retry</a>
 							</li>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
-								<a href="_tcp_client_.tcpclient.html#state" class="tsd-kind-icon">state</a>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-protected">
+								<a href="_tcp_client_.tcpclient.html#retrywhen" class="tsd-kind-icon">retry<wbr>When</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-protected">
+								<a href="_tcp_client_.tcpclient.html#timeout" class="tsd-kind-icon">timeout</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="_tcp_client_.tcpclient.html#unitid" class="tsd-kind-icon">unit<wbr>Id</a>
@@ -1663,6 +1843,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_tcp_client_.tcpclient.html#connect" class="tsd-kind-icon">connect</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+								<a href="_tcp_client_.tcpclient.html#defaultretrywhen" class="tsd-kind-icon">default<wbr>Retry<wbr>When</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
 								<a href="_tcp_client_.tcpclient.html#destroysocket" class="tsd-kind-icon">destroy<wbr>Socket</a>
@@ -1687,6 +1870,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
 								<a href="_tcp_client_.tcpclient.html#responsehandler" class="tsd-kind-icon">response<wbr>Handler</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+								<a href="_tcp_client_.tcpclient.html#retrywhencallback" class="tsd-kind-icon">retry<wbr>When<wbr>Callback</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
 								<a href="_tcp_client_.tcpclient.html#setsocketstate" class="tsd-kind-icon">set<wbr>Socket<wbr>State</a>
@@ -1715,6 +1901,9 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
 								<a href="_tcp_client_.tcpclient.html#writesocket" class="tsd-kind-icon">write<wbr>Socket</a>
 							</li>
+							<li class=" tsd-kind-object-literal tsd-parent-kind-class tsd-is-static">
+								<a href="_tcp_client_.tcpclient.html#error-1" class="tsd-kind-icon">ERROR</a>
+							</li>
 						</ul>
 					</li>
 				</ul>
@@ -1722,14 +1911,14 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/_tcp_client_.itcpclientoptions.html" class="tsd-kind-icon">ITcp<wbr>Client<wbr>Options</a>
 					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/_tcp_client_.itcpclientrequestoptions.html" class="tsd-kind-icon">ITcp<wbr>Client<wbr>Request<wbr>Options</a>
+					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
 						<a href="../modules/_tcp_client_.html#tcpclientresponse" class="tsd-kind-icon">Tcp<wbr>Client<wbr>Response</a>
 					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module">
-						<a href="../modules/_tcp_client_.html#connection_error" class="tsd-kind-icon">CONNECTION_<wbr>ERROR</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module">
-						<a href="../modules/_tcp_client_.html#timeout_error" class="tsd-kind-icon">TIMEOUT_<wbr>ERROR</a>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="../modules/_tcp_client_.html#tcpclientretrywhen" class="tsd-kind-icon">Tcp<wbr>Client<wbr>Retry<wbr>When</a>
 					</li>
 				</ul>
 			</nav>

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;tcp/client&quot; | modbus.ts</title>
+	<title>&quot;tcp/Client&quot; | modbus.ts</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="_tcp_client_.html">&quot;tcp/client&quot;</a>
+					<a href="_tcp_client_.html">&quot;tcp/Client&quot;</a>
 				</li>
 			</ul>
-			<h1>External module &quot;tcp/client&quot;</h1>
+			<h1>External module &quot;tcp/Client&quot;</h1>
 		</div>
 	</div>
 </header>
@@ -80,19 +80,14 @@
 							<h3>Interfaces</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_tcp_client_.itcpclientoptions.html" class="tsd-kind-icon">ITcp<wbr>Client<wbr>Options</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_tcp_client_.itcpclientrequestoptions.html" class="tsd-kind-icon">ITcp<wbr>Client<wbr>Request<wbr>Options</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="_tcp_client_.html#tcpclientresponse" class="tsd-kind-icon">Tcp<wbr>Client<wbr>Response</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
-							<h3>Variables</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-variable tsd-parent-kind-external-module"><a href="_tcp_client_.html#connection_error" class="tsd-kind-icon">CONNECTION_<wbr>ERROR</a></li>
-								<li class="tsd-kind-variable tsd-parent-kind-external-module"><a href="_tcp_client_.html#timeout_error" class="tsd-kind-icon">TIMEOUT_<wbr>ERROR</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="_tcp_client_.html#tcpclientretrywhen" class="tsd-kind-icon">Tcp<wbr>Client<wbr>Retry<wbr>When</a></li>
 							</ul>
 						</section>
 					</div>
@@ -106,7 +101,7 @@
 					<div class="tsd-signature tsd-kind-icon">Tcp<wbr>Client<wbr>Response<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">tcp.TcpResponse</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">tcp.TcpException</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L14">tcp/client.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L10">tcp/Client.ts:10</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -115,37 +110,52 @@
 						</div>
 					</div>
 				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Variables</h2>
-				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module">
-					<a name="connection_error" class="tsd-anchor"></a>
-					<h3>CONNECTION_<wbr>ERROR</h3>
-					<div class="tsd-signature tsd-kind-icon">CONNECTION_<wbr>ERROR<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"ConnectionError"</span><span class="tsd-signature-symbol"> =&nbsp;&quot;ConnectionError&quot;</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module">
+					<a name="tcpclientretrywhen" class="tsd-anchor"></a>
+					<h3>Tcp<wbr>Client<wbr>Retry<wbr>When</h3>
+					<div class="tsd-signature tsd-kind-icon">Tcp<wbr>Client<wbr>Retry<wbr>When<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L8">tcp/client.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Client.ts#L13">tcp/Client.ts:13</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Client connection to host failed error.</p>
+							<p>Conditional retry callback type.</p>
 						</div>
 					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module">
-					<a name="timeout_error" class="tsd-anchor"></a>
-					<h3>TIMEOUT_<wbr>ERROR</h3>
-					<div class="tsd-signature tsd-kind-icon">TIMEOUT_<wbr>ERROR<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"TimeoutError"</span><span class="tsd-signature-symbol"> =&nbsp;&quot;TimeoutError&quot;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/client.ts#L11">tcp/client.ts:11</a></li>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-siganture">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias tsd-is-not-exported">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>client<span class="tsd-signature-symbol">: </span><a href="../classes/_tcp_client_.tcpclient.html" class="tsd-signature-type">TcpClient</a>, request<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">tcp.TcpRequest</span>, retry<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, errorCount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, error<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>client: <a href="../classes/_tcp_client_.tcpclient.html" class="tsd-signature-type">TcpClient</a></h5>
+											</li>
+											<li>
+												<h5>request: <span class="tsd-signature-type">tcp.TcpRequest</span></h5>
+											</li>
+											<li>
+												<h5>retry: <span class="tsd-signature-type">number</span></h5>
+											</li>
+											<li>
+												<h5>errorCount: <span class="tsd-signature-type">number</span></h5>
+											</li>
+											<li>
+												<h5>error: <span class="tsd-signature-type">any</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+									</li>
+								</ul>
+							</li>
 						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Client timed out error.</p>
-						</div>
 					</div>
 				</section>
 			</section>
@@ -157,43 +167,52 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="_examples_quickstart_.html">"examples/quickstart"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="_index_.html">"index"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_node_.html">"node"</a>
+						<a href="_pdu_client_.html">"pdu/<wbr>Client"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_pdu_client_.html">"pdu/client"</a>
+						<a href="_pdu_client_spec_.html">"pdu/<wbr>Client.spec"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_pdu_client_spec_.html">"pdu/client.spec"</a>
+						<a href="_pdu_mockserver_.html">"pdu/<wbr>Mock<wbr>Server"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_pdu_server_.html">"pdu/<wbr>Server"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_pdu_index_.html">"pdu/index"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="_pdu_pdu_.html">"pdu/pdu"</a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_pdu_server_.html">"pdu/server"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_pdu_server_mock_.html">"pdu/server-<wbr>mock"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_rx_.html">"rx"</a>
-					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="_tcp_client_.html">"tcp/client"</a>
+						<a href="_tcp_client_.html">"tcp/<wbr>Client"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_tcp_client_spec_.html">"tcp/client.spec"</a>
+						<a href="_tcp_client_spec_.html">"tcp/<wbr>Client.spec"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_tcp_server_.html">"tcp/server"</a>
+						<a href="_tcp_mockserver_.html">"tcp/<wbr>Mock<wbr>Server"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_tcp_server_mock_.html">"tcp/server-<wbr>mock"</a>
+						<a href="_tcp_server_.html">"tcp/<wbr>Server"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_tcp_index_.html">"tcp/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_tcp_rx_.html">"tcp/rx"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="_tcp_tcp_.html">"tcp/tcp"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_test_.html">"test"</a>
 					</li>
 				</ul>
 			</nav>
@@ -205,14 +224,14 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/_tcp_client_.itcpclientoptions.html" class="tsd-kind-icon">ITcp<wbr>Client<wbr>Options</a>
 					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/_tcp_client_.itcpclientrequestoptions.html" class="tsd-kind-icon">ITcp<wbr>Client<wbr>Request<wbr>Options</a>
+					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
 						<a href="_tcp_client_.html#tcpclientresponse" class="tsd-kind-icon">Tcp<wbr>Client<wbr>Response</a>
 					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module">
-						<a href="_tcp_client_.html#connection_error" class="tsd-kind-icon">CONNECTION_<wbr>ERROR</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module">
-						<a href="_tcp_client_.html#timeout_error" class="tsd-kind-icon">TIMEOUT_<wbr>ERROR</a>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="_tcp_client_.html#tcpclientretrywhen" class="tsd-kind-icon">Tcp<wbr>Client<wbr>Retry<wbr>When</a>
 					</li>
 				</ul>
 			</nav>

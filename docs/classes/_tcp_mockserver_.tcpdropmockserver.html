@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>TcpMockServer | modbus.ts</title>
+	<title>TcpDropMockServer | modbus.ts</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,35 +56,34 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_tcp_server_mock_.html">&quot;tcp/server-mock&quot;</a>
+					<a href="../modules/_tcp_mockserver_.html">&quot;tcp/MockServer&quot;</a>
 				</li>
 				<li>
-					<a href="_tcp_server_mock_.tcpmockserver.html">TcpMockServer</a>
+					<a href="_tcp_mockserver_.tcpdropmockserver.html">TcpDropMockServer</a>
 				</li>
 			</ul>
-			<h1>Class TcpMockServer</h1>
+			<h1>Class TcpDropMockServer</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Emulate a Modbus TCP server which drops 2/3 of packets.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="_tcp_server_.tcpserver.html" class="tsd-signature-type">TcpServer</a>
+						<a href="_tcp_mockserver_.tcpmockserver.html" class="tsd-signature-type">TcpMockServer</a>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">TcpMockServer</span>
-								<ul class="tsd-hierarchy">
-									<li>
-										<a href="_tcp_server_mock_.tcpslowmockserver.html" class="tsd-signature-type">TcpSlowMockServer</a>
-									</li>
-									<li>
-										<a href="_tcp_server_mock_.tcpdropmockserver.html" class="tsd-signature-type">TcpDropMockServer</a>
-									</li>
-								</ul>
+								<span class="target">TcpDropMockServer</span>
 							</li>
 						</ul>
 					</li>
@@ -97,42 +96,48 @@
 						<section class="tsd-index-section tsd-is-inherited">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><a href="_tcp_server_mock_.tcpmockserver.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><a href="_tcp_mockserver_.tcpdropmockserver.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_tcp_mockserver_.tcpdropmockserver.html#_dropcounter" class="tsd-kind-icon">_drop<wbr>Counter</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section tsd-is-inherited">
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_tcp_server_mock_.tcpmockserver.html#debug" class="tsd-kind-icon">debug</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="_tcp_server_mock_.tcpmockserver.html#port" class="tsd-kind-icon">port</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_tcp_mockserver_.tcpdropmockserver.html#debug" class="tsd-kind-icon">debug</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="_tcp_mockserver_.tcpdropmockserver.html#port" class="tsd-kind-icon">port</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_tcp_server_mock_.tcpmockserver.html#aduheader" class="tsd-kind-icon">adu<wbr>Header</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_tcp_server_mock_.tcpmockserver.html#close" class="tsd-kind-icon">close</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_tcp_server_mock_.tcpmockserver.html#open" class="tsd-kind-icon">open</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_tcp_server_mock_.tcpmockserver.html#pdurequesthandler" class="tsd-kind-icon">pdu<wbr>Request<wbr>Handler</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="_tcp_server_mock_.tcpmockserver.html#readbits" class="tsd-kind-icon">read<wbr>Bits</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_tcp_server_mock_.tcpmockserver.html#readcoils" class="tsd-kind-icon">read<wbr>Coils</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_tcp_server_mock_.tcpmockserver.html#readdiscreteinputs" class="tsd-kind-icon">read<wbr>Discrete<wbr>Inputs</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_tcp_server_mock_.tcpmockserver.html#readholdingregisters" class="tsd-kind-icon">read<wbr>Holding<wbr>Registers</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_tcp_server_mock_.tcpmockserver.html#readinputregisters" class="tsd-kind-icon">read<wbr>Input<wbr>Registers</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="_tcp_server_mock_.tcpmockserver.html#readregisters" class="tsd-kind-icon">read<wbr>Registers</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_tcp_server_mock_.tcpmockserver.html#receivedata" class="tsd-kind-icon">receive<wbr>Data</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_tcp_server_mock_.tcpmockserver.html#requestreadbits" class="tsd-kind-icon">request<wbr>Read<wbr>Bits</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_tcp_server_mock_.tcpmockserver.html#requestreadregisters" class="tsd-kind-icon">request<wbr>Read<wbr>Registers</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_tcp_server_mock_.tcpmockserver.html#requestwritemultiplebits" class="tsd-kind-icon">request<wbr>Write<wbr>Multiple<wbr>Bits</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_tcp_server_mock_.tcpmockserver.html#requestwritemultipleregisters" class="tsd-kind-icon">request<wbr>Write<wbr>Multiple<wbr>Registers</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_tcp_server_mock_.tcpmockserver.html#requestwritesinglebit" class="tsd-kind-icon">request<wbr>Write<wbr>Single<wbr>Bit</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_tcp_server_mock_.tcpmockserver.html#requestwritesingleregister" class="tsd-kind-icon">request<wbr>Write<wbr>Single<wbr>Register</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_tcp_server_mock_.tcpmockserver.html#tcprequesthandler" class="tsd-kind-icon">tcp<wbr>Request<wbr>Handler</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_tcp_server_mock_.tcpmockserver.html#writemultiplecoils" class="tsd-kind-icon">write<wbr>Multiple<wbr>Coils</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_tcp_server_mock_.tcpmockserver.html#writemultipleregisters" class="tsd-kind-icon">write<wbr>Multiple<wbr>Registers</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_tcp_server_mock_.tcpmockserver.html#writeresponse" class="tsd-kind-icon">write<wbr>Response</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_tcp_server_mock_.tcpmockserver.html#writesinglecoil" class="tsd-kind-icon">write<wbr>Single<wbr>Coil</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_tcp_server_mock_.tcpmockserver.html#writesingleregister" class="tsd-kind-icon">write<wbr>Single<wbr>Register</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_tcp_mockserver_.tcpdropmockserver.html#aduheader" class="tsd-kind-icon">adu<wbr>Header</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_tcp_mockserver_.tcpdropmockserver.html#close" class="tsd-kind-icon">close</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_tcp_mockserver_.tcpdropmockserver.html#open" class="tsd-kind-icon">open</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_tcp_mockserver_.tcpdropmockserver.html#pdurequesthandler" class="tsd-kind-icon">pdu<wbr>Request<wbr>Handler</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_tcp_mockserver_.tcpdropmockserver.html#readbits" class="tsd-kind-icon">read<wbr>Bits</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_tcp_mockserver_.tcpdropmockserver.html#readcoils" class="tsd-kind-icon">read<wbr>Coils</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_tcp_mockserver_.tcpdropmockserver.html#readdiscreteinputs" class="tsd-kind-icon">read<wbr>Discrete<wbr>Inputs</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_tcp_mockserver_.tcpdropmockserver.html#readholdingregisters" class="tsd-kind-icon">read<wbr>Holding<wbr>Registers</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_tcp_mockserver_.tcpdropmockserver.html#readinputregisters" class="tsd-kind-icon">read<wbr>Input<wbr>Registers</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_tcp_mockserver_.tcpdropmockserver.html#readregisters" class="tsd-kind-icon">read<wbr>Registers</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_tcp_mockserver_.tcpdropmockserver.html#receivedata" class="tsd-kind-icon">receive<wbr>Data</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_tcp_mockserver_.tcpdropmockserver.html#requestreadbits" class="tsd-kind-icon">request<wbr>Read<wbr>Bits</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_tcp_mockserver_.tcpdropmockserver.html#requestreadregisters" class="tsd-kind-icon">request<wbr>Read<wbr>Registers</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_tcp_mockserver_.tcpdropmockserver.html#requestwritemultiplebits" class="tsd-kind-icon">request<wbr>Write<wbr>Multiple<wbr>Bits</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_tcp_mockserver_.tcpdropmockserver.html#requestwritemultipleregisters" class="tsd-kind-icon">request<wbr>Write<wbr>Multiple<wbr>Registers</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_tcp_mockserver_.tcpdropmockserver.html#requestwritesinglebit" class="tsd-kind-icon">request<wbr>Write<wbr>Single<wbr>Bit</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_tcp_mockserver_.tcpdropmockserver.html#requestwritesingleregister" class="tsd-kind-icon">request<wbr>Write<wbr>Single<wbr>Register</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_tcp_mockserver_.tcpdropmockserver.html#tcprequesthandler" class="tsd-kind-icon">tcp<wbr>Request<wbr>Handler</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_tcp_mockserver_.tcpdropmockserver.html#writemultiplecoils" class="tsd-kind-icon">write<wbr>Multiple<wbr>Coils</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_tcp_mockserver_.tcpdropmockserver.html#writemultipleregisters" class="tsd-kind-icon">write<wbr>Multiple<wbr>Registers</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected"><a href="_tcp_mockserver_.tcpdropmockserver.html#writeresponse" class="tsd-kind-icon">write<wbr>Response</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_tcp_mockserver_.tcpdropmockserver.html#writesinglecoil" class="tsd-kind-icon">write<wbr>Single<wbr>Coil</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_tcp_mockserver_.tcpdropmockserver.html#writesingleregister" class="tsd-kind-icon">write<wbr>Single<wbr>Register</a></li>
 							</ul>
 						</section>
 					</div>
@@ -144,14 +149,14 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Tcp<wbr>Mock<wbr>Server<span class="tsd-signature-symbol">(</span>port<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span>, namespace<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_tcp_server_mock_.tcpmockserver.html" class="tsd-signature-type">TcpMockServer</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Tcp<wbr>Drop<wbr>Mock<wbr>Server<span class="tsd-signature-symbol">(</span>port<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span>, namespace<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_tcp_mockserver_.tcpdropmockserver.html" class="tsd-signature-type">TcpDropMockServer</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_tcp_server_.tcpserver.html">TcpServer</a>.<a href="_tcp_server_.tcpserver.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/server.ts#L25">tcp/server.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Server.ts#L26">tcp/Server.ts:26</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -163,9 +168,22 @@
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> namespace: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;mbtcp&quot;</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_tcp_server_mock_.tcpmockserver.html" class="tsd-signature-type">TcpMockServer</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_tcp_mockserver_.tcpdropmockserver.html" class="tsd-signature-type">TcpDropMockServer</a></h4>
 						</li>
 					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="_dropcounter" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _drop<wbr>Counter</h3>
+					<div class="tsd-signature tsd-kind-icon">_drop<wbr>Counter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/MockServer.ts#L75">tcp/MockServer.ts:75</a></li>
+						</ul>
+					</aside>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
@@ -181,7 +199,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_tcp_server_.tcpserver.html">TcpServer</a>.<a href="_tcp_server_.tcpserver.html#debug">debug</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/server.ts#L85">tcp/server.ts:85</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Server.ts#L86">tcp/Server.ts:86</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -204,7 +222,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_tcp_server_.tcpserver.html">TcpServer</a>.<a href="_tcp_server_.tcpserver.html#port">port</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/server.ts#L25">tcp/server.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Server.ts#L26">tcp/Server.ts:26</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -230,7 +248,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_tcp_server_.tcpserver.html">TcpServer</a>.<a href="_tcp_server_.tcpserver.html#aduheader">aduHeader</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/server.ts#L148">tcp/server.ts:148</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Server.ts#L149">tcp/Server.ts:149</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -254,7 +272,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_tcp_server_.tcpserver.html">TcpServer</a>.<a href="_tcp_server_.tcpserver.html#close">close</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/server.ts#L75">tcp/server.ts:75</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Server.ts#L76">tcp/Server.ts:76</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -272,7 +290,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_tcp_server_.tcpserver.html">TcpServer</a>.<a href="_tcp_server_.tcpserver.html#open">open</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/server.ts#L33">tcp/server.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Server.ts#L34">tcp/Server.ts:34</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -290,7 +308,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_pdu_server_.pduserver.html">PduServer</a>.<a href="_pdu_server_.pduserver.html#pdurequesthandler">pduRequestHandler</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/pdu/server.ts#L17">pdu/server.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/pdu/Server.ts#L17">pdu/Server.ts:17</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -311,17 +329,18 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 					<a name="readbits" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> read<wbr>Bits</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 						<li class="tsd-signature tsd-kind-icon">read<wbr>Bits<span class="tsd-signature-symbol">(</span>startingAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, quantityOfBits<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Inherited from <a href="_tcp_mockserver_.tcpmockserver.html">TcpMockServer</a>.<a href="_tcp_mockserver_.tcpmockserver.html#readbits">readBits</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/server-mock.ts#L38">tcp/server-mock.ts:38</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/MockServer.ts#L39">tcp/MockServer.ts:39</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -337,18 +356,19 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 					<a name="readcoils" class="tsd-anchor"></a>
 					<h3>read<wbr>Coils</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 						<li class="tsd-signature tsd-kind-icon">read<wbr>Coils<span class="tsd-signature-symbol">(</span>startingAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, quantityOfCoils<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Inherited from <a href="_tcp_mockserver_.tcpmockserver.html">TcpMockServer</a>.<a href="_tcp_mockserver_.tcpmockserver.html#readcoils">readCoils</a></p>
 								<p>Overrides <a href="_pdu_server_.pduserver.html">PduServer</a>.<a href="_pdu_server_.pduserver.html#readcoils">readCoils</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/server-mock.ts#L6">tcp/server-mock.ts:6</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/MockServer.ts#L7">tcp/MockServer.ts:7</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -364,18 +384,19 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 					<a name="readdiscreteinputs" class="tsd-anchor"></a>
 					<h3>read<wbr>Discrete<wbr>Inputs</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 						<li class="tsd-signature tsd-kind-icon">read<wbr>Discrete<wbr>Inputs<span class="tsd-signature-symbol">(</span>startingAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, quantityOfInputs<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Inherited from <a href="_tcp_mockserver_.tcpmockserver.html">TcpMockServer</a>.<a href="_tcp_mockserver_.tcpmockserver.html#readdiscreteinputs">readDiscreteInputs</a></p>
 								<p>Overrides <a href="_pdu_server_.pduserver.html">PduServer</a>.<a href="_pdu_server_.pduserver.html#readdiscreteinputs">readDiscreteInputs</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/server-mock.ts#L10">tcp/server-mock.ts:10</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/MockServer.ts#L11">tcp/MockServer.ts:11</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -391,18 +412,19 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 					<a name="readholdingregisters" class="tsd-anchor"></a>
 					<h3>read<wbr>Holding<wbr>Registers</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 						<li class="tsd-signature tsd-kind-icon">read<wbr>Holding<wbr>Registers<span class="tsd-signature-symbol">(</span>startingAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, quantityOfRegisters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Inherited from <a href="_tcp_mockserver_.tcpmockserver.html">TcpMockServer</a>.<a href="_tcp_mockserver_.tcpmockserver.html#readholdingregisters">readHoldingRegisters</a></p>
 								<p>Overrides <a href="_pdu_server_.pduserver.html">PduServer</a>.<a href="_pdu_server_.pduserver.html#readholdingregisters">readHoldingRegisters</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/server-mock.ts#L14">tcp/server-mock.ts:14</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/MockServer.ts#L15">tcp/MockServer.ts:15</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -418,18 +440,19 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 					<a name="readinputregisters" class="tsd-anchor"></a>
 					<h3>read<wbr>Input<wbr>Registers</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 						<li class="tsd-signature tsd-kind-icon">read<wbr>Input<wbr>Registers<span class="tsd-signature-symbol">(</span>startingAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, quantityOfRegisters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Inherited from <a href="_tcp_mockserver_.tcpmockserver.html">TcpMockServer</a>.<a href="_tcp_mockserver_.tcpmockserver.html#readinputregisters">readInputRegisters</a></p>
 								<p>Overrides <a href="_pdu_server_.pduserver.html">PduServer</a>.<a href="_pdu_server_.pduserver.html#readinputregisters">readInputRegisters</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/server-mock.ts#L18">tcp/server-mock.ts:18</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/MockServer.ts#L19">tcp/MockServer.ts:19</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -445,17 +468,18 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 					<a name="readregisters" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> read<wbr>Registers</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 						<li class="tsd-signature tsd-kind-icon">read<wbr>Registers<span class="tsd-signature-symbol">(</span>startingAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, quantityOfRegisters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Inherited from <a href="_tcp_mockserver_.tcpmockserver.html">TcpMockServer</a>.<a href="_tcp_mockserver_.tcpmockserver.html#readregisters">readRegisters</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/server-mock.ts#L46">tcp/server-mock.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/MockServer.ts#L47">tcp/MockServer.ts:47</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -482,7 +506,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_tcp_server_.tcpserver.html">TcpServer</a>.<a href="_tcp_server_.tcpserver.html#receivedata">receiveData</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/server.ts#L87">tcp/server.ts:87</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Server.ts#L88">tcp/Server.ts:88</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -512,7 +536,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_pdu_server_.pduserver.html">PduServer</a>.<a href="_pdu_server_.pduserver.html#requestreadbits">requestReadBits</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/pdu/server.ts#L73">pdu/server.ts:73</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/pdu/Server.ts#L73">pdu/Server.ts:73</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -542,7 +566,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_pdu_server_.pduserver.html">PduServer</a>.<a href="_pdu_server_.pduserver.html#requestreadregisters">requestReadRegisters</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/pdu/server.ts#L90">pdu/server.ts:90</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/pdu/Server.ts#L90">pdu/Server.ts:90</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -572,7 +596,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_pdu_server_.pduserver.html">PduServer</a>.<a href="_pdu_server_.pduserver.html#requestwritemultiplebits">requestWriteMultipleBits</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/pdu/server.ts#L135">pdu/server.ts:135</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/pdu/Server.ts#L135">pdu/Server.ts:135</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -599,7 +623,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_pdu_server_.pduserver.html">PduServer</a>.<a href="_pdu_server_.pduserver.html#requestwritemultipleregisters">requestWriteMultipleRegisters</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/pdu/server.ts#L150">pdu/server.ts:150</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/pdu/Server.ts#L150">pdu/Server.ts:150</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -626,7 +650,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_pdu_server_.pduserver.html">PduServer</a>.<a href="_pdu_server_.pduserver.html#requestwritesinglebit">requestWriteSingleBit</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/pdu/server.ts#L107">pdu/server.ts:107</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/pdu/Server.ts#L107">pdu/Server.ts:107</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -653,7 +677,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_pdu_server_.pduserver.html">PduServer</a>.<a href="_pdu_server_.pduserver.html#requestwritesingleregister">requestWriteSingleRegister</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/pdu/server.ts#L121">pdu/server.ts:121</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/pdu/Server.ts#L121">pdu/Server.ts:121</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -680,7 +704,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_tcp_server_.tcpserver.html">TcpServer</a>.<a href="_tcp_server_.tcpserver.html#tcprequesthandler">tcpRequestHandler</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/server.ts#L122">tcp/server.ts:122</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/Server.ts#L123">tcp/Server.ts:123</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -699,18 +723,19 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 					<a name="writemultiplecoils" class="tsd-anchor"></a>
 					<h3>write<wbr>Multiple<wbr>Coils</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 						<li class="tsd-signature tsd-kind-icon">write<wbr>Multiple<wbr>Coils<span class="tsd-signature-symbol">(</span>startingAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, outputValues<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Inherited from <a href="_tcp_mockserver_.tcpmockserver.html">TcpMockServer</a>.<a href="_tcp_mockserver_.tcpmockserver.html#writemultiplecoils">writeMultipleCoils</a></p>
 								<p>Overrides <a href="_pdu_server_.pduserver.html">PduServer</a>.<a href="_pdu_server_.pduserver.html#writemultiplecoils">writeMultipleCoils</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/server-mock.ts#L30">tcp/server-mock.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/MockServer.ts#L31">tcp/MockServer.ts:31</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -726,18 +751,19 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 					<a name="writemultipleregisters" class="tsd-anchor"></a>
 					<h3>write<wbr>Multiple<wbr>Registers</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 						<li class="tsd-signature tsd-kind-icon">write<wbr>Multiple<wbr>Registers<span class="tsd-signature-symbol">(</span>startingAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, registerValues<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Inherited from <a href="_tcp_mockserver_.tcpmockserver.html">TcpMockServer</a>.<a href="_tcp_mockserver_.tcpmockserver.html#writemultipleregisters">writeMultipleRegisters</a></p>
 								<p>Overrides <a href="_pdu_server_.pduserver.html">PduServer</a>.<a href="_pdu_server_.pduserver.html#writemultipleregisters">writeMultipleRegisters</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/server-mock.ts#L34">tcp/server-mock.ts:34</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/MockServer.ts#L35">tcp/MockServer.ts:35</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -753,18 +779,18 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
 					<a name="writeresponse" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> write<wbr>Response</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
 						<li class="tsd-signature tsd-kind-icon">write<wbr>Response<span class="tsd-signature-symbol">(</span>socket<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Socket</span>, packet<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="_tcp_server_.tcpserver.html">TcpServer</a>.<a href="_tcp_server_.tcpserver.html#writeresponse">writeResponse</a></p>
+								<p>Overrides <a href="_tcp_server_.tcpserver.html">TcpServer</a>.<a href="_tcp_server_.tcpserver.html#writeresponse">writeResponse</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/server.ts#L157">tcp/server.ts:157</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/MockServer.ts#L77">tcp/MockServer.ts:77</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -780,18 +806,19 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 					<a name="writesinglecoil" class="tsd-anchor"></a>
 					<h3>write<wbr>Single<wbr>Coil</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 						<li class="tsd-signature tsd-kind-icon">write<wbr>Single<wbr>Coil<span class="tsd-signature-symbol">(</span>outputAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, outputValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Inherited from <a href="_tcp_mockserver_.tcpmockserver.html">TcpMockServer</a>.<a href="_tcp_mockserver_.tcpmockserver.html#writesinglecoil">writeSingleCoil</a></p>
 								<p>Overrides <a href="_pdu_server_.pduserver.html">PduServer</a>.<a href="_pdu_server_.pduserver.html#writesinglecoil">writeSingleCoil</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/server-mock.ts#L22">tcp/server-mock.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/MockServer.ts#L23">tcp/MockServer.ts:23</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -807,18 +834,19 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 					<a name="writesingleregister" class="tsd-anchor"></a>
 					<h3>write<wbr>Single<wbr>Register</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 						<li class="tsd-signature tsd-kind-icon">write<wbr>Single<wbr>Register<span class="tsd-signature-symbol">(</span>registerAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, registerValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Inherited from <a href="_tcp_mockserver_.tcpmockserver.html">TcpMockServer</a>.<a href="_tcp_mockserver_.tcpmockserver.html#writesingleregister">writeSingleRegister</a></p>
 								<p>Overrides <a href="_pdu_server_.pduserver.html">PduServer</a>.<a href="_pdu_server_.pduserver.html#writesingleregister">writeSingleRegister</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/ce3be42/src/tcp/server-mock.ts#L26">tcp/server-mock.ts:26</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/c518ada/tcp/MockServer.ts#L27">tcp/MockServer.ts:27</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -843,140 +871,152 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="../modules/_examples_quickstart_.html">"examples/quickstart"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_index_.html">"index"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_node_.html">"node"</a>
+						<a href="../modules/_pdu_client_.html">"pdu/<wbr>Client"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_pdu_client_.html">"pdu/client"</a>
+						<a href="../modules/_pdu_client_spec_.html">"pdu/<wbr>Client.spec"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_pdu_client_spec_.html">"pdu/client.spec"</a>
+						<a href="../modules/_pdu_mockserver_.html">"pdu/<wbr>Mock<wbr>Server"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_pdu_server_.html">"pdu/<wbr>Server"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_pdu_index_.html">"pdu/index"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_pdu_pdu_.html">"pdu/pdu"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_pdu_server_.html">"pdu/server"</a>
+						<a href="../modules/_tcp_client_.html">"tcp/<wbr>Client"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_pdu_server_mock_.html">"pdu/server-<wbr>mock"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_rx_.html">"rx"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_tcp_client_.html">"tcp/client"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_tcp_client_spec_.html">"tcp/client.spec"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_tcp_server_.html">"tcp/server"</a>
+						<a href="../modules/_tcp_client_spec_.html">"tcp/<wbr>Client.spec"</a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/_tcp_server_mock_.html">"tcp/server-<wbr>mock"</a>
+						<a href="../modules/_tcp_mockserver_.html">"tcp/<wbr>Mock<wbr>Server"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_tcp_server_.html">"tcp/<wbr>Server"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_tcp_index_.html">"tcp/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_tcp_rx_.html">"tcp/rx"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_tcp_tcp_.html">"tcp/tcp"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_test_.html">"test"</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_tcp_server_mock_.tcpdropmockserver.html" class="tsd-kind-icon">Tcp<wbr>Drop<wbr>Mock<wbr>Server</a>
-					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_tcp_server_mock_.tcpmockserver.html" class="tsd-kind-icon">Tcp<wbr>Mock<wbr>Server</a>
+						<a href="_tcp_mockserver_.tcpdropmockserver.html" class="tsd-kind-icon">Tcp<wbr>Drop<wbr>Mock<wbr>Server</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited">
-								<a href="_tcp_server_mock_.tcpmockserver.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#_dropcounter" class="tsd-kind-icon">_drop<wbr>Counter</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
-								<a href="_tcp_server_mock_.tcpmockserver.html#debug" class="tsd-kind-icon">debug</a>
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#debug" class="tsd-kind-icon">debug</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
-								<a href="_tcp_server_mock_.tcpmockserver.html#port" class="tsd-kind-icon">port</a>
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#port" class="tsd-kind-icon">port</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
-								<a href="_tcp_server_mock_.tcpmockserver.html#aduheader" class="tsd-kind-icon">adu<wbr>Header</a>
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#aduheader" class="tsd-kind-icon">adu<wbr>Header</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_tcp_server_mock_.tcpmockserver.html#close" class="tsd-kind-icon">close</a>
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#close" class="tsd-kind-icon">close</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_tcp_server_mock_.tcpmockserver.html#open" class="tsd-kind-icon">open</a>
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#open" class="tsd-kind-icon">open</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_tcp_server_mock_.tcpmockserver.html#pdurequesthandler" class="tsd-kind-icon">pdu<wbr>Request<wbr>Handler</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
-								<a href="_tcp_server_mock_.tcpmockserver.html#readbits" class="tsd-kind-icon">read<wbr>Bits</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_tcp_server_mock_.tcpmockserver.html#readcoils" class="tsd-kind-icon">read<wbr>Coils</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_tcp_server_mock_.tcpmockserver.html#readdiscreteinputs" class="tsd-kind-icon">read<wbr>Discrete<wbr>Inputs</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_tcp_server_mock_.tcpmockserver.html#readholdingregisters" class="tsd-kind-icon">read<wbr>Holding<wbr>Registers</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_tcp_server_mock_.tcpmockserver.html#readinputregisters" class="tsd-kind-icon">read<wbr>Input<wbr>Registers</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
-								<a href="_tcp_server_mock_.tcpmockserver.html#readregisters" class="tsd-kind-icon">read<wbr>Registers</a>
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#pdurequesthandler" class="tsd-kind-icon">pdu<wbr>Request<wbr>Handler</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
-								<a href="_tcp_server_mock_.tcpmockserver.html#receivedata" class="tsd-kind-icon">receive<wbr>Data</a>
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#readbits" class="tsd-kind-icon">read<wbr>Bits</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#readcoils" class="tsd-kind-icon">read<wbr>Coils</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#readdiscreteinputs" class="tsd-kind-icon">read<wbr>Discrete<wbr>Inputs</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#readholdingregisters" class="tsd-kind-icon">read<wbr>Holding<wbr>Registers</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#readinputregisters" class="tsd-kind-icon">read<wbr>Input<wbr>Registers</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
-								<a href="_tcp_server_mock_.tcpmockserver.html#requestreadbits" class="tsd-kind-icon">request<wbr>Read<wbr>Bits</a>
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#readregisters" class="tsd-kind-icon">read<wbr>Registers</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
-								<a href="_tcp_server_mock_.tcpmockserver.html#requestreadregisters" class="tsd-kind-icon">request<wbr>Read<wbr>Registers</a>
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#receivedata" class="tsd-kind-icon">receive<wbr>Data</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
-								<a href="_tcp_server_mock_.tcpmockserver.html#requestwritemultiplebits" class="tsd-kind-icon">request<wbr>Write<wbr>Multiple<wbr>Bits</a>
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#requestreadbits" class="tsd-kind-icon">request<wbr>Read<wbr>Bits</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
-								<a href="_tcp_server_mock_.tcpmockserver.html#requestwritemultipleregisters" class="tsd-kind-icon">request<wbr>Write<wbr>Multiple<wbr>Registers</a>
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#requestreadregisters" class="tsd-kind-icon">request<wbr>Read<wbr>Registers</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
-								<a href="_tcp_server_mock_.tcpmockserver.html#requestwritesinglebit" class="tsd-kind-icon">request<wbr>Write<wbr>Single<wbr>Bit</a>
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#requestwritemultiplebits" class="tsd-kind-icon">request<wbr>Write<wbr>Multiple<wbr>Bits</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
-								<a href="_tcp_server_mock_.tcpmockserver.html#requestwritesingleregister" class="tsd-kind-icon">request<wbr>Write<wbr>Single<wbr>Register</a>
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#requestwritemultipleregisters" class="tsd-kind-icon">request<wbr>Write<wbr>Multiple<wbr>Registers</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
-								<a href="_tcp_server_mock_.tcpmockserver.html#tcprequesthandler" class="tsd-kind-icon">tcp<wbr>Request<wbr>Handler</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_tcp_server_mock_.tcpmockserver.html#writemultiplecoils" class="tsd-kind-icon">write<wbr>Multiple<wbr>Coils</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_tcp_server_mock_.tcpmockserver.html#writemultipleregisters" class="tsd-kind-icon">write<wbr>Multiple<wbr>Registers</a>
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#requestwritesinglebit" class="tsd-kind-icon">request<wbr>Write<wbr>Single<wbr>Bit</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
-								<a href="_tcp_server_mock_.tcpmockserver.html#writeresponse" class="tsd-kind-icon">write<wbr>Response</a>
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#requestwritesingleregister" class="tsd-kind-icon">request<wbr>Write<wbr>Single<wbr>Register</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_tcp_server_mock_.tcpmockserver.html#writesinglecoil" class="tsd-kind-icon">write<wbr>Single<wbr>Coil</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#tcprequesthandler" class="tsd-kind-icon">tcp<wbr>Request<wbr>Handler</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_tcp_server_mock_.tcpmockserver.html#writesingleregister" class="tsd-kind-icon">write<wbr>Single<wbr>Register</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#writemultiplecoils" class="tsd-kind-icon">write<wbr>Multiple<wbr>Coils</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#writemultipleregisters" class="tsd-kind-icon">write<wbr>Multiple<wbr>Registers</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#writeresponse" class="tsd-kind-icon">write<wbr>Response</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#writesinglecoil" class="tsd-kind-icon">write<wbr>Single<wbr>Coil</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
+								<a href="_tcp_mockserver_.tcpdropmockserver.html#writesingleregister" class="tsd-kind-icon">write<wbr>Single<wbr>Register</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_tcp_server_mock_.tcpslowmockserver.html" class="tsd-kind-icon">Tcp<wbr>Slow<wbr>Mock<wbr>Server</a>
+						<a href="_tcp_mockserver_.tcpmockserver.html" class="tsd-kind-icon">Tcp<wbr>Mock<wbr>Server</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="_tcp_mockserver_.tcpslowmockserver.html" class="tsd-kind-icon">Tcp<wbr>Slow<wbr>Mock<wbr>Server</a>
 					</li>
 				</ul>
 			</nav>

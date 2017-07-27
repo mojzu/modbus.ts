@@ -75,11 +75,11 @@
 				</ul>
 				<h2 id="quickstart">Quickstart</h2>
 				<p>Modbus TCP client communicating with mock server example.</p>
-				<pre><code class="lang-JavaScript"><span class="hljs-keyword">var</span> modbus = <span class="hljs-built_in">require</span>(<span class="hljs-string">"modbus.ts"</span>);
+				<pre><code class="lang-TypeScript"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> modbus <span class="hljs-keyword">from</span> <span class="hljs-string">"modbus.ts"</span>;
 
 <span class="hljs-comment">// Create mock server and client instances.</span>
-<span class="hljs-keyword">var</span> server = <span class="hljs-keyword">new</span> modbus.TcpMockServer(<span class="hljs-number">5022</span>, <span class="hljs-string">"server"</span>);
-<span class="hljs-keyword">var</span> client = <span class="hljs-keyword">new</span> modbus.TcpClient({ <span class="hljs-attr">host</span>: <span class="hljs-string">"localhost"</span>, <span class="hljs-attr">port</span>: <span class="hljs-number">5022</span> }, <span class="hljs-string">"client"</span>);
+<span class="hljs-keyword">const</span> server = <span class="hljs-keyword">new</span> modbus.TcpMockServer(<span class="hljs-number">5022</span>, <span class="hljs-string">"server"</span>);
+<span class="hljs-keyword">const</span> client = <span class="hljs-keyword">new</span> modbus.TcpClient({ host: <span class="hljs-string">"localhost"</span>, port: <span class="hljs-number">5022</span> }, <span class="hljs-string">"client"</span>);
 
 <span class="hljs-comment">// Open server for connections.</span>
 server.open()
@@ -93,7 +93,7 @@ server.open()
       })
       .subscribe(<span class="hljs-function">(<span class="hljs-params">response</span>) =&gt;</span> {
         <span class="hljs-comment">// Handle server response(s).</span>
-        <span class="hljs-built_in">console</span>.log(response.data);
+        process.stdout.write(<span class="hljs-string">`<span class="hljs-subst">${JSON.stringify(response.data, null, 2)}</span>\n`</span>);
 
         <span class="hljs-comment">// Disconnect client, close server.</span>
         client.disconnect();
@@ -104,36 +104,52 @@ server.open()
 </code></pre>
 				<h2 id="dependencies">Dependencies</h2>
 				<ul>
+					<li><a href="https://www.npmjs.com/package/container.ts">container.ts</a></li>
 					<li><a href="https://www.npmjs.com/package/debug">debug</a></li>
-					<li><a href="http://reactivex.io/rxjs/">RxJS</a></li>
+					<li><a href="https://www.npmjs.com/package/rxjs">rxjs</a></li>
 				</ul>
 				<h2 id="developer">Developer</h2>
-				<pre><code class="lang-Shell"><span class="hljs-meta">#</span><span class="bash"> Install dependencies.</span>
-<span class="hljs-meta">$</span><span class="bash"> yarn install</span>
-<span class="hljs-meta">
-#</span><span class="bash"> Clean distribution directory.</span>
-<span class="hljs-meta">$</span><span class="bash"> yarn run clean</span>
-<span class="hljs-meta">
-#</span><span class="bash"> Clean Node modules directory.</span>
-<span class="hljs-meta">$</span><span class="bash"> yarn run distclean</span>
-<span class="hljs-meta">
-#</span><span class="bash"> Run tests with coverage.</span>
-<span class="hljs-meta">$</span><span class="bash"> yarn run <span class="hljs-built_in">test</span></span>
-<span class="hljs-meta">
-#</span><span class="bash"> Run linter.</span>
-<span class="hljs-meta">$</span><span class="bash"> yarn run lint</span>
-<span class="hljs-meta">
-#</span><span class="bash"> Build documentation.</span>
-<span class="hljs-meta">$</span><span class="bash"> yarn run docs</span>
-<span class="hljs-meta">
-#</span><span class="bash"> Package library.</span>
-<span class="hljs-meta">$</span><span class="bash"> yarn run pack</span>
-<span class="hljs-meta">
-#</span><span class="bash"> Run examples.</span>
-<span class="hljs-meta">$</span><span class="bash"> node examples/quickstart.js</span>
-<span class="hljs-meta">
-#</span><span class="bash"> Release library.</span>
-<span class="hljs-meta">$</span><span class="bash"> yarn run pack &amp;&amp; npm publish --access=public</span>
+				<p>Clone repository, install dependencies with <code>yarn install</code> and run scripts: <code>yarn run ...</code></p>
+				<table>
+					<thead>
+						<tr>
+							<th>Script</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>clean</code></td>
+							<td>Clean compiled files.</td>
+						</tr>
+						<tr>
+							<td><code>distclean</code></td>
+							<td>Remove Node modules and generated documentation.</td>
+						</tr>
+						<tr>
+							<td><code>test</code></td>
+							<td>Run tests using Jasmine and Istanbul.</td>
+						</tr>
+						<tr>
+							<td><code>lint</code></td>
+							<td>Run TSLint on project.</td>
+						</tr>
+						<tr>
+							<td><code>example</code></td>
+							<td>Run example script, <code>yarn run example -- -f quickstart</code>.</td>
+						</tr>
+						<tr>
+							<td><code>docs</code></td>
+							<td>Generate Typedoc documentation.</td>
+						</tr>
+						<tr>
+							<td><code>build</code></td>
+							<td>Build library for release.</td>
+						</tr>
+					</tbody>
+				</table>
+				<p>Publishing library to NPM/GitHub.</p>
+				<pre><code class="lang-Shell"><span class="hljs-meta">$</span><span class="bash"> yarn run build &amp;&amp; npm publish --access=public</span>
 <span class="hljs-meta">$</span><span class="bash"> git push origin master --tags</span>
 </code></pre>
 				<p>Set <a href="https://github.com/">GitHub</a> repository pages source to <code>/docs</code>.</p>
@@ -147,43 +163,52 @@ server.open()
 						<a href="globals.html"><em>Globals</em></a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="modules/_examples_quickstart_.html">"examples/quickstart"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="modules/_index_.html">"index"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_node_.html">"node"</a>
+						<a href="modules/_pdu_client_.html">"pdu/<wbr>Client"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_pdu_client_.html">"pdu/client"</a>
+						<a href="modules/_pdu_client_spec_.html">"pdu/<wbr>Client.spec"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_pdu_client_spec_.html">"pdu/client.spec"</a>
+						<a href="modules/_pdu_mockserver_.html">"pdu/<wbr>Mock<wbr>Server"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_pdu_server_.html">"pdu/<wbr>Server"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_pdu_index_.html">"pdu/index"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_pdu_pdu_.html">"pdu/pdu"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_pdu_server_.html">"pdu/server"</a>
+						<a href="modules/_tcp_client_.html">"tcp/<wbr>Client"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_pdu_server_mock_.html">"pdu/server-<wbr>mock"</a>
+						<a href="modules/_tcp_client_spec_.html">"tcp/<wbr>Client.spec"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_rx_.html">"rx"</a>
+						<a href="modules/_tcp_mockserver_.html">"tcp/<wbr>Mock<wbr>Server"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_tcp_client_.html">"tcp/client"</a>
+						<a href="modules/_tcp_server_.html">"tcp/<wbr>Server"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_tcp_client_spec_.html">"tcp/client.spec"</a>
+						<a href="modules/_tcp_index_.html">"tcp/index"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_tcp_server_.html">"tcp/server"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_tcp_server_mock_.html">"tcp/server-<wbr>mock"</a>
+						<a href="modules/_tcp_rx_.html">"tcp/rx"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_tcp_tcp_.html">"tcp/tcp"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_.html">"test"</a>
 					</li>
 				</ul>
 			</nav>
