@@ -9,19 +9,35 @@ import * as tcp from "./tcp";
 /** Modbus TCP client response types. */
 export type TcpClientResponse = tcp.TcpResponse | tcp.TcpException | null;
 
-/**
- * Modbus TCP client options.
- */
-export interface ITcpClientOptions {
+/** Conditional retry callback type. */
+export type TcpClientRetryWhen = (
+  client: TcpClient,
+  request: tcp.TcpRequest,
+  retry: number,
+  errorCount: number,
+  error: any,
+) => number;
+
+/** Modbus TCP client request options. */
+export interface ITcpClientRequestOptions {
+  retry?: number;
+  timeout?: number;
+  retryWhen?: TcpClientRetryWhen;
+}
+
+/** Modbus TCP client options. */
+export interface ITcpClientOptions extends ITcpClientRequestOptions {
   host: string;
   port?: number;
   unitId?: number;
 }
 
-/**
- * Modbus TCP client.
- */
+/** Modbus TCP client. */
 export class TcpClient {
+
+  public static DEFAULT_RETRY = 0;
+  public static DEFAULT_TIMEOUT = 5000;
+  public static DEFAULT_PORT = 502;
 
   /** Error codes. */
   public static ERROR = {
@@ -29,7 +45,11 @@ export class TcpClient {
     TIMEOUT: "TcpClientTimeoutError",
   };
 
-  private _debug: any;
+  private _debug: debug.IDebugger;
+
+  private _retry: number;
+  private _timeout: number;
+  private _retryWhen: TcpClientRetryWhen;
 
   private _host: string;
   private _port: number;
@@ -45,7 +65,6 @@ export class TcpClient {
   private _receive = new Subject<tcp.TcpResponse | tcp.TcpException>();
   private _transmit = new Subject<tcp.TcpRequest>();
 
-  private _retries = 0;
   private _bytesReceived = 0;
   private _bytesTransmitted = 0;
   private _packetsReceived = 0;
@@ -83,9 +102,6 @@ export class TcpClient {
     return null;
   }
 
-  /** Total number of retries performed by client. */
-  public get retries(): number { return this._retries; }
-
   /** Number of bytes received by client. */
   public get bytesReceived(): number { return this._bytesReceived; }
 
@@ -99,7 +115,21 @@ export class TcpClient {
   public get packetsTransmitted(): number { return this._packetsTransmitted; }
 
   /** Client internal debugging interface. */
-  protected get debug(): any { return ((this._debug != null) ? this._debug : () => { }); }
+  protected get debug(): debug.IDebugger {
+    if (this._debug != null) {
+      return this._debug;
+    }
+    return (() => { }) as any;
+  }
+
+  /** Default number of retries performed during requests. */
+  protected get retry(): number { return this._retry; }
+
+  /** Default timeout of requests. */
+  protected get timeout(): number { return this._timeout; }
+
+  /** Default retryWhen callback of requests. */
+  protected get retryWhen(): TcpClientRetryWhen { return this._retryWhen; }
 
   /** Node socket connection options. */
   protected get connectionOptions() { return { host: this._host, port: this._port }; }
@@ -112,13 +142,18 @@ export class TcpClient {
 
   /**
    * Create TCP client instance.
-   * @param options Client options.
+   * @param options Client and default request options.
    * @param namespace Optional debug namespace.
    */
   public constructor(options: ITcpClientOptions, namespace?: string) {
+    this._retry = this.validRetry(options.retry || TcpClient.DEFAULT_RETRY);
+    this._timeout = this.validTimeout(options.timeout || TcpClient.DEFAULT_TIMEOUT);
+    this._retryWhen = this.retryWhenCallback(options.retryWhen || this.defaultRetryWhen.bind(this));
+
     this._host = Validate.isString(options.host);
-    this._port = Validate.isPort(String(options.port || 502));
+    this._port = Validate.isPort(String(options.port || TcpClient.DEFAULT_PORT));
     this._unitId = Validate.isInteger(String(options.unitId || 1), { min: 0x1, max: 0xFF });
+
     if (namespace != null) {
       this._debug = debug(namespace);
     }
@@ -129,11 +164,11 @@ export class TcpClient {
    * Observable will emit next after connected, throw an error if
    * connection fails and complete when 'disconnect' is called.
    * Completes if no data transmitted or received after timeout.
-   * @param timeout Seconds of socket inactivty which causes timeout error.
+   * @param options Request options.
    */
-  public connect(timeout = 30): Observable<boolean> {
+  public connect(options: ITcpClientRequestOptions = {}): Observable<boolean> {
     // Validate timeout argument and ensure client disconnected.
-    timeout = this.validTimeout(timeout);
+    const timeout = this.validTimeout(options.timeout);
     this.disconnect();
 
     this.debug(`connect: ${this.address}`);
@@ -206,18 +241,16 @@ export class TcpClient {
    * of coils in a remote device.
    * @param startingAddress Starting address.
    * @param quantityOfCoils Quantity of coils.
-   * @param timeout Number of seconds to wait for response (1 - 30).
-   * @param retry Number of retries (0 - 5).
+   * @param options Request options.
    */
   public readCoils(
     startingAddress: number,
     quantityOfCoils: number,
-    timeout = 5,
-    retry = 0,
+    options: ITcpClientRequestOptions = {},
   ): Observable<tcp.TcpResponse> {
     const pduRequest = PduClient.readCoils(startingAddress, quantityOfCoils);
     const request = this.aduHeader(pduRequest.functionCode, pduRequest.buffer);
-    return this.writeRequest(request, timeout, retry);
+    return this.writeRequest(request, options);
   }
 
   /**
@@ -225,18 +258,16 @@ export class TcpClient {
    * of discrete inputs in a remote device.
    * @param startingAddress Starting address.
    * @param quantityOfInputs Quantity of inputs.
-   * @param timeout Number of seconds to wait for response (1 - 30).
-   * @param retry Number of retries (0 - 5).
+   * @param options Request options.
    */
   public readDiscreteInputs(
     startingAddress: number,
     quantityOfInputs: number,
-    timeout = 5,
-    retry = 0,
+    options: ITcpClientRequestOptions = {},
   ): Observable<tcp.TcpResponse> {
     const pduRequest = PduClient.readDiscreteInputs(startingAddress, quantityOfInputs);
     const request = this.aduHeader(pduRequest.functionCode, pduRequest.buffer);
-    return this.writeRequest(request, timeout, retry);
+    return this.writeRequest(request, options);
   }
 
   /**
@@ -244,18 +275,16 @@ export class TcpClient {
    * of holding registers in a remote device.
    * @param startingAddress Starting address.
    * @param quantityOfRegisters Quantity of registers.
-   * @param timeout Number of seconds to wait for response (1 - 30).
-   * @param retry Number of retries (0 - 5).
+   * @param options Request options.
    */
   public readHoldingRegisters(
     startingAddress: number,
     quantityOfRegisters: number,
-    timeout = 5,
-    retry = 0,
+    options: ITcpClientRequestOptions = {},
   ): Observable<tcp.TcpResponse> {
     const pduRequest = PduClient.readHoldingRegisters(startingAddress, quantityOfRegisters);
     const request = this.aduHeader(pduRequest.functionCode, pduRequest.buffer);
-    return this.writeRequest(request, timeout, retry);
+    return this.writeRequest(request, options);
   }
 
   /**
@@ -263,18 +292,16 @@ export class TcpClient {
    * registers in a remote device.
    * @param startingAddress Starting address.
    * @param quantityOfRegisters Quantity of registers.
-   * @param timeout Number of seconds to wait for response (1 - 30).
-   * @param retry Number of retries (0 - 5).
+   * @param options Request options.
    */
   public readInputRegisters(
     startingAddress: number,
     quantityOfRegisters: number,
-    timeout = 5,
-    retry = 0,
+    options: ITcpClientRequestOptions = {},
   ): Observable<tcp.TcpResponse> {
     const pduRequest = PduClient.readInputRegisters(startingAddress, quantityOfRegisters);
     const request = this.aduHeader(pduRequest.functionCode, pduRequest.buffer);
-    return this.writeRequest(request, timeout, retry);
+    return this.writeRequest(request, options);
   }
 
   /**
@@ -282,18 +309,16 @@ export class TcpClient {
    * or OFF in a remote device.
    * @param outputAddress Output address.
    * @param outputValue  Output value.
-   * @param timeout Number of seconds to wait for response (1 - 30).
-   * @param retry Number of retries (0 - 5).
+   * @param options Request options.
    */
   public writeSingleCoil(
     outputAddress: number,
     outputValue: boolean,
-    timeout = 5,
-    retry = 0,
+    options: ITcpClientRequestOptions = {},
   ): Observable<tcp.TcpResponse> {
     const pduRequest = PduClient.writeSingleCoil(outputAddress, outputValue);
     const request = this.aduHeader(pduRequest.functionCode, pduRequest.buffer);
-    return this.writeRequest(request, timeout, retry);
+    return this.writeRequest(request, options);
   }
 
   /**
@@ -301,18 +326,16 @@ export class TcpClient {
    * in a remote device.
    * @param registerAddress Register address.
    * @param registerValue Register value.
-   * @param timeout Number of seconds to wait for response (1 - 30).
-   * @param retry Number of retries (0 - 5).
+   * @param options Request options.
    */
   public writeSingleRegister(
     registerAddress: number,
     registerValue: number,
-    timeout = 5,
-    retry = 0,
+    options: ITcpClientRequestOptions = {},
   ): Observable<tcp.TcpResponse> {
     const pduRequest = PduClient.writeSingleRegister(registerAddress, registerValue);
     const request = this.aduHeader(pduRequest.functionCode, pduRequest.buffer);
-    return this.writeRequest(request, timeout, retry);
+    return this.writeRequest(request, options);
   }
 
   /**
@@ -320,18 +343,16 @@ export class TcpClient {
    * either ON or OFF in a remote device.
    * @param startingAddress Starting address.
    * @param outputValues Output values.
-   * @param timeout Number of seconds to wait for response (1 - 30).
-   * @param retry Number of retries (0 - 5).
+   * @param options Request options.
    */
   public writeMultipleCoils(
     startingAddress: number,
     outputValues: boolean[],
-    timeout = 5,
-    retry = 0,
+    options: ITcpClientRequestOptions = {},
   ): Observable<tcp.TcpResponse> {
     const pduRequest = PduClient.writeMultipleCoils(startingAddress, outputValues);
     const request = this.aduHeader(pduRequest.functionCode, pduRequest.buffer);
-    return this.writeRequest(request, timeout, retry);
+    return this.writeRequest(request, options);
   }
 
   /**
@@ -339,28 +360,33 @@ export class TcpClient {
    * (1 to 123 registers) in a remote device.
    * @param startingAddress Starting address.
    * @param registerValues Register values.
-   * @param timeout Number of seconds to wait for response (1 - 30).
-   * @param retry Number of retries (0 - 5).
+   * @param options Request options.
    */
   public writeMultipleRegisters(
     startingAddress: number,
     registerValues: number[],
-    timeout = 5,
-    retry = 0,
+    options: ITcpClientRequestOptions = {},
   ): Observable<tcp.TcpResponse> {
     const pduRequest = PduClient.writeMultipleRegisters(startingAddress, registerValues);
     const request = this.aduHeader(pduRequest.functionCode, pduRequest.buffer);
-    return this.writeRequest(request, timeout, retry);
-  }
-
-  /** Validate and convert timeout in seconds to milliseconds. */
-  protected validTimeout(value: number): number {
-    return Validate.isInteger(String(value), { min: 1, max: 120 }) * 1000;
+    return this.writeRequest(request, options);
   }
 
   /** Validate number of retries. */
-  protected validRetry(value: number): number {
+  protected validRetry(value?: number): number {
+    value = (typeof value === "number") ? value : this.retry;
     return Validate.isInteger(String(value), { min: 0, max: 10 });
+  }
+
+  /** Validate and convert timeout in seconds to milliseconds. */
+  protected validTimeout(value?: number): number {
+    value = (typeof value === "number") ? value : this.timeout;
+    return Validate.isInteger(String(value), { min: 500, max: 60000 });
+  }
+
+  /** Get retry when callback. */
+  protected retryWhenCallback(callback?: TcpClientRetryWhen): TcpClientRetryWhen {
+    return callback || this.retryWhen;
   }
 
   /** Set client socket state. */
@@ -383,7 +409,11 @@ export class TcpClient {
   /** Destroy client socket. */
   protected destroySocket(): void {
     if (this._socket != null) {
-      this.debug(`disconnect: ${this.address} (${this.errorCode})`);
+      let message = `disconnect: ${this.address}`;
+      if (this.errorCode != null) {
+        message += ` (${this.errorCode})`;
+      }
+      this.debug(message);
       this._socket.end();
       this._socket.destroy();
       this._socket = null;
@@ -414,10 +444,32 @@ export class TcpClient {
     return new tcp.TcpRequest(transactionId, this._unitId, functionCode, buffer);
   }
 
+  /** Default retryWhen callback for conditional retries. */
+  protected defaultRetryWhen(
+    client: TcpClient,
+    request: tcp.TcpRequest,
+    retry: number,
+    errorCount: number,
+    error: any,
+  ): number {
+    // If client is still connected and error is a timeout, retry up to limit.
+    if (client.isConnected && (error instanceof TimeoutError)) {
+      if (errorCount >= retry) {
+        throw TcpClient.ERROR.TIMEOUT;
+      }
+      // Retransmit request and increment counter.
+      client._transmit.next(request);
+      return (errorCount + 1);
+    }
+    // Rethrow unknown errors.
+    throw error;
+  }
+
   /** Write request to socket and wait for response, throw an error if exception returned. */
-  protected writeRequest(request: tcp.TcpRequest, timeout = 5, retry = 0): Observable<tcp.TcpResponse> {
-    timeout = this.validTimeout(timeout);
-    retry = this.validRetry(retry);
+  protected writeRequest(request: tcp.TcpRequest, options: ITcpClientRequestOptions): Observable<tcp.TcpResponse> {
+    const retry = this.validRetry(options.retry);
+    const timeout = this.validTimeout(options.timeout);
+    const retryWhen = this.retryWhenCallback(options.retryWhen);
 
     // Write to socket via transmit subject.
     this._transmit.next(request);
@@ -435,18 +487,7 @@ export class TcpClient {
       .retryWhen((errors) => {
         return errors
           .scan((errorCount, error) => {
-            // If client is still connected and error is a timeout, retry up to limit.
-            if (this.isConnected && (error instanceof TimeoutError)) {
-              if (errorCount >= retry) {
-                throw TcpClient.ERROR.TIMEOUT;
-              }
-              // Increment number of retries, retransmit request.
-              this._retries += 1;
-              this._transmit.next(request);
-              return errorCount + 1;
-            }
-            // Throw now for unknown errors.
-            throw error;
+            return retryWhen(this, request, retry, errorCount, error);
           }, 0);
       })
       .switchMap((response) => {
@@ -464,6 +505,7 @@ export class TcpClient {
     this._bytesReceived += data.length;
 
     // Check if buffer may contain MBAP header.
+    // TODO: Failure to parse packet after n events causes buffer reset?
     if (buffer.length >= 7) {
       const header = buffer.slice(0, 7);
       const headerLength = header.readUInt16BE(4);
