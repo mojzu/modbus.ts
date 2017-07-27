@@ -1,7 +1,8 @@
-import { Observable, Subject } from "../rx";
-import { Socket, Server, createServer, debug } from "../node";
-import * as pdu from "../pdu/pdu";
-import { PduServer } from "../pdu/server";
+/// <reference types="node" />
+import { Socket, Server, createServer } from "net";
+import * as debug from "debug";
+import { Observable, Subject } from "./rx";
+import { PduResponse, PduException, PduServer } from "../pdu";
 import * as tcp from "./tcp";
 
 /** Modbus TCP observable response or exception. */
@@ -123,7 +124,7 @@ export abstract class TcpServer extends PduServer {
     const pduResponse = this.pduRequestHandler(pduBuffer);
     let response: TcpServerResponse = null;
 
-    if (pduResponse instanceof pdu.PduResponse) {
+    if (pduResponse instanceof PduResponse) {
       response = new tcp.TcpResponse(
         transactionId,
         unitId,
@@ -131,7 +132,7 @@ export abstract class TcpServer extends PduServer {
         pduResponse.data,
         pduResponse.buffer,
       );
-    } else if (pduResponse instanceof pdu.PduException) {
+    } else if (pduResponse instanceof PduException) {
       response = new tcp.TcpException(
         transactionId,
         unitId,

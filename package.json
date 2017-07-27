@@ -1,37 +1,50 @@
 {
   "name": "modbus.ts",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "Modbus application protocol",
-  "license": "Unlicense",
-  "author": "mojzu <mail@mojzu.net>",
-  "repository": "https://github.com/mojzu/modbus.ts.git",
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
-  "scripts": {
-    "clean": "rimraf coverage dist",
-    "distclean": "npm run clean && rimraf node_modules docs",
-    "test": "npm run tsc && istanbul cover test.js -x \"**/*.spec.js\"",
-    "lint": "tslint -p tsconfig.json --type-check",
-    "pack": "npm run tsc && npm pack",
-    "tsc": "npm run clean && tsc",
-    "docs": "typedoc --out docs ."
-  },
+  "repository": "https://github.com/mojzu/modbus.ts.git",
+  "author": "mojzu <mail@mojzu.net>",
+  "license": "Unlicense",
   "files": [
-    "dist"
+    "/index.d.ts",
+    "/index.js",
+    "/index.js.map",
+    "/pdu/**/!(*.spec).d.ts",
+    "/pdu/**/!(*.spec).js",
+    "/pdu/**/!(*.spec).js.map",
+    "/tcp/**/!(*.spec).d.ts",
+    "/tcp/**/!(*.spec).js",
+    "/tcp/**/!(*.spec).js.map"
   ],
+  "scripts": {
+    "clean": "gulp clean",
+    "distclean": "gulp distclean",
+    "test": "gulp test",
+    "lint": "gulp lint",
+    "example": "gulp example",
+    "docs": "gulp docs",
+    "build": "gulp build"
+  },
   "dependencies": {
+    "container.ts": "^0.10.0",
     "debug": "^2.6.8",
-    "rxjs": "^5.4.1"
+    "rxjs": "^5.4.2"
   },
   "devDependencies": {
+    "@types/debug": "^0.0.29",
     "@types/jasmine": "^2.5.53",
-    "@types/node": "^8.0.4",
+    "@types/moment-timezone": "^0.2.34",
+    "@types/node": "^6.0.85",
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-util": "^3.0.8",
     "istanbul": "^0.4.5",
     "jasmine": "^2.6.0",
-    "rimraf": "^2.6.1",
-    "tslint": "^5.4.3",
+    "tslint": "^5.5.0",
     "tslint-eslint-rules": "^4.1.1",
-    "typedoc": "^0.7.1",
-    "typescript": "~2.3.4"
+    "typedoc": "^0.7.2",
+    "typescript": "^2.4.2"
   }
 }

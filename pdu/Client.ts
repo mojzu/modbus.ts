@@ -1,3 +1,4 @@
+/// <reference types="node" />
 /* tslint:disable:no-bitwise */
 import * as pdu from "./pdu";
 

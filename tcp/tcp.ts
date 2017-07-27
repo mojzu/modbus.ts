@@ -1,3 +1,4 @@
+/// <reference types="node" />
 
 /**
  * Modbus TCP request.

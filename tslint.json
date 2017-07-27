@@ -7,23 +7,21 @@
     "tslint-eslint-rules"
   ],
   "rules": {
-    "no-var-requires": false,
+    "max-classes-per-file": [
+      false
+    ],
     "no-empty": false,
-    "no-string-literal": false,
+    "no-empty-interface": false,
+    "no-var-requires": false,
     "object-literal-sort-keys": false,
     "ordered-imports": [
       false
     ],
-    "max-line-length": [
-      true,
-      140
-    ],
     "variable-name": [
-      true,
-      "ban-keywords"
-    ],
-    "max-classes-per-file": [
-      false
+      "allow-leading-underscore",
+      "ban-keywords",
+      "check-format",
+      true
     ]
   }
 }

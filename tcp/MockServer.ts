@@ -1,5 +1,6 @@
-import { Socket } from "../node";
-import { TcpServer } from "./server";
+/// <reference types="node" />
+import { Socket } from "net";
+import { TcpServer } from "./Server";
 
 export class TcpMockServer extends TcpServer {
 

@@ -1,4 +1,4 @@
-import { PduServer } from "./server";
+import { PduServer } from "./Server";
 
 export class PduMockServer extends PduServer {
 

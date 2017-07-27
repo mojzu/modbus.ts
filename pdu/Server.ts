@@ -1,4 +1,4 @@
-import { Buffer } from "../node";
+/// <reference types="node" />
 import * as pdu from "./pdu";
 
 /** Modbus PDU response or exception. */

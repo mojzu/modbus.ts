@@ -1,7 +1,11 @@
 # Git ignored files.
 # <https://git-scm.com/docs/gitignore>
 /coverage
-/dist
 /node_modules
 /*.log
 /*.tgz
+*.d.ts
+*.js.map
+*.js
+!gulpfile.js
+!/gulp/**/*.js

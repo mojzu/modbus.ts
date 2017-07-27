@@ -1,7 +1,7 @@
 /// <reference types="jasmine" />
 import * as pdu from "./pdu";
-import { PduClient } from "./client";
-import { PduMockServer } from "./server-mock";
+import { PduClient } from "./Client";
+import { PduMockServer } from "./MockServer";
 
 describe("Modbus PDU Client", () => {
 

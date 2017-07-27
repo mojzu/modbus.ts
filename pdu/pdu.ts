@@ -1,20 +1,20 @@
 /* tslint:disable:no-bitwise no-empty-interface */
-import { assert } from "../node";
+import { Validate } from "container.ts/lib/validate";
 
 export function validAddress(value: number): void {
-  assert((0x0 <= value) && (value <= 0xFFFF), `Invalid address: ${value}`);
+  Validate.isInteger(String(value), { min: 0x0, max: 0xFFFF });
 }
 
 export function validRegister(value: number): void {
-  assert((0x0 <= value) && (value <= 0xFFFF), `Invalid register value: ${value}`);
+  Validate.isInteger(String(value), { min: 0x0, max: 0xFFFF });
 }
 
 export function validQuantityOfBits(value: number, maximum = 0x7D0): void {
-  assert((0x1 <= value) && (value <= maximum), `Invalid quantity of bits: ${value}`);
+  Validate.isInteger(String(value), { min: 0x1, max: maximum });
 }
 
 export function validQuantityOfRegisters(value: number, maximum = 0x7D): void {
-  assert((0x1 <= value) && (value <= maximum), `Invalid quantity of registers: ${value}`);
+  Validate.isInteger(String(value), { min: 0x1, max: maximum });
 }
 
 export function bitsToBytes(values: boolean[]): [number, number[]] {

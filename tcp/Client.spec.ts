@@ -1,9 +1,9 @@
 /// <reference types="jasmine" />
-import { Observable } from "../rx";
-import * as pdu from "../pdu/pdu";
-import { CONNECTION_ERROR, TIMEOUT_ERROR, ITcpClientOptions, TcpClient } from "./client";
-import { TcpServer } from "./server";
-import { TcpMockServer, TcpSlowMockServer, TcpDropMockServer } from "./server-mock";
+import { Observable } from "./rx";
+import * as pdu from "../pdu";
+import { ITcpClientOptions, TcpClient } from "./Client";
+import { TcpServer } from "./Server";
+import { TcpMockServer, TcpSlowMockServer, TcpDropMockServer } from "./MockServer";
 
 let nextPort = 5020;
 let nextNamespace = 0;
@@ -28,9 +28,8 @@ describe("Modbus TCP Client", () => {
       .subscribe({
         next: () => fail(),
         error: (error) => {
-          expect(client.isConnected).toEqual(false);
-          expect(error).toEqual(CONNECTION_ERROR);
-          expect(client.errorCode).toEqual("ECONNREFUSED");
+          expect(error).toEqual(TcpClient.ERROR.CONNECTION);
+          expect(client.errorCode).toEqual(TcpClient.ERROR.CONNECTION);
           done();
         },
         complete: () => {
@@ -70,7 +69,6 @@ describe("Modbus TCP Client", () => {
 
   it("Disconnects from server after inactivity timeout", (done) => {
     const [server, client] = create(TcpMockServer);
-    let nextCounter = 0;
     server.open()
       .subscribe(() => {
         client.connect(1)
@@ -79,19 +77,13 @@ describe("Modbus TCP Client", () => {
             return Observable.of(undefined).delay(2000);
           })
           .subscribe({
-            next: () => {
-              nextCounter += 1;
-              client.disconnect();
-              server.close();
-            },
+            next: () => fail(),
             error: (error) => {
-              fail(error);
+              expect(error).toEqual(TcpClient.ERROR.TIMEOUT);
+              expect(client.errorCode).toEqual(TcpClient.ERROR.TIMEOUT);
               done();
             },
-            complete: () => {
-              expect(nextCounter).toEqual(1);
-              done();
-            },
+            complete: () => fail(),
           });
       });
   });
@@ -148,7 +140,7 @@ describe("Modbus TCP Client", () => {
           .subscribe({
             next: () => fail(),
             error: (error) => {
-              expect(error).toEqual(TIMEOUT_ERROR);
+              expect(error).toEqual(TcpClient.ERROR.TIMEOUT);
               done();
             },
             complete: () => done(),

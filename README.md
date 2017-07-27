@@ -13,12 +13,12 @@
 
 Modbus TCP client communicating with mock server example.
 
-```JavaScript
-var modbus = require("modbus.ts");
+```TypeScript
+import * as modbus from "modbus.ts";
 
 // Create mock server and client instances.
-var server = new modbus.TcpMockServer(5022, "server");
-var client = new modbus.TcpClient({ host: "localhost", port: 5022 }, "client");
+const server = new modbus.TcpMockServer(5022, "server");
+const client = new modbus.TcpClient({ host: "localhost", port: 5022 }, "client");
 
 // Open server for connections.
 server.open()
@@ -32,7 +32,7 @@ server.open()
       })
       .subscribe((response) => {
         // Handle server response(s).
-        console.log(response.data);
+        process.stdout.write(`${JSON.stringify(response.data, null, 2)}\n`);
 
         // Disconnect client, close server.
         client.disconnect();
@@ -44,38 +44,28 @@ server.open()
 
 ## Dependencies
 
+-  [container.ts](https://www.npmjs.com/package/container.ts)
 -  [debug](https://www.npmjs.com/package/debug)
--  [RxJS](http://reactivex.io/rxjs/)
+-  [rxjs](https://www.npmjs.com/package/rxjs)
 
 ## Developer
 
+Clone repository, install dependencies with `yarn install` and run scripts: `yarn run ...`
+
+| Script      | Description                                              |
+| ----------- | -------------------------------------------------------- |
+| `clean`     | Clean compiled files.                                    |
+| `distclean` | Remove Node modules and generated documentation.         |
+| `test`      | Run tests using Jasmine and Istanbul.                    |
+| `lint`      | Run TSLint on project.                                   |
+| `example`   | Run example script, `yarn run example -- -f quickstart`. |
+| `docs`      | Generate Typedoc documentation.                          |
+| `build`     | Build library for release.                               |
+
+Publishing library to NPM/GitHub.
+
 ```Shell
-# Install dependencies.
-$ yarn install
-
-# Clean distribution directory.
-$ yarn run clean
-
-# Clean Node modules directory.
-$ yarn run distclean
-
-# Run tests with coverage.
-$ yarn run test
-
-# Run linter.
-$ yarn run lint
-
-# Build documentation.
-$ yarn run docs
-
-# Package library.
-$ yarn run pack
-
-# Run examples.
-$ node examples/quickstart.js
-
-# Release library.
-$ yarn run pack && npm publish --access=public
+$ yarn run build && npm publish --access=public
 $ git push origin master --tags
 ```
 

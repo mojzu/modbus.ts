@@ -1,9 +1,9 @@
-// var modbus = require("modbus.ts");
-var modbus = require("../dist");
+// import * as modbus from "modbus.ts";
+import * as modbus from "../";
 
 // Create mock server and client instances.
-var server = new modbus.TcpMockServer(5022, "server");
-var client = new modbus.TcpClient({ host: "localhost", port: 5022 }, "client");
+const server = new modbus.TcpMockServer(5022, "server");
+const client = new modbus.TcpClient({ host: "localhost", port: 5022 }, "client");
 
 // Open server for connections.
 server.open()
@@ -17,7 +17,7 @@ server.open()
       })
       .subscribe((response) => {
         // Handle server response(s).
-        console.log(response.data);
+        process.stdout.write(`${JSON.stringify(response.data, null, 2)}\n`);
 
         // Disconnect client, close server.
         client.disconnect();

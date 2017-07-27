@@ -1,4 +1,5 @@
-# Commit message format.
+# Git commit message template.
+# <https://git-scm.com/docs/git-commit>
 # ```
 # <type>(<scope>): <subject>
 #
