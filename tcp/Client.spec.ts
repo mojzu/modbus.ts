@@ -1,19 +1,20 @@
 /// <reference types="jasmine" />
+import { ValidateError } from "container.ts/lib/validate";
 import { Observable } from "./rx";
 import * as pdu from "../pdu";
-import { ITcpClientOptions, TcpClient } from "./Client";
+import { ITcpClientOptions, ITcpClientRequestOptions, TcpClient } from "./Client";
 import { TcpServer } from "./Server";
 import { TcpMockServer, TcpSlowMockServer, TcpDropMockServer } from "./MockServer";
 
 let nextPort = 5020;
 let nextNamespace = 0;
 
-function create(serverClass: any): [TcpServer, TcpClient] {
+function create(serverClass: any, options: ITcpClientRequestOptions = {}): [TcpServer, TcpClient] {
   const port = nextPort++;
   const namespace = nextNamespace++;
   const server = new serverClass(port, `server:${namespace}`);
-  const options: ITcpClientOptions = { host: "localhost", port };
-  const client = new TcpClient(options, `client:${namespace}`);
+  const clientOptions: ITcpClientOptions = Object.assign({ host: "localhost", port }, options);
+  const client = new TcpClient(clientOptions, `client:${namespace}`);
   return [server, client];
 }
 
@@ -21,6 +22,24 @@ describe("Modbus TCP Client", () => {
 
   // TODO: Test TcpClient method requests/exceptions.
   // TODO: Test TcpClient argument validation.
+
+  it("Throws error for invalid retry argument", () => {
+    try {
+      create(TcpMockServer, { retry: 1000 });
+      fail();
+    } catch (error) {
+      expect(error instanceof ValidateError).toEqual(true);
+    }
+  });
+
+  it("Throws error for invalid timeout argument", () => {
+    try {
+      create(TcpMockServer, { timeout: 1 });
+      fail();
+    } catch (error) {
+      expect(error instanceof ValidateError).toEqual(true);
+    }
+  });
 
   it("Fails to connect to closed server port", (done) => {
     const [, client] = create(TcpMockServer);
@@ -71,7 +90,7 @@ describe("Modbus TCP Client", () => {
     const [server, client] = create(TcpMockServer);
     server.open()
       .subscribe(() => {
-        client.connect(1)
+        client.connect({ timeout: 1000 })
           .switchMap(() => {
             expect(client.isConnected).toEqual(true);
             return Observable.of(undefined).delay(2000);
@@ -132,7 +151,7 @@ describe("Modbus TCP Client", () => {
       .subscribe(() => {
         client.connect()
           .switchMap(() => {
-            return client.readCoils(0x0001, 1, 1);
+            return client.readCoils(0x0001, 1, { timeout: 1000 });
           })
           .switchMap((response) => {
             return Observable.of(undefined);
@@ -155,14 +174,13 @@ describe("Modbus TCP Client", () => {
       .subscribe(() => {
         client.connect()
           .switchMap(() => {
-            return client.readCoils(0x0001, 1, 2, 3);
+            return client.readCoils(0x0001, 1, { retry: 3, timeout: 1000 });
           })
           .switchMap((response) => {
             const data: pdu.IReadCoils = response.data;
             expect(response.functionCode).toEqual(pdu.FunctionCode.ReadCoils);
             expect(data.bytes).toEqual(1);
             expect(data.values).toEqual([true, false, false, false, false, false, false, false]);
-            expect(client.retries).toEqual(2);
             return Observable.of(undefined);
           })
           .subscribe({
