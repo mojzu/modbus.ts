@@ -1,6 +1,6 @@
 {
   "name": "modbus.ts",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Modbus application protocol",
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
@@ -28,23 +28,22 @@
     "build": "gulp build"
   },
   "dependencies": {
-    "container.ts": "^0.10.0",
+    "container.ts": "^0.14.1",
     "debug": "^2.6.8",
     "rxjs": "^5.4.2"
   },
   "devDependencies": {
     "@types/debug": "^0.0.29",
     "@types/jasmine": "^2.5.53",
-    "@types/moment-timezone": "^0.2.34",
     "@types/node": "^6.0.85",
     "del": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-util": "^3.0.8",
     "istanbul": "^0.4.5",
-    "jasmine": "^2.6.0",
+    "jasmine": "^2.7.0",
     "tslint": "^5.5.0",
     "tslint-eslint-rules": "^4.1.1",
-    "typedoc": "^0.7.2",
+    "typedoc": "^0.8.0",
     "typescript": "^2.4.2"
   }
 }
