@@ -2,8 +2,8 @@
 const path = require("path");
 const gulp = require("gulp");
 const gutil = require("gulp-util");
-const clean = require("./gulp/clean");
-const shell = require("./gulp/shell");
+const clean = require("./gulp/clean.js");
+const shell = require("./gulp/shell.js");
 
 // Library package path and file.
 const packagePath = path.resolve(__dirname);
@@ -21,15 +21,15 @@ gulp.task("clean", (done) => {
     "index.d.ts",
     "index.js.map",
     "index.js",
+    "examples/**/*.d.ts",
+    "examples/**/*.js",
+    "examples/**/*.js.map",
     "pdu/**/*.d.ts",
     "pdu/**/*.js",
     "pdu/**/*.js.map",
     "tcp/**/*.d.ts",
     "tcp/**/*.js",
     "tcp/**/*.js.map",
-    "examples/**/*.d.ts",
-    "examples/**/*.js",
-    "examples/**/*.js.map",
   ], done);
 });
 

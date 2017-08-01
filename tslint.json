@@ -18,10 +18,10 @@
       false
     ],
     "variable-name": [
-      "allow-leading-underscore",
+      true,
       "ban-keywords",
       "check-format",
-      true
+      "allow-leading-underscore"
     ]
   }
 }

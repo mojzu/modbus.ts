@@ -1,9 +1,9 @@
 {
   "name": "modbus.ts",
-  "version": "0.8.0",
+  "version": "1.0.0",
   "description": "Modbus application protocol",
-  "main": "./dist/index.js",
-  "typings": "./dist/index.d.ts",
+  "main": "./index.js",
+  "typings": "./index.d.ts",
   "repository": "https://github.com/mojzu/modbus.ts.git",
   "author": "mojzu <mail@mojzu.net>",
   "license": "Unlicense",
@@ -28,12 +28,12 @@
     "build": "gulp build"
   },
   "dependencies": {
+    "@types/debug": "^0.0.29",
     "container.ts": "^0.14.1",
     "debug": "^2.6.8",
     "rxjs": "^5.4.2"
   },
   "devDependencies": {
-    "@types/debug": "^0.0.29",
     "@types/jasmine": "^2.5.53",
     "@types/node": "^6.0.85",
     "del": "^3.0.0",
