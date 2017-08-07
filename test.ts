@@ -6,6 +6,7 @@ const SPECS = new JASMINE();
 SPECS.loadConfig({
   spec_files: [
     "pdu/**/*[spec].js",
+    "rtu/**/*[spec].js",
     "tcp/**/*[spec].js",
   ],
 });
