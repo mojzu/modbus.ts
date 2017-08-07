@@ -1,10 +1,6 @@
 {
-  "rulesDirectory": [
-    "node_modules/tslint-eslint-rules/dist/rules"
-  ],
   "extends": [
-    "tslint:recommended",
-    "tslint-eslint-rules"
+    "tslint:recommended"
   ],
   "rules": {
     "max-classes-per-file": [

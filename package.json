@@ -28,10 +28,10 @@
     "build": "gulp build"
   },
   "dependencies": {
-    "@types/debug": "^0.0.29",
-    "container.ts": "^0.14.1",
+    "@types/debug": "^0.0.30",
+    "container.ts": "^0.15.0",
     "debug": "^2.6.8",
-    "rxjs": "^5.4.2"
+    "rxjs": "^5.4.2",
   },
   "devDependencies": {
     "@types/jasmine": "^2.5.53",
@@ -42,7 +42,6 @@
     "istanbul": "^0.4.5",
     "jasmine": "^2.7.0",
     "tslint": "^5.5.0",
-    "tslint-eslint-rules": "^4.1.1",
     "typedoc": "^0.8.0",
     "typescript": "^2.4.2"
   }
