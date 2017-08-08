@@ -484,18 +484,18 @@ export class TcpClient {
       })
       .take(1)
       .timeout(timeout)
-      .retryWhen((errors) => {
-        return errors
-          .scan((errorCount, error) => {
-            return retryWhen(this, request, retry, errorCount, error);
-          }, 0);
-      })
       .switchMap((response) => {
         if (response instanceof tcp.TcpResponse) {
           return Observable.of(response);
         } else {
           return Observable.throw(response);
         }
+      })
+      .retryWhen((errors) => {
+        return errors
+          .scan((errorCount, error) => {
+            return retryWhen(this, request, retry, errorCount, error);
+          }, 0);
       });
   }
 
@@ -547,7 +547,7 @@ export class TcpClient {
     aduBuffer: Buffer,
   ): TcpClientResponse {
     const pduResponse = PduClient.responseHandler(pduBuffer);
-    let response: tcp.TcpResponse | tcp.TcpException | null = null;
+    let response: TcpClientResponse = null;
 
     if (pduResponse instanceof PduResponse) {
       response = new tcp.TcpResponse(
