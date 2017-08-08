@@ -1,5 +1,6 @@
 # Git ignored files.
 # <https://git-scm.com/docs/gitignore>
+/.vendor
 /coverage
 /node_modules
 /*.log

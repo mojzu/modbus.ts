@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>TcpResponse | modbus.ts</title>
+	<title>RtuException | modbus.ts</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,31 +56,24 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_tcp_tcp_.html">&quot;tcp/tcp&quot;</a>
+					<a href="../modules/_rtu_rtu_.html">&quot;rtu/rtu&quot;</a>
 				</li>
 				<li>
-					<a href="_tcp_tcp_.tcpresponse.html">TcpResponse</a>
+					<a href="_rtu_rtu_.rtuexception.html">RtuException</a>
 				</li>
 			</ul>
-			<h1>Class TcpResponse</h1>
+			<h1>Class RtuException</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Modbus TCP response.</p>
-					</div>
-				</div>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">TcpResponse</span>
+						<span class="target">RtuException</span>
 					</li>
 				</ul>
 			</section>
@@ -91,23 +84,23 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_tcp_tcp_.tcpresponse.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_rtu_rtu_.rtuexception.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_tcp_tcp_.tcpresponse.html#buffer" class="tsd-kind-icon">buffer</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_tcp_tcp_.tcpresponse.html#data" class="tsd-kind-icon">data</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_tcp_tcp_.tcpresponse.html#functioncode" class="tsd-kind-icon">function<wbr>Code</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_tcp_tcp_.tcpresponse.html#transactionid" class="tsd-kind-icon">transaction<wbr>Id</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_tcp_tcp_.tcpresponse.html#unitid" class="tsd-kind-icon">unit<wbr>Id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_rtu_rtu_.rtuexception.html#buffer" class="tsd-kind-icon">buffer</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_rtu_rtu_.rtuexception.html#exceptioncode" class="tsd-kind-icon">exception<wbr>Code</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_rtu_rtu_.rtuexception.html#exceptionfunctioncode" class="tsd-kind-icon">exception<wbr>Function<wbr>Code</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_rtu_rtu_.rtuexception.html#functioncode" class="tsd-kind-icon">function<wbr>Code</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_rtu_rtu_.rtuexception.html#slaveaddress" class="tsd-kind-icon">slave<wbr>Address</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_tcp_tcp_.tcpresponse.html#tostring" class="tsd-kind-icon">to<wbr>String</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_rtu_rtu_.rtuexception.html#tostring" class="tsd-kind-icon">to<wbr>String</a></li>
 							</ul>
 						</section>
 					</div>
@@ -119,34 +112,34 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Tcp<wbr>Response<span class="tsd-signature-symbol">(</span>transactionId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, unitId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, functionCode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, buffer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_tcp_tcp_.tcpresponse.html" class="tsd-signature-type">TcpResponse</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Rtu<wbr>Exception<span class="tsd-signature-symbol">(</span>slaveAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, functionCode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, exceptionFunctionCode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, exceptionCode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, buffer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_rtu_rtu_.rtuexception.html" class="tsd-signature-type">RtuException</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/1b71a83/tcp/tcp.ts#L21">tcp/tcp.ts:21</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/1b71a83/rtu/rtu.ts#L26">rtu/rtu.ts:26</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>transactionId: <span class="tsd-signature-type">number</span></h5>
-								</li>
-								<li>
-									<h5>unitId: <span class="tsd-signature-type">number</span></h5>
+									<h5>slaveAddress: <span class="tsd-signature-type">number</span></h5>
 								</li>
 								<li>
 									<h5>functionCode: <span class="tsd-signature-type">number</span></h5>
 								</li>
 								<li>
-									<h5>data: <span class="tsd-signature-type">any</span></h5>
+									<h5>exceptionFunctionCode: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>exceptionCode: <span class="tsd-signature-type">number</span></h5>
 								</li>
 								<li>
 									<h5>buffer: <span class="tsd-signature-type">Buffer</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_tcp_tcp_.tcpresponse.html" class="tsd-signature-type">TcpResponse</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_rtu_rtu_.rtuexception.html" class="tsd-signature-type">RtuException</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -159,17 +152,27 @@
 					<div class="tsd-signature tsd-kind-icon">buffer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Buffer</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/1b71a83/tcp/tcp.ts#L27">tcp/tcp.ts:27</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/1b71a83/rtu/rtu.ts#L32">rtu/rtu.ts:32</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="data" class="tsd-anchor"></a>
-					<h3>data</h3>
-					<div class="tsd-signature tsd-kind-icon">data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<a name="exceptioncode" class="tsd-anchor"></a>
+					<h3>exception<wbr>Code</h3>
+					<div class="tsd-signature tsd-kind-icon">exception<wbr>Code<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/1b71a83/tcp/tcp.ts#L26">tcp/tcp.ts:26</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/1b71a83/rtu/rtu.ts#L31">rtu/rtu.ts:31</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="exceptionfunctioncode" class="tsd-anchor"></a>
+					<h3>exception<wbr>Function<wbr>Code</h3>
+					<div class="tsd-signature tsd-kind-icon">exception<wbr>Function<wbr>Code<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/1b71a83/rtu/rtu.ts#L30">rtu/rtu.ts:30</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -179,27 +182,17 @@
 					<div class="tsd-signature tsd-kind-icon">function<wbr>Code<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/1b71a83/tcp/tcp.ts#L25">tcp/tcp.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/1b71a83/rtu/rtu.ts#L29">rtu/rtu.ts:29</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="transactionid" class="tsd-anchor"></a>
-					<h3>transaction<wbr>Id</h3>
-					<div class="tsd-signature tsd-kind-icon">transaction<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="slaveaddress" class="tsd-anchor"></a>
+					<h3>slave<wbr>Address</h3>
+					<div class="tsd-signature tsd-kind-icon">slave<wbr>Address<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/1b71a83/tcp/tcp.ts#L23">tcp/tcp.ts:23</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="unitid" class="tsd-anchor"></a>
-					<h3>unit<wbr>Id</h3>
-					<div class="tsd-signature tsd-kind-icon">unit<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/1b71a83/tcp/tcp.ts#L24">tcp/tcp.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/1b71a83/rtu/rtu.ts#L28">rtu/rtu.ts:28</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -216,7 +209,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/1b71a83/tcp/tcp.ts#L29">tcp/tcp.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/1b71a83/rtu/rtu.ts#L34">rtu/rtu.ts:34</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -267,7 +260,7 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_rtu_index_.html">"rtu/index"</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="../modules/_rtu_rtu_.html">"rtu/rtu"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -288,7 +281,7 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_tcp_rx_.html">"tcp/rx"</a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_tcp_tcp_.html">"tcp/tcp"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -298,42 +291,42 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_tcp_tcp_.tcpexception.html" class="tsd-kind-icon">Tcp<wbr>Exception</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_tcp_tcp_.tcprequest.html" class="tsd-kind-icon">Tcp<wbr>Request</a>
-					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_tcp_tcp_.tcpresponse.html" class="tsd-kind-icon">Tcp<wbr>Response</a>
+						<a href="_rtu_rtu_.rtuexception.html" class="tsd-kind-icon">Rtu<wbr>Exception</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="_tcp_tcp_.tcpresponse.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="_rtu_rtu_.rtuexception.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_tcp_tcp_.tcpresponse.html#buffer" class="tsd-kind-icon">buffer</a>
+								<a href="_rtu_rtu_.rtuexception.html#buffer" class="tsd-kind-icon">buffer</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_tcp_tcp_.tcpresponse.html#data" class="tsd-kind-icon">data</a>
+								<a href="_rtu_rtu_.rtuexception.html#exceptioncode" class="tsd-kind-icon">exception<wbr>Code</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_tcp_tcp_.tcpresponse.html#functioncode" class="tsd-kind-icon">function<wbr>Code</a>
+								<a href="_rtu_rtu_.rtuexception.html#exceptionfunctioncode" class="tsd-kind-icon">exception<wbr>Function<wbr>Code</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_tcp_tcp_.tcpresponse.html#transactionid" class="tsd-kind-icon">transaction<wbr>Id</a>
+								<a href="_rtu_rtu_.rtuexception.html#functioncode" class="tsd-kind-icon">function<wbr>Code</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_tcp_tcp_.tcpresponse.html#unitid" class="tsd-kind-icon">unit<wbr>Id</a>
+								<a href="_rtu_rtu_.rtuexception.html#slaveaddress" class="tsd-kind-icon">slave<wbr>Address</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_tcp_tcp_.tcpresponse.html#tostring" class="tsd-kind-icon">to<wbr>String</a>
+								<a href="_rtu_rtu_.rtuexception.html#tostring" class="tsd-kind-icon">to<wbr>String</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="_rtu_rtu_.rturequest.html" class="tsd-kind-icon">Rtu<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="_rtu_rtu_.rturesponse.html" class="tsd-kind-icon">Rtu<wbr>Response</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
