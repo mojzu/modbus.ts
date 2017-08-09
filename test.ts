@@ -4,11 +4,8 @@ const SPECS = new JASMINE();
 
 // Run tests for compiled `*.spec.js` files
 SPECS.loadConfig({
-  spec_files: [
-    "pdu/**/*[spec].js",
-    "rtu/**/*[spec].js",
-    "tcp/**/*[spec].js",
-  ],
+  spec_dir: "src",
+  spec_files: ["**/*[spec].js"],
 });
 SPECS.configureDefaultReporter({ showColors: true });
 SPECS.execute();

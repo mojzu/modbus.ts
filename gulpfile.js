@@ -24,15 +24,9 @@ gulp.task("clean", (done) => {
     "examples/**/*.d.ts",
     "examples/**/*.js",
     "examples/**/*.js.map",
-    "pdu/**/*.d.ts",
-    "pdu/**/*.js",
-    "pdu/**/*.js.map",
-    "rtu/**/*.d.ts",
-    "rtu/**/*.js",
-    "rtu/**/*.js.map",
-    "tcp/**/*.d.ts",
-    "tcp/**/*.js",
-    "tcp/**/*.js.map",
+    "src/**/*.d.ts",
+    "src/**/*.js",
+    "src/**/*.js.map",
   ], done);
 });
 

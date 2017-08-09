@@ -11,15 +11,9 @@
     "/index.d.ts",
     "/index.js",
     "/index.js.map",
-    "/pdu/**/!(*.spec).d.ts",
-    "/pdu/**/!(*.spec).js",
-    "/pdu/**/!(*.spec).js.map",
-    "/rtu/**/!(*.spec).d.ts",
-    "/rtu/**/!(*.spec).js",
-    "/rtu/**/!(*.spec).js.map",
-    "/tcp/**/!(*.spec).d.ts",
-    "/tcp/**/!(*.spec).js",
-    "/tcp/**/!(*.spec).js.map"
+    "/src/**/!(*.spec).d.ts",
+    "/src/**/!(*.spec).js",
+    "/src/**/!(*.spec).js.map"
   ],
   "scripts": {
     "clean": "gulp clean",
