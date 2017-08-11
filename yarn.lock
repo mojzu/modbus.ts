@@ -2215,8 +2215,8 @@ restify-errors@^4.2.3, restify-errors@^4.3.0:
     safe-json-stringify "^1.0.3"
 
 restify@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/restify/-/restify-5.0.1.tgz#267cf68360e474c727d1c8efb4d9d37ae1cbd724"
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/restify/-/restify-5.1.0.tgz#2cddd855c0978c4ff976fae7e2e32181f3eba203"
   dependencies:
     assert-plus "^1.0.0"
     bunyan "^1.8.1"
@@ -2274,9 +2274,9 @@ rollbar@^2.1.1:
   optionalDependencies:
     decache "^3.0.5"
 
-rxjs@^5.4.2:
-  version "5.4.2"
-  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.4.2.tgz#2a3236fcbf03df57bae06fd6972fd99e5c08fcf7"
+rxjs@^5.4.2, rxjs@^5.4.3:
+  version "5.4.3"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.4.3.tgz#0758cddee6033d68e0fd53676f0f3596ce3d483f"
   dependencies:
     symbol-observable "^1.0.1"
 

@@ -28,7 +28,7 @@
     "@types/debug": "^0.0.30",
     "container.ts": "^0.15.0",
     "debug": "^3.0.0",
-    "rxjs": "^5.4.2",
+    "rxjs": "^5.4.3",
     "serialport": "^5.0.0"
   },
   "devDependencies": {
