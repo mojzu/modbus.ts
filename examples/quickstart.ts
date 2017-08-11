@@ -2,7 +2,7 @@
 import * as modbus from "../";
 
 // Create mock server and client instances.
-const server = new modbus.TcpMockServer(5022, "server");
+const server = new modbus.MockTcpServer({ port: 5022 }, "server");
 const client = new modbus.TcpClient({ host: "localhost", port: 5022 }, "client");
 
 // Open server for connections.
