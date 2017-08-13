@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;examples/tcp&quot; | modbus.ts</title>
+	<title>&quot;src/TcpClient.spec&quot; | modbus.ts</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="_examples_tcp_.html">&quot;examples/tcp&quot;</a>
+					<a href="_src_tcpclient_spec_.html">&quot;src/TcpClient.spec&quot;</a>
 				</li>
 			</ul>
-			<h1>External module &quot;examples/tcp&quot;</h1>
+			<h1>External module &quot;src/TcpClient.spec&quot;</h1>
 		</div>
 	</div>
 </header>
@@ -73,7 +73,14 @@
 						<section class="tsd-index-section tsd-is-not-exported">
 							<h3>Variables</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_examples_tcp_.html#client" class="tsd-kind-icon">client</a></li>
+								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_src_tcpclient_spec_.html#nextnamespace" class="tsd-kind-icon">next<wbr>Namespace</a></li>
+								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_src_tcpclient_spec_.html#nextport" class="tsd-kind-icon">next<wbr>Port</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section tsd-is-not-exported">
+							<h3>Functions</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_src_tcpclient_spec_.html#create" class="tsd-kind-icon">create</a></li>
 							</ul>
 						</section>
 					</div>
@@ -82,14 +89,53 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
 				<h2>Variables</h2>
 				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-					<a name="client" class="tsd-anchor"></a>
-					<h3>client</h3>
-					<div class="tsd-signature tsd-kind-icon">client<span class="tsd-signature-symbol">:</span> <a href="../classes/_src_tcpclient_.tcpclient.html" class="tsd-signature-type">TcpClient</a><span class="tsd-signature-symbol"> =&nbsp;new modbus.TcpClient({ host: &quot;localhost&quot;, port: 5002 }, &quot;tcp&quot;)</span></div>
+					<a name="nextnamespace" class="tsd-anchor"></a>
+					<h3>next<wbr>Namespace</h3>
+					<div class="tsd-signature tsd-kind-icon">next<wbr>Namespace<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/59fbee3/examples/tcp.ts#L9">examples/tcp.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/59fbee3/src/TcpClient.spec.ts#L25">src/TcpClient.spec.ts:25</a></li>
 						</ul>
 					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+					<a name="nextport" class="tsd-anchor"></a>
+					<h3>next<wbr>Port</h3>
+					<div class="tsd-signature tsd-kind-icon">next<wbr>Port<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;5020</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/59fbee3/src/TcpClient.spec.ts#L24">src/TcpClient.spec.ts:24</a></li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+					<a name="create" class="tsd-anchor"></a>
+					<h3>create</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">create<span class="tsd-signature-symbol">(</span>serverClass<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_src_adumaster_.iadumasterrequestoptions.html" class="tsd-signature-type">IAduMasterRequestOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">[</span><a href="../classes/_src_tcpserver_.tcpserver.html" class="tsd-signature-type">TcpServer</a><span class="tsd-signature-symbol">, </span><a href="../classes/_src_tcpclient_.tcpclient.html" class="tsd-signature-type">TcpClient</a><span class="tsd-signature-symbol">]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/59fbee3/src/TcpClient.spec.ts#L27">src/TcpClient.spec.ts:27</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>serverClass: <span class="tsd-signature-type">any</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <a href="../interfaces/_src_adumaster_.iadumasterrequestoptions.html" class="tsd-signature-type">IAduMasterRequestOptions</a><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">[</span><a href="../classes/_src_tcpserver_.tcpserver.html" class="tsd-signature-type">TcpServer</a><span class="tsd-signature-symbol">, </span><a href="../classes/_src_tcpclient_.tcpclient.html" class="tsd-signature-type">TcpClient</a><span class="tsd-signature-symbol">]</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -105,7 +151,7 @@
 					<li class=" tsd-kind-external-module">
 						<a href="_examples_rtu_.html">"examples/rtu"</a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="_examples_tcp_.html">"examples/tcp"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -135,7 +181,7 @@
 					<li class=" tsd-kind-external-module">
 						<a href="_src_tcpclient_.html">"src/<wbr>Tcp<wbr>Client"</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="_src_tcpclient_spec_.html">"src/<wbr>Tcp<wbr>Client.spec"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -161,7 +207,13 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_examples_tcp_.html#client" class="tsd-kind-icon">client</a>
+						<a href="_src_tcpclient_spec_.html#nextnamespace" class="tsd-kind-icon">next<wbr>Namespace</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_src_tcpclient_spec_.html#nextport" class="tsd-kind-icon">next<wbr>Port</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_src_tcpclient_spec_.html#create" class="tsd-kind-icon">create</a>
 					</li>
 				</ul>
 			</nav>

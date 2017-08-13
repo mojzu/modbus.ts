@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;examples/tcp&quot; | modbus.ts</title>
+	<title>Observable | modbus.ts</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,40 +56,89 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="_examples_tcp_.html">&quot;examples/tcp&quot;</a>
+					<a href="../modules/_src_rxjs_.html">&quot;src/rxjs&quot;</a>
+				</li>
+				<li>
+					<a href="../modules/_src_rxjs_._rxjs_observable_.html">&quot;rxjs/Observable&quot;</a>
+				</li>
+				<li>
+					<a href="_src_rxjs_._rxjs_observable_.observable.html">Observable</a>
 				</li>
 			</ul>
-			<h1>External module &quot;examples/tcp&quot;</h1>
+			<h1>Interface Observable&lt;T&gt;</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-type-parameters">
+				<h3>Type parameters</h3>
+				<ul class="tsd-type-parameters">
+					<li>
+						<h4>T</h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">Observable</span>
+					</li>
+				</ul>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section tsd-is-not-exported">
-							<h3>Variables</h3>
+							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_examples_tcp_.html#client" class="tsd-kind-icon">client</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="_src_rxjs_._rxjs_observable_.observable.html#debug" class="tsd-kind-icon">debug</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
-				<h2>Variables</h2>
-				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-					<a name="client" class="tsd-anchor"></a>
-					<h3>client</h3>
-					<div class="tsd-signature tsd-kind-icon">client<span class="tsd-signature-symbol">:</span> <a href="../classes/_src_tcpclient_.tcpclient.html" class="tsd-signature-type">TcpClient</a><span class="tsd-signature-symbol"> =&nbsp;new modbus.TcpClient({ host: &quot;localhost&quot;, port: 5002 }, &quot;tcp&quot;)</span></div>
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+					<a name="debug" class="tsd-anchor"></a>
+					<h3>debug</h3>
+					<div class="tsd-signature tsd-kind-icon">debug<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/59fbee3/examples/tcp.ts#L9">examples/tcp.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/mojzu/modbus.ts/blob/59fbee3/src/rxjs.ts#L45">src/rxjs.ts:45</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-siganture">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property tsd-is-not-exported">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>debug<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Debug.IDebugger</span>, name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>debug: <span class="tsd-signature-type">Debug.IDebugger</span></h5>
+											</li>
+											<li>
+												<h5>name: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -100,69 +149,83 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_examples_quickstart_.html">"examples/quickstart"</a>
+						<a href="../modules/_examples_quickstart_.html">"examples/quickstart"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_examples_rtu_.html">"examples/rtu"</a>
+						<a href="../modules/_examples_rtu_.html">"examples/rtu"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_examples_tcp_.html">"examples/tcp"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_index_.html">"index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_adumaster_.html">"src/<wbr>Adu<wbr>Master"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_aduslave_.html">"src/<wbr>Adu<wbr>Slave"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_pdumaster_.html">"src/<wbr>Pdu<wbr>Master"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_pdumaster_spec_.html">"src/<wbr>Pdu<wbr>Master.spec"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_pduslave_.html">"src/<wbr>Pdu<wbr>Slave"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_pduslave_mock_.html">"src/<wbr>Pdu<wbr>Slave.mock"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_rtumaster_.html">"src/<wbr>Rtu<wbr>Master"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_tcpclient_.html">"src/<wbr>Tcp<wbr>Client"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_tcpclient_spec_.html">"src/<wbr>Tcp<wbr>Client.spec"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_tcpserver_.html">"src/<wbr>Tcp<wbr>Server"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_tcpserver_mock_.html">"src/<wbr>Tcp<wbr>Server.mock"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_modbus_.html">"src/modbus"</a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="_examples_tcp_.html">"examples/tcp"</a>
+						<a href="../modules/_src_rxjs_.html">"src/rxjs"</a>
+						<ul>
+							<li class="current tsd-kind-module tsd-parent-kind-external-module tsd-is-not-exported">
+								<a href="../modules/_src_rxjs_._rxjs_observable_.html">"rxjs/<wbr>Observable"</a>
+							</li>
+						</ul>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_index_.html">"index"</a>
+						<a href="../modules/_src_utilities_.html">"src/utilities"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_src_adumaster_.html">"src/<wbr>Adu<wbr>Master"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_aduslave_.html">"src/<wbr>Adu<wbr>Slave"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_pdumaster_.html">"src/<wbr>Pdu<wbr>Master"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_pdumaster_spec_.html">"src/<wbr>Pdu<wbr>Master.spec"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_pduslave_.html">"src/<wbr>Pdu<wbr>Slave"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_pduslave_mock_.html">"src/<wbr>Pdu<wbr>Slave.mock"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_rtumaster_.html">"src/<wbr>Rtu<wbr>Master"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_tcpclient_.html">"src/<wbr>Tcp<wbr>Client"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_tcpclient_spec_.html">"src/<wbr>Tcp<wbr>Client.spec"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_tcpserver_.html">"src/<wbr>Tcp<wbr>Server"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_tcpserver_mock_.html">"src/<wbr>Tcp<wbr>Server.mock"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_modbus_.html">"src/modbus"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_rxjs_.html">"src/rxjs"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_utilities_.html">"src/utilities"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_test_.html">"test"</a>
+						<a href="../modules/_test_.html">"test"</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_examples_tcp_.html#client" class="tsd-kind-icon">client</a>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter tsd-is-not-exported">
+						<a href="_src_rxjs_._rxjs_observable_.observable.html" class="tsd-kind-icon">Observable</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+								<a href="_src_rxjs_._rxjs_observable_.observable.html#debug" class="tsd-kind-icon">debug</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 				</ul>
 			</nav>
 		</div>

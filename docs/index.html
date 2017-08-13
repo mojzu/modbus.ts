@@ -78,7 +78,7 @@
 				<pre><code class="lang-TypeScript"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> modbus <span class="hljs-keyword">from</span> <span class="hljs-string">"modbus.ts"</span>;
 
 <span class="hljs-comment">// Create mock server and client instances.</span>
-<span class="hljs-keyword">const</span> server = <span class="hljs-keyword">new</span> modbus.TcpMockServer(<span class="hljs-number">5022</span>, <span class="hljs-string">"server"</span>);
+<span class="hljs-keyword">const</span> server = <span class="hljs-keyword">new</span> modbus.MockTcpServer({ port: <span class="hljs-number">5022</span> }, <span class="hljs-string">"server"</span>);
 <span class="hljs-keyword">const</span> client = <span class="hljs-keyword">new</span> modbus.TcpClient({ host: <span class="hljs-string">"localhost"</span>, port: <span class="hljs-number">5022</span> }, <span class="hljs-string">"client"</span>);
 
 <span class="hljs-comment">// Open server for connections.</span>
@@ -102,11 +102,13 @@ server.open()
 
   });
 </code></pre>
+				<p>More examples can be found in the <code>examples</code> directory.</p>
 				<h2 id="dependencies">Dependencies</h2>
 				<ul>
 					<li><a href="https://www.npmjs.com/package/container.ts">container.ts</a></li>
 					<li><a href="https://www.npmjs.com/package/debug">debug</a></li>
 					<li><a href="https://www.npmjs.com/package/rxjs">rxjs</a></li>
+					<li><a href="https://www.npmjs.com/package/serialport">serialport</a></li>
 				</ul>
 				<h2 id="developer">Developer</h2>
 				<p>Clone repository, install dependencies with <code>yarn install</code> and run scripts: <code>yarn run ...</code></p>
@@ -175,52 +177,46 @@ server.open()
 						<a href="modules/_index_.html">"index"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_pdu_client_.html">"pdu/<wbr>Client"</a>
+						<a href="modules/_src_adumaster_.html">"src/<wbr>Adu<wbr>Master"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_pdu_client_spec_.html">"pdu/<wbr>Client.spec"</a>
+						<a href="modules/_src_aduslave_.html">"src/<wbr>Adu<wbr>Slave"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_pdu_mockserver_.html">"pdu/<wbr>Mock<wbr>Server"</a>
+						<a href="modules/_src_pdumaster_.html">"src/<wbr>Pdu<wbr>Master"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_pdu_server_.html">"pdu/<wbr>Server"</a>
+						<a href="modules/_src_pdumaster_spec_.html">"src/<wbr>Pdu<wbr>Master.spec"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_pdu_index_.html">"pdu/index"</a>
+						<a href="modules/_src_pduslave_.html">"src/<wbr>Pdu<wbr>Slave"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_pdu_pdu_.html">"pdu/pdu"</a>
+						<a href="modules/_src_pduslave_mock_.html">"src/<wbr>Pdu<wbr>Slave.mock"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_rtu_client_.html">"rtu/<wbr>Client"</a>
+						<a href="modules/_src_rtumaster_.html">"src/<wbr>Rtu<wbr>Master"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_rtu_index_.html">"rtu/index"</a>
+						<a href="modules/_src_tcpclient_.html">"src/<wbr>Tcp<wbr>Client"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_rtu_rtu_.html">"rtu/rtu"</a>
+						<a href="modules/_src_tcpclient_spec_.html">"src/<wbr>Tcp<wbr>Client.spec"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_tcp_client_.html">"tcp/<wbr>Client"</a>
+						<a href="modules/_src_tcpserver_.html">"src/<wbr>Tcp<wbr>Server"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_tcp_client_spec_.html">"tcp/<wbr>Client.spec"</a>
+						<a href="modules/_src_tcpserver_mock_.html">"src/<wbr>Tcp<wbr>Server.mock"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_tcp_mockserver_.html">"tcp/<wbr>Mock<wbr>Server"</a>
+						<a href="modules/_src_modbus_.html">"src/modbus"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_tcp_server_.html">"tcp/<wbr>Server"</a>
+						<a href="modules/_src_rxjs_.html">"src/rxjs"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_tcp_index_.html">"tcp/index"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_tcp_rx_.html">"tcp/rx"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_tcp_tcp_.html">"tcp/tcp"</a>
+						<a href="modules/_src_utilities_.html">"src/utilities"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_test_.html">"test"</a>
