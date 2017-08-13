@@ -11,6 +11,7 @@ import "rxjs/add/observable/empty";
 import "rxjs/add/observable/of";
 import "rxjs/add/observable/race";
 import "rxjs/add/observable/throw";
+import "rxjs/add/observable/merge";
 import "rxjs/add/operator/do";
 import "rxjs/add/operator/filter";
 import "rxjs/add/operator/map";
@@ -25,22 +26,22 @@ import "rxjs/add/operator/scan";
 import "rxjs/add/operator/skip";
 
 /** Debug operator. */
-Observable.prototype.debug = function(debug: Debug.IDebugger, ...args: any[]) {
+Observable.prototype.debug = function(debug: Debug.IDebugger, name: string, ...args: any[]) {
   return this.do({
     next: (next) => {
-      debug("NEXT", ...args, next);
+      debug(`next:${name}`, next, ...args);
     },
     error: (error) => {
-      debug("ERROR", ...args, error);
+      debug(`error:${name}`, error, ...args);
     },
     complete: () => {
-      debug("COMPLETE", ...args);
+      debug(`complete:${name}`, ...args);
     },
   });
 };
 
 declare module "rxjs/Observable" {
   interface Observable<T> {
-    debug: (debug: Debug.IDebugger, ...args: any[]) => Observable<T>;
+    debug: (debug: Debug.IDebugger, name: string, ...args: any[]) => Observable<T>;
   }
 }

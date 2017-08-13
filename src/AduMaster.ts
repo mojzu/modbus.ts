@@ -3,7 +3,6 @@ import { Validate } from "container.ts/lib/validate";
 import {
   Observable,
   Subject,
-  BehaviorSubject,
   TimeoutError,
 } from "./rxjs";
 import {
@@ -44,10 +43,11 @@ export abstract class AduMaster
     TIMEOUT: "TimeoutError",
   };
 
-  protected _buffer: Buffer;
-  protected _receive: Subject<RESPONSE | EXCEPTION>;
-  protected _transmit: Subject<REQUEST>;
-  protected _error = new BehaviorSubject<any>(null);
+  private _buffer: Buffer;
+  private _receive: Subject<RESPONSE | EXCEPTION>;
+  private _transmit: Subject<REQUEST>;
+  private _error: Subject<any>;
+  private _errorCode: string | null = null;
 
   private _debug: debug.IDebugger;
   private _retry: number;
@@ -75,19 +75,17 @@ export abstract class AduMaster
   /** Default retryWhen callback of requests. */
   public get retryWhen(): IAduMasterRetryWhen { return this._retryWhen; }
 
+  /** Responses/exceptions stream. */
+  public get receive(): Observable<RESPONSE | EXCEPTION> { return this._receive; }
+
+  /** Requests stream. */
+  public get transmit(): Observable<REQUEST> { return this._transmit; }
+
   /** Socket errors stream. */
   public get error(): Observable<any> { return this._error; }
 
   /** Last error code returned by master. */
-  public get errorCode(): string | null {
-    if (this._error.value != null) {
-      if (this._error.value.code != null) {
-        return this._error.value.code;
-      }
-      return this._error.value;
-    }
-    return null;
-  }
+  public get errorCode(): string | null { return this._errorCode; }
 
   /** Number of bytes received by master. */
   public get bytesReceived(): number { return this._bytesReceived; }
@@ -244,35 +242,33 @@ export abstract class AduMaster
   /** (Re)create internal properties. */
   protected create(): void {
     this.destroy();
-    this._buffer = Buffer.allocUnsafe(0);
+
+    // Create observables.
     this._receive = new Subject<RESPONSE | EXCEPTION>();
     this._transmit = new Subject<REQUEST>();
-
-    // TODO: Remove debug from observables?
-    this._receive = this._receive.debug(this.debug, "RX") as any;
-    this._transmit = this._transmit.debug(this.debug, "TX") as any;
+    this._error = new Subject<any>();
   }
 
   /** Destroy internal properties. */
   protected destroy(): void {
-    if (this._receive != null) {
-      this._receive.complete();
-    }
-    if (this._transmit != null) {
-      this._transmit.complete();
-    }
+    this._buffer = Buffer.allocUnsafe(0);
+
+    // Observable clean up.
+    if (this._receive != null) { this._receive.complete(); }
+    if (this._transmit != null) { this._transmit.complete(); }
+    if (this._error != null) { this._error.complete(); }
   }
 
-  /** Validate number of retries. */
+  /** Validate number of retries (0-20). */
   protected validRetry(value?: number): number {
     value = (typeof value === "number") ? value : this.retry;
-    return Validate.isInteger(String(value), { min: 0, max: 10 });
+    return Validate.isInteger(String(value), { min: 0, max: 20 });
   }
 
-  /** Validate and convert timeout in seconds to milliseconds. */
+  /** Validate and convert timeout in seconds to milliseconds (50-120000). */
   protected validTimeout(value?: number): number {
     value = (typeof value === "number") ? value : this.timeout;
-    return Validate.isInteger(String(value), { min: 500, max: 60000 });
+    return Validate.isInteger(String(value), { min: 50, max: 120000 });
   }
 
   /** Get retry when callback. */
@@ -293,10 +289,28 @@ export abstract class AduMaster
       if (errorCount >= retry) {
         throw AduMaster.ERROR.TIMEOUT;
       }
-      return;
+    } else {
+      // Rethrow unknown errors.
+      throw error;
     }
-    // Rethrow unknown errors.
-    throw error;
+  }
+
+  /** Send response/exception on observable stream. */
+  protected receiveResponse(response: RESPONSE | EXCEPTION): void {
+    this._receive.next(response);
+  }
+
+  /** Set error/code with unknown error. */
+  protected setError(error: any): void {
+    this._error.next(error);
+
+    // Set error code if available.
+    // TODO: Improve error code detection.
+    if (error.code != null) {
+      this._errorCode = error.code;
+    } else {
+      this._errorCode = error;
+    }
   }
 
   /** Implemented by subclass to prepend/append data to request. */
@@ -340,17 +354,18 @@ export abstract class AduMaster
       });
   }
 
+  /** Transmit request using transmit observable. */
   protected transmitRequest(request: REQUEST): void {
     this._transmit.next(request);
     this._bytesTransmitted += request.buffer.length;
   }
 
+  /** Receive data into internal buffer and try to parse responses. */
   protected receiveData(data: Buffer): void {
     this._buffer = Buffer.concat([this._buffer, data]);
     this._bytesReceived += data.length;
-
-    const parsed = this.parseResponse(this._buffer);
-    this._buffer = this._buffer.slice(parsed);
+    const parsedLength = this.parseResponse(this._buffer);
+    this._buffer = this._buffer.slice(parsedLength);
   }
 
 }

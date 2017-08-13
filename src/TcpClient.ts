@@ -144,8 +144,11 @@ export class TcpClient extends AduMaster<TcpRequest, TcpResponse, TcpException> 
    * @param options Request options.
    */
   public connect(options: IAduMasterRequestOptions = {}): Observable<boolean> {
+    // TODO: Connection retries support.
     // Validate timeout argument and ensure client disconnected.
     const timeout = this.validTimeout(options.timeout);
+
+    // Ensure client is discconected and in known state.
     this.disconnect();
     this.create();
 
@@ -153,7 +156,7 @@ export class TcpClient extends AduMaster<TcpRequest, TcpResponse, TcpException> 
     // (Re)create socket, reset receive buffer.
     // Error listener required to prevent process exit.
     this._socket = createConnection(this.connectionOptions);
-    this._socket.on("error", (error) => { this._error.next(error); });
+    this._socket.on("error", (error) => { this.setError(error); });
 
     // Will emit next(false) and complete with call to 'disconnect' method.
     // Will emit next(false) and error if socket closes or times out due to inactivity.
@@ -170,7 +173,9 @@ export class TcpClient extends AduMaster<TcpRequest, TcpResponse, TcpException> 
       .takeUntil(disconnected)
       .map(() => ({ name: "connect", hadError: false }));
 
-    Observable.race(socketClose, socketConnect)
+    Observable.merge(socketClose, socketConnect)
+      .takeUntil(disconnected)
+      .debug(this.debug, "socket")
       .subscribe((value) => {
         if (value.name === "connect") {
           this.setSocketState(true);
@@ -182,24 +187,26 @@ export class TcpClient extends AduMaster<TcpRequest, TcpResponse, TcpException> 
     // Socket data event receives data into internal buffer and processes responses.
     Observable.fromEvent(this._socket, "data")
       .takeUntil(disconnected)
+      .debug(this.debug, "socket:data")
       .subscribe((buffer: Buffer) => this.receiveData(buffer));
 
     // Requests transmitted via socket.
-    this._transmit
+    this.transmit
       .takeUntil(disconnected)
       .subscribe((request) => this.writeSocket(request));
 
     // If no activity occurs on socket for timeout duration, client is disconnected.
-    Observable.race(this._transmit, this._receive)
+    Observable.merge(this.transmit, this.receive)
       .takeUntil(disconnected)
       .timeout(timeout)
+      .debug(this.debug, "activity")
       .subscribe({
         error: () => this.disconnect(TcpClient.ERROR.TIMEOUT),
       });
 
     // Emits next if socket connected, completes if 'disconnect' method called,
     // throws an error if socket closes.
-    return this.connected.skip(1).filter((v) => v).debug(this.debug, "CONNECT");
+    return this.connected.skip(1).filter((v) => v).debug(this.debug, "connect");
   }
 
   /**
@@ -221,7 +228,7 @@ export class TcpClient extends AduMaster<TcpRequest, TcpResponse, TcpException> 
       this._connected.complete();
     }
     if (error != null) {
-      this._error.next(error);
+      this.setError(error);
       this._connected.error(error);
     }
     if (disconnect || (error != null)) {
@@ -274,7 +281,6 @@ export class TcpClient extends AduMaster<TcpRequest, TcpResponse, TcpException> 
 
   protected parseResponse(data: Buffer): number {
     // Check if buffer may contain MBAP header.
-    // TODO: Failure to parse packet after n events causes buffer reset?
     if (data.length >= 7) {
       const header = data.slice(0, 7);
       const headerLength = header.readUInt16BE(4);
@@ -290,9 +296,7 @@ export class TcpClient extends AduMaster<TcpRequest, TcpResponse, TcpException> 
         const pduBuffer = aduBuffer.slice(7);
 
         const response = this.responseHandler(transactionId, unitId, pduBuffer, aduBuffer);
-        if (response != null) {
-          this._receive.next(response);
-        }
+        if (response != null) { this.receiveResponse(response); }
 
         // Return length of parsed data.
         return responseLength;
