@@ -4,9 +4,7 @@ import {
   Observable,
   BehaviorSubject,
 } from "./rxjs";
-import {
-  EModbusFunctionCode,
-} from "./modbus";
+import { EModbusFunctionCode } from "./modbus";
 import {
   PduRequest,
   PduResponse,
@@ -112,7 +110,7 @@ export class TcpClient extends AduMaster<TcpRequest, TcpResponse, TcpException> 
   public get packetsTransmitted(): number { return this._packetsTransmitted; }
 
   /** Node socket connection options. */
-  protected get connectionOptions() { return { host: this._host, port: this._port }; }
+  protected get connectionOptions() { return { host: this.host, port: this.port }; }
 
   /** Get next transaction identifier. */
   protected get nextTransactionId(): number {
@@ -131,6 +129,7 @@ export class TcpClient extends AduMaster<TcpRequest, TcpResponse, TcpException> 
     // TCP client option validation.
     const port = String(options.port || TcpClient.DEFAULT_PORT);
     const unitId = String(options.unitId || TcpClient.DEFAULT_UNIT_ID);
+
     this._host = Validate.isString(options.host);
     this._port = Validate.isPort(port);
     this._unitId = Validate.isInteger(unitId, { min: 0x1, max: 0xFF });
@@ -145,7 +144,6 @@ export class TcpClient extends AduMaster<TcpRequest, TcpResponse, TcpException> 
    */
   public connect(options: IAduMasterRequestOptions = {}): Observable<boolean> {
     // TODO: Connection retries support.
-    // Validate timeout argument and ensure client disconnected.
     const timeout = this.validTimeout(options.timeout);
 
     // Ensure client is discconected and in known state.
@@ -153,8 +151,7 @@ export class TcpClient extends AduMaster<TcpRequest, TcpResponse, TcpException> 
     this.create();
 
     this.debug(`connect: ${this.address}`);
-    // (Re)create socket, reset receive buffer.
-    // Error listener required to prevent process exit.
+    // (Re)create socket, add error listener.
     this._socket = createConnection(this.connectionOptions);
     this._socket.on("error", (error) => { this.setError(error); });
 
@@ -162,7 +159,7 @@ export class TcpClient extends AduMaster<TcpRequest, TcpResponse, TcpException> 
     // Will emit next(false) and error if socket closes or times out due to inactivity.
     const disconnected = this.connected.skip(1).filter((b) => !b);
 
-    // Race socket close/connect events to determine client state.
+    // Merge socket close/connect events to determine client state.
     // Connect event will emit next(true).
     // Close event will emit next(false) and throw an error.
     const socketClose = Observable.fromEvent(this._socket, "close")
@@ -251,12 +248,11 @@ export class TcpClient extends AduMaster<TcpRequest, TcpResponse, TcpException> 
   }
 
   /** Write request to client socket. */
-  protected writeSocket(request: TcpRequest): Observable<void> {
+  protected writeSocket(request: TcpRequest): void {
     if (this._socket != null) {
       this._socket.write(request.buffer);
       this._packetsTransmitted += 1;
     }
-    return Observable.of(undefined);
   }
 
   /** Construct and prepend MBAP header to PDU request buffer. */

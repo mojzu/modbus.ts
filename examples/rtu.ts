@@ -5,7 +5,7 @@ import * as modbus from "../";
 // $ ./diagslave -a 1 /dev/pts/17
 
 // Create client instance.
-const client = new modbus.RtuClient({ path: "/dev/pts/10" }, "rtu");
+const client = new modbus.RtuMaster({ path: "/dev/pts/10" }, "rtu");
 
 // Open client.
 client.open()

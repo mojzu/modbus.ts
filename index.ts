@@ -6,3 +6,4 @@ export * from "./src/AduMaster";
 export * from "./src/TcpClient";
 export * from "./src/TcpServer";
 export * from "./src/TcpServer.mock";
+export * from "./src/RtuMaster";
