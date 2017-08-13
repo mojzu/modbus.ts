@@ -98,13 +98,12 @@ export class TcpServer extends PduSlave {
     return serverListen();
   }
 
-  public close(): Observable<void> {
+  public close(): void {
     if (this._server != null) {
       this.debug(`close ${this.port}`);
       this._server.close();
       this._server = null;
     }
-    return Observable.of(undefined);
   }
 
   protected receiveData(buffer: Buffer, data: Buffer, transmit: Subject<TcpResponse | TcpException>): Buffer {
