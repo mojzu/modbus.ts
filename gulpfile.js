@@ -52,8 +52,9 @@ gulp.task("lint", (done) => {
 
 // Run example.
 gulp.task("example", ["tsc"], (done) => {
-  const file = gutil.env.f || gutil.env.file || "modules";
-  shell.run(`node ./examples/${file}.js`, packagePath, done);
+  const file = gutil.env.f || gutil.env.file;
+  const port = gutil.env.p || gutil.env.port;
+  shell.run(`node ./examples/${file}.js ${port}`, packagePath, done);
 });
 
 // Build documentation.

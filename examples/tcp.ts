@@ -1,5 +1,9 @@
-// import * as modbus from "modbus.ts";
 import * as modbus from "../";
+
+// Test using Diagslave, run following commands in different terminals:
+// $ ./diagslave -m tcp -a 1 -p 5002
+//
+// $ yarn run example -- -f tcp
 
 // Create client instance.
 const client = new modbus.TcpClient({ host: "localhost", port: 5002 }, "tcp");
@@ -7,19 +11,13 @@ const client = new modbus.TcpClient({ host: "localhost", port: 5002 }, "tcp");
 // Open client.
 client.connect()
   .switchMap(() => {
-    // Make request(s) to slave.
-    return client.readHoldingRegisters(0x1000, 2);
+    // Make request(s) to server.
+    return client.readHoldingRegisters(1, 4);
   })
-  .subscribe({
-    next: (response) => {
-      // Handle slave response(s).
-      process.stdout.write(`${JSON.stringify(response.data, null, 2)}\n`);
+  .subscribe((response) => {
+    // Handle server response(s).
+    process.stdout.write(`${JSON.stringify(response.data, null, 2)}\n`);
 
-      // Disconnect client.
-      client.disconnect();
-    },
-    error: (error) => {
-      // Handle client errors.
-      process.stderr.write(`ERROR: ${error}\n`);
-    },
+    // Disconnect client.
+    client.disconnect();
   });

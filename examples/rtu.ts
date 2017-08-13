@@ -1,27 +1,26 @@
-// import * as modbus from "modbus.ts";
+import * as process from "process";
 import * as modbus from "../";
 
+// Test using Diagslave, run following commands in different terminals:
 // $ socat -d -d PTY PTY
-// $ ./diagslave -a 1 /dev/pts/17
+// socat[13872] N PTY is /dev/pts/7
+// socat[13872] N PTY is /dev/pts/19
+// $ ./diagslave -m rtu -a 1 /dev/pts/7
+// $ yarn run example -- -f rtu -p /dev/pts/19
 
-// Create client instance.
-const client = new modbus.RtuMaster({ path: "/dev/pts/10" }, "rtu");
+// Create master instance.
+const master = new modbus.RtuMaster({ path: process.argv[2] }, "rtu");
 
-// Open client.
-client.open()
+// Open master.
+master.open()
   .switchMap(() => {
     // Make request(s) to slave.
-    return client.readHoldingRegisters(5, 2);
+    return master.readHoldingRegisters(1, 4);
   })
-  .subscribe({
-    next: (response) => {
-      // Handle slave response(s).
-      process.stdout.write(`${JSON.stringify(response.data, null, 2)}\n`);
+  .subscribe((response) => {
+    // Handle slave response(s).
+    process.stdout.write(`${JSON.stringify(response.data, null, 2)}\n`);
 
-      client.close();
-    },
-    error: (error) => {
-      // Handle client errors.
-      process.stderr.write(`ERROR: ${error}\n`);
-    },
+    // Close master.
+    master.close();
   });
