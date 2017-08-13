@@ -1,8 +1,8 @@
+import * as process from "process";
 import * as modbus from "../";
 
 // Test using Diagslave, run following commands in different terminals:
 // $ ./diagslave -m tcp -a 1 -p 5002
-//
 // $ yarn run example -- -f tcp
 
 // Create client instance.
