@@ -1,6 +1,6 @@
 {
   "name": "modbus.ts",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Modbus application protocol",
   "main": "./index.js",
   "typings": "./index.d.ts",
@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@types/debug": "^0.0.30",
+    "@types/serialport": "^4.0.9",
     "container.ts": "^0.15.0",
     "debug": "^3.0.0",
     "rxjs": "^5.4.3",
@@ -34,7 +35,6 @@
   "devDependencies": {
     "@types/jasmine": "^2.5.53",
     "@types/node": "^6.0.85",
-    "@types/serialport": "^4.0.9",
     "del": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-util": "^3.0.8",
