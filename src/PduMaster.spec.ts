@@ -1,4 +1,5 @@
 /// <reference types="jasmine" />
+import { ValidateError } from "container.ts/lib/validate";
 import {
   EModbusFunctionCode,
   EModbusExceptionCode,
@@ -68,7 +69,7 @@ describe("PduMaster", () => {
       PduMaster.readCoils(0xFF0000, 1);
       fail();
     } catch (error) {
-      expect(error instanceof Error).toEqual(true);
+      expect(error instanceof ValidateError).toEqual(true);
     }
   });
 
@@ -77,7 +78,7 @@ describe("PduMaster", () => {
       PduMaster.readCoils(0x0000, -1);
       fail();
     } catch (error) {
-      expect(error instanceof Error).toEqual(true);
+      expect(error instanceof ValidateError).toEqual(true);
     }
   });
 
