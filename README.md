@@ -1,13 +1,13 @@
+![logo](docs/logo.png)
+
 # Modbus.ts
 
 [![npm](https://img.shields.io/npm/v/modbus.ts.svg?style=flat-square)](https://www.npmjs.com/package/modbus.ts)
-[![npm](https://img.shields.io/npm/l/modbus.ts.svg?style=flat-square)](https://github.com/mojzu/modbus.ts/blob/master/LICENCE)
-[![Travis CI](https://img.shields.io/travis/mojzu/modbus.ts.svg?style=flat-square)](https://travis-ci.org/mojzu/modbus.ts)
-[![Code Climate](https://img.shields.io/codeclimate/coverage/github/mojzu/modbus.ts.svg?style=flat-square)](https://codeclimate.com/github/mojzu/modbus.ts)
+[![npm](https://img.shields.io/npm/l/modbus.ts.svg?style=flat-square)](https://github.com/mojzunet/modbus.ts/blob/master/LICENCE)
+[![Travis CI](https://img.shields.io/travis/mojzunet/modbus.ts.svg?style=flat-square)](https://travis-ci.org/mojzunet/modbus.ts)
+[![Code Climate](https://img.shields.io/codeclimate/coverage/github/mojzunet/modbus.ts.svg?style=flat-square)](https://codeclimate.com/github/mojzunet/modbus.ts)
 
 [Modbus](http://www.modbus.org/) application protocol written in [TypeScript](https://www.typescriptlang.org/) for [Node.js](https://nodejs.org/en/).
-
--   [Documentation](https://mojzu.github.io/modbus.ts/)
 
 ## Quickstart
 
@@ -62,7 +62,6 @@ Clone repository, install dependencies with `yarn install` and run scripts: `yar
 | `test`      | Run tests using Jasmine and Istanbul.                    |
 | `lint`      | Run TSLint on project.                                   |
 | `example`   | Run example script, `yarn run example -- -f quickstart`. |
-| `docs`      | Generate Typedoc documentation.                          |
 | `build`     | Build library for release.                               |
 
 Publishing library to NPM/GitHub.
@@ -71,7 +70,5 @@ Publishing library to NPM/GitHub.
 $ yarn run build && npm publish --access=public
 $ git push origin master --tags
 ```
-
-Set [GitHub](https://github.com/) repository pages source to `/docs`.
 
 Add [Code Climate](https://codeclimate.com/) repository token to [Travis CI](https://travis-ci.org/) in `Settings -> Environment Variables`.

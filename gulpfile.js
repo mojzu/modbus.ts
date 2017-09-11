@@ -32,7 +32,7 @@ gulp.task("clean", (done) => {
 
 // Clean and delete modules generated documentation.
 gulp.task("distclean", ["clean"], (done) => {
-  clean.run(packagePath, ["docs", "node_modules"], done);
+  clean.run(packagePath, ["node_modules"], done);
 });
 
 // Run TypeScript compiler.
@@ -55,11 +55,6 @@ gulp.task("example", ["tsc"], (done) => {
   const file = gutil.env.f || gutil.env.file;
   const port = gutil.env.p || gutil.env.port;
   shell.run(`node ./examples/${file}.js ${port}`, packagePath, done);
-});
-
-// Build documentation.
-gulp.task("docs", (done) => {
-  shell.run("typedoc --out docs .", packagePath, done);
 });
 
 // Build library.

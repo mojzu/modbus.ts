@@ -5,11 +5,9 @@ const childProcess = require("child_process");
 const gutil = require("gulp-util");
 
 module.exports = {
-  /**
-   * Execute command as child process.
-   * Adds Node binaries directory to PATH for usability.
-   */
+  /** Execute command as child process. */
   run: (command, cwd, done) => {
+    // Adds Node binaries directory to PATH for usability.
     process.env.PATH += ";" + path.resolve("./node_modules/.bin");
     gutil.log("[shell]", command);
 
@@ -17,7 +15,6 @@ module.exports = {
       stdio: [null, process.stdout, process.stderr],
       cwd: cwd,
     });
-
     done();
   },
 };
