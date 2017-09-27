@@ -6,9 +6,9 @@
   version "0.0.30"
   resolved "https://registry.yarnpkg.com/@types/debug/-/debug-0.0.30.tgz#dc1e40f7af3b9c815013a7860e6252f6352a84df"
 
-"@types/jasmine@^2.5.54":
-  version "2.5.54"
-  resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-2.5.54.tgz#a6b5f2ae2afb6e0307774e8c7c608e037d491c63"
+"@types/jasmine@^2.6.0":
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-2.6.0.tgz#997b41a27752b4850af2683bc4a8d8222c25bd02"
 
 "@types/moment-timezone@^0.2.35":
   version "0.2.35"
@@ -24,9 +24,9 @@
   version "6.0.88"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.88.tgz#f618f11a944f6a18d92b5c472028728a3e3d4b66"
 
-"@types/serialport@^4.0.9":
-  version "4.0.9"
-  resolved "https://registry.yarnpkg.com/@types/serialport/-/serialport-4.0.9.tgz#9e2c134b7d481faa345d78dca351feb936be8e17"
+"@types/serialport@^4.0.10":
+  version "4.0.10"
+  resolved "https://registry.yarnpkg.com/@types/serialport/-/serialport-4.0.10.tgz#9a8e2d86e2126f2296dd190e231fa4c01bff23c0"
   dependencies:
     "@types/node" "*"
     "@types/streamjs" "*"
@@ -147,9 +147,9 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
 
-awilix@^2.7.0:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/awilix/-/awilix-2.7.0.tgz#b440b8fb84652038b5f355703868aba2345b721b"
+awilix@^2.7.1:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/awilix/-/awilix-2.7.1.tgz#0003a7509747cadd87b6975820e21e5218cfe71f"
   dependencies:
     camel-case "^3.0.0"
     glob "^7.1.2"
@@ -299,13 +299,13 @@ console-control-strings@^1.0.0, console-control-strings@~1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/console-control-strings/-/console-control-strings-1.1.0.tgz#3d7cf4464db6446ea644bf4b39507f9851008e8e"
 
-container.ts@^0.20.0:
-  version "0.20.0"
-  resolved "https://registry.yarnpkg.com/container.ts/-/container.ts-0.20.0.tgz#69cc8bd007c178ed3d37eb5e0f3ef4af0978ee22"
+container.ts@^0.27.0:
+  version "0.27.0"
+  resolved "https://registry.yarnpkg.com/container.ts/-/container.ts-0.27.0.tgz#ffce25c9d8cc042ad8c76174abc26648f99649b9"
   dependencies:
     "@types/debug" "^0.0.30"
-    awilix "^2.7.0"
-    debug "^3.0.1"
+    awilix "^2.7.1"
+    debug "^3.1.0"
     rxjs "^5.4.3"
   optionalDependencies:
     "@types/moment-timezone" "^0.2.35"
@@ -338,9 +338,9 @@ debug@^2.2.0, debug@^2.6.6:
   dependencies:
     ms "2.0.0"
 
-debug@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-3.0.1.tgz#0564c612b521dc92d9f2988f0549e34f9c98db64"
+debug@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-3.1.0.tgz#5bb5a0672628b64149566ba16819e61518c67261"
   dependencies:
     ms "2.0.0"
 
@@ -2070,9 +2070,9 @@ type-check@~0.3.2:
   dependencies:
     prelude-ls "~1.1.2"
 
-typescript@^2.5.2:
-  version "2.5.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.5.2.tgz#038a95f7d9bbb420b1bf35ba31d4c5c1dd3ffe34"
+typescript@^2.5.3:
+  version "2.5.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.5.3.tgz#df3dcdc38f3beb800d4bc322646b04a3f6ca7f0d"
 
 uglify-js@^2.6:
   version "2.8.29"
