@@ -1,6 +1,6 @@
 {
   "name": "modbus.ts",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "description": "Modbus application protocol",
   "main": "./index.js",
   "typings": "./index.d.ts",

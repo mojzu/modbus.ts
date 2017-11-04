@@ -265,10 +265,10 @@ export abstract class AduMaster
     return Validate.isInteger(String(value), { min: 0, max: 20 });
   }
 
-  /** Validate and convert timeout in seconds to milliseconds (50-120000). */
+  /** Validate and convert timeout in seconds to milliseconds (50-600000). */
   protected validTimeout(value?: number): number {
     value = (typeof value === "number") ? value : this.timeout;
-    return Validate.isInteger(String(value), { min: 50, max: 120000 });
+    return Validate.isInteger(String(value), { min: 50, max: 600000 });
   }
 
   /** Get retry when callback. */
