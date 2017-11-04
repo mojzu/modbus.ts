@@ -162,11 +162,11 @@ export class TcpClient extends AduMaster<TcpRequest, TcpResponse, TcpException> 
     // Merge socket close/connect events to determine client state.
     // Connect event will emit next(true).
     // Close event will emit next(false) and throw an error.
-    const socketClose = Observable.fromEvent(this._socket, "close")
+    const socketClose = Observable.fromEvent(this._socket as any, "close")
       .takeUntil(disconnected)
       .map((hadError) => ({ name: "close", hadError }));
 
-    const socketConnect = Observable.fromEvent(this._socket, "connect")
+    const socketConnect = Observable.fromEvent(this._socket as any, "connect")
       .takeUntil(disconnected)
       .map(() => ({ name: "connect", hadError: false }));
 
@@ -182,10 +182,10 @@ export class TcpClient extends AduMaster<TcpRequest, TcpResponse, TcpException> 
       });
 
     // Socket data event receives data into internal buffer and processes responses.
-    Observable.fromEvent(this._socket, "data")
+    Observable.fromEvent<Buffer>(this._socket as any, "data")
       .takeUntil(disconnected)
       .debug(this.debug, "socket:data")
-      .subscribe((buffer: Buffer) => this.receiveData(buffer));
+      .subscribe((buffer) => this.receiveData(buffer));
 
     // Requests transmitted via socket.
     this.transmit

@@ -165,7 +165,7 @@ export class PduSlave {
     const address = request.readUInt16BE(0);
     const quantityOfBits = request.readUInt16BE(2);
     const bitValues = bytesToBits(quantityOfBits, request.slice(5));
-    const quantity = handler(address, bitValues);
+    const quantity = handler(address, bitValues[1]);
 
     const buffer = Buffer.allocUnsafe(5);
     buffer.writeUInt8(functionCode, 0);

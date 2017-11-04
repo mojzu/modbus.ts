@@ -41,7 +41,7 @@ export function bitsToBytes(values: boolean[]): [number, number[]] {
   return [byteCount, byteValues];
 }
 
-export function bytesToBits(quantity: number, buffer: Buffer): boolean[] {
+export function bytesToBits(quantity: number, buffer: Buffer): [number, boolean[]] {
   let byteCount = Math.floor(quantity / 8);
   if ((quantity % 8) !== 0) {
     byteCount += 1;
@@ -57,5 +57,5 @@ export function bytesToBits(quantity: number, buffer: Buffer): boolean[] {
     bitValues.push(!!(byteValue & (0x1 << bitIndex)));
   }
 
-  return bitValues;
+  return [byteCount, bitValues];
 }

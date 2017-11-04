@@ -47,6 +47,9 @@ export class TcpServer extends PduSlave {
   /** Port the server will listen on. */
   public get port(): number { return this._port; }
 
+  public get packetsReceived(): number { return this._packetsReceived; }
+  public get packetsTransmitted(): number { return this._packetsTransmitted; }
+
   public constructor(options: ITcpServerOptions, namespace?: string) {
     super(options);
 
@@ -69,7 +72,7 @@ export class TcpServer extends PduSlave {
 
       // Map socket close event to observable.
       // Close event will complete other socket observables.
-      const socketClose = Observable.fromEvent(socket, "close").take(1);
+      const socketClose = Observable.fromEvent(socket as any, "close").take(1);
       socketClose
         .subscribe(() => {
           this.debug(`disconnect: ${address}`);
@@ -78,7 +81,7 @@ export class TcpServer extends PduSlave {
 
       // Receive data into buffer and process.
       let buffer = Buffer.allocUnsafe(0);
-      const socketData: Observable<any> = Observable.fromEvent(socket, "data").takeUntil(socketClose);
+      const socketData = Observable.fromEvent<Buffer>(socket as any, "data").takeUntil(socketClose);
       socketData
         .subscribe((data: Buffer) => {
           buffer = this.receiveData(buffer, data, transmit);

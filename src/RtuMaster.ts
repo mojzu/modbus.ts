@@ -103,8 +103,7 @@ export class RtuMaster extends AduMaster<RtuRequest, RtuResponse, RtuException> 
   private _rtscts: boolean;
   private _slaveAddress: number;
 
-  // TODO: SerialPort type fix.
-  private _port: any;
+  private _port: SerialPort | null;
   private _opened = new BehaviorSubject<boolean>(false);
 
   public get path(): string { return this._path; }
@@ -125,7 +124,7 @@ export class RtuMaster extends AduMaster<RtuRequest, RtuResponse, RtuException> 
 
   public get isOpened(): boolean { return this._opened.value; }
 
-  protected get openOptions(): SerialPort.options {
+  protected get openOptions(): SerialPort.OpenOptions {
     const parity: IRtuMasterParity = RTU_MASTER_PARITY[this.parity] as any;
     return {
       baudRate: this.baudRate,
@@ -175,11 +174,12 @@ export class RtuMaster extends AduMaster<RtuRequest, RtuResponse, RtuException> 
     // Merge port close/connect events to determine master state.
     // Connect event will emit next(true).
     // Close event will emit next(false) and throw an error.
-    const portClose = Observable.fromEvent(this._port, "close")
+    // TODO: Fix fromEvent types.
+    const portClose = Observable.fromEvent(this._port as any, "close")
       .takeUntil(closed)
       .map(() => ({ name: "close" }));
 
-    const portOpen = Observable.fromEvent(this._port, "open")
+    const portOpen = Observable.fromEvent(this._port as any, "open")
       .takeUntil(closed)
       .map(() => ({ name: "open" }));
 
@@ -195,10 +195,10 @@ export class RtuMaster extends AduMaster<RtuRequest, RtuResponse, RtuException> 
       });
 
     // Port data event receives data into internal buffer and processes responses.
-    Observable.fromEvent(this._port, "data")
+    Observable.fromEvent<Buffer>(this._port as any, "data")
       .takeUntil(closed)
       .debug(this.debug, "port:data")
-      .subscribe((buffer: Buffer) => this.receiveData(buffer));
+      .subscribe((buffer) => this.receiveData(buffer));
 
     // Requests transmitted via port.
     this.transmit
