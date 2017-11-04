@@ -47,7 +47,7 @@ gulp.task("test", ["tsc"], (done) => {
 
 // Run linter.
 gulp.task("lint", (done) => {
-  shell.run("tslint -c tslint.json -p tsconfig.json --type-check", packagePath, done);
+  shell.run("tslint -c tslint.json -p tsconfig.json", packagePath, done);
 });
 
 // Run example.
