@@ -47,28 +47,7 @@ More examples can be found in the `examples` directory.
 ## Dependencies
 
 -  [container.ts](https://www.npmjs.com/package/container.ts)
--  [debug](https://www.npmjs.com/package/debug)
 -  [rxjs](https://www.npmjs.com/package/rxjs)
 -  [serialport](https://www.npmjs.com/package/serialport)
 
-## Developer
-
-Clone repository, install dependencies with `yarn install` and run scripts: `yarn run ...`
-
-| Script      | Description                                           |
-| ----------- | ----------------------------------------------------- |
-| `clean`     | Clean compiled files.                                 |
-| `distclean` | Remove Node modules and generated documentation.      |
-| `test`      | Run tests using Jasmine and Istanbul.                 |
-| `lint`      | Run TSLint on project.                                |
-| `example`   | Run example script, `yarn run example -f quickstart`. |
-| `build`     | Build library for release.                            |
-
-Publishing library to NPM/GitHub.
-
-```Shell
-$ yarn run build && npm publish --access=public
-$ git push origin master --tags
-```
-
-Add [Code Climate](https://codeclimate.com/) repository token to [Travis CI](https://travis-ci.org/) in `Settings -> Environment Variables`.
+TODO: Write documentation (GitBook?).
