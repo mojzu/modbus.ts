@@ -19,9 +19,9 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
-"@types/jest@^21.1.5":
-  version "21.1.5"
-  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-21.1.5.tgz#3db93d069d12602ca115d3604550e15131d8eb7a"
+"@types/jest@^21.1.6":
+  version "21.1.6"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-21.1.6.tgz#9467945ce33261e4fdd14276576951aa130515aa"
 
 "@types/minimatch@*":
   version "3.0.1"
@@ -33,11 +33,7 @@
   dependencies:
     moment ">=2.14.0"
 
-"@types/node@*":
-  version "8.0.47"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.47.tgz#968e596f91acd59069054558a00708c445ca30c2"
-
-"@types/node@^8.0.51":
+"@types/node@*", "@types/node@^8.0.51":
   version "8.0.51"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.51.tgz#b31d716fb8d58eeb95c068a039b9b6292817d5fb"
 
@@ -77,8 +73,8 @@ acorn-globals@^3.1.0:
     acorn "^4.0.4"
 
 acorn-jsx@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-4.0.1.tgz#ada5a01573727a237774ce625564d079ec9de12a"
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-4.1.0.tgz#e687194645bcde55e7e7e9b1859644351a27d13e"
   dependencies:
     acorn "^5.0.3"
 
@@ -263,9 +259,9 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
 
-awilix@^2.10.0:
-  version "2.10.0"
-  resolved "https://registry.yarnpkg.com/awilix/-/awilix-2.10.0.tgz#d76e5b51c9eb40ec766292422b35274aa145efab"
+awilix@^2.11.1:
+  version "2.11.1"
+  resolved "https://registry.yarnpkg.com/awilix/-/awilix-2.11.1.tgz#7d5432bf5d24b28aa07ef00849a466c8427e1111"
   dependencies:
     camel-case "^3.0.0"
     glob "^7.1.2"
@@ -673,8 +669,8 @@ code-point-at@^1.0.0:
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
 
 color-convert@^1.9.0:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/color-convert/-/color-convert-1.9.0.tgz#1accf97dd739b983bf994d56fec8f95853641b7a"
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/color-convert/-/color-convert-1.9.1.tgz#c1261107aeb2f294ebffec9ed9ecad529a6097ed"
   dependencies:
     color-name "^1.1.1"
 
@@ -706,12 +702,12 @@ console-control-strings@^1.0.0, console-control-strings@~1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/console-control-strings/-/console-control-strings-1.1.0.tgz#3d7cf4464db6446ea644bf4b39507f9851008e8e"
 
-container.ts@^0.47.0:
-  version "0.47.0"
-  resolved "https://registry.yarnpkg.com/container.ts/-/container.ts-0.47.0.tgz#28fcb4773302f3b8ada899e4aa2dd335505201bd"
+container.ts@^0.47.1:
+  version "0.47.1"
+  resolved "https://registry.yarnpkg.com/container.ts/-/container.ts-0.47.1.tgz#5657b507a88f6a79cac04cd17c13034f2cd147da"
   dependencies:
     "@types/debug" "^0.0.30"
-    awilix "^2.10.0"
+    awilix "^2.11.1"
     debug "^3.1.0"
     rxjs "^5.5.2"
   optionalDependencies:
@@ -2231,8 +2227,8 @@ moment-timezone@^0.5.14:
     moment ">= 2.9.0"
 
 "moment@>= 2.9.0", moment@>=2.14.0:
-  version "2.19.1"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.19.1.tgz#56da1a2d1cbf01d38b7e1afc31c10bcfa1929167"
+  version "2.19.2"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.19.2.tgz#8a7f774c95a64550b4c7ebd496683908f9419dbe"
 
 ms@2.0.0:
   version "2.0.0"
