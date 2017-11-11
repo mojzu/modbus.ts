@@ -38,7 +38,7 @@ fuseBox.Sparky.task("lint", () => {
 });
 
 // Run Jest tests with coverage.
-fuseBox.Sparky.task("test", ["clean", "test-worker"], () => {
+fuseBox.Sparky.task("test", ["clean"], () => {
   return tools.shell("jest --coverage", CWD);
 });
 
