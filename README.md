@@ -17,8 +17,8 @@ Modbus TCP client communicating with mock server example.
 import * as modbus from "modbus.ts";
 
 // Create mock server and client instances.
-const server = new modbus.MockTcpServer({ port: 5022 }, "server");
-const client = new modbus.TcpClient({ host: "localhost", port: 5022 }, "client");
+const server = new modbus.tcp.MockServer({ port: 5022 });
+const client = new modbus.tcp.Client({ host: "localhost", port: 5022, timeout: 10000 });
 
 // Open server for connections.
 server.open()
@@ -47,7 +47,6 @@ More examples can be found in the `examples` directory.
 ## Dependencies
 
 -  [container.ts](https://www.npmjs.com/package/container.ts)
+-  [debug](https://www.npmjs.com/package/debug)
 -  [rxjs](https://www.npmjs.com/package/rxjs)
 -  [serialport](https://www.npmjs.com/package/serialport)
-
-TODO: Write documentation (GitBook?).
