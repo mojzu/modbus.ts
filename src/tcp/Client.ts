@@ -10,11 +10,14 @@ import * as tcp from "../tcp";
 const debug = Debug("modbus.ts");
 
 export class Log extends adu.Log<tcp.Request, tcp.Response, tcp.Exception> {
-  public connect(host: string, port: number, unitId: number): void {
-    debug(Client.LOG.CONNECT, host, port, unitId);
+  public connecting(host: string, port: number, unitId: number): void {
+    debug(Client.LOG.CONNECTING, host, port, unitId);
   }
-  public disconnect(host: string, port: number, unitId: number): void {
-    debug(Client.LOG.DISCONNECT, host, port, unitId);
+  public connected(host: string, port: number, unitId: number): void {
+    debug(Client.LOG.CONNECTED, host, port, unitId);
+  }
+  public disconnected(host: string, port: number, unitId: number): void {
+    debug(Client.LOG.DISCONNECTED, host, port, unitId);
   }
   public error(error: adu.MasterError): void {
     debug(Client.LOG.ERROR, error);
@@ -44,10 +47,16 @@ export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception,
     UNIT_ID: 1,
   }, adu.Master.DEFAULT);
 
+  /** Error names. */
+  public static ERROR = Object.assign({
+    WRITE: "ModbusTcpClientWriteError",
+  }, adu.Master.ERROR);
+
   /** Log names. */
   public static LOG = Object.assign({
-    CONNECT: "ModbusTcpClientConnect",
-    DISCONNECT: "ModbusTcpClientDisconnect",
+    CONNECTING: "ModbusTcpClientConnecting",
+    CONNECTED: "ModbusTcpClientConnected",
+    DISCONNECTED: "ModbusTcpClientDisconnected",
     ERROR: "ModbusTcpClientError",
   }, adu.Master.LOG);
 
@@ -63,7 +72,11 @@ export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception,
   /** Inactivity client timeout. */
   public readonly inactivityTimeout: number;
 
+  /** Is client connected. */
+  public get connected(): boolean { return this.isConnected; }
+
   protected socket: Socket | null;
+  protected isConnected = false;
   protected transactionId = 0;
 
   /** Node socket connection options. */
@@ -96,11 +109,15 @@ export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception,
    * @param options Request options.
    */
   public connect(options: IClientRequestOptions = {}): Observable<void> {
-    // TODO: Timeout/retry support.
+    const retry = this.isRetry(options.retry);
+    const retryWhen = this.isRetryWhen(options.retryWhen);
+    let retrying = false;
+
     return new Observable((subscriber: Subscriber<void>) => {
       // Disconnect and (re)open for clean state.
       this.disconnect();
       this.onOpen();
+      this.log.connecting(this.host, this.port, this.unitId);
 
       // (Re)create socket, add error listener.
       this.socket = createConnection(this.connectionOptions);
@@ -113,19 +130,22 @@ export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception,
       socketClose
         .subscribe((hadError) => {
           this.disconnect();
-          subscriber.complete();
+          if (!retrying) {
+            subscriber.complete();
+          }
         });
 
       // If socket connects, call next.
       Observable.fromEvent<void>(this.socket as any, "connect")
         .take(1)
         .subscribe(() => {
-          this.log.connect(this.host, this.port, this.unitId);
+          this.log.connected(this.host, this.port, this.unitId);
+          this.isConnected = true;
           subscriber.next();
         });
 
       // Socket data event receives data into internal buffer and processes responses.
-      Observable.fromEvent<Buffer>(this.socket as any as any, "data")
+      Observable.fromEvent<Buffer>(this.socket as any, "data")
         .takeUntil(socketClose)
         .subscribe((buffer) => this.onData(buffer));
 
@@ -141,9 +161,21 @@ export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception,
         .subscribe({
           error: (error) => {
             this.disconnect();
-            subscriber.error(new adu.MasterError(error.code, error));
+            subscriber.error(error);
           },
         });
+    })
+    .retryWhen((errors) => {
+      return errors
+        .scan((errorCount, error) => {
+          errorCount += 1;
+          retrying = false;
+          // Throws error if retry not required.
+          retryWhen(this, retry, errorCount, error);
+          retrying = true;
+          return errorCount;
+        }, 0)
+        .delay(100);
     });
   }
 
@@ -151,7 +183,8 @@ export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception,
   public disconnect(): void {
     if (this.socket != null) {
       this.onClose();
-      this.log.disconnect(this.host, this.port, this.unitId);
+      this.log.disconnected(this.host, this.port, this.unitId);
+      this.isConnected = false;
       this.socket.end();
       this.socket.destroy();
       this.socket = null;
@@ -159,9 +192,11 @@ export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception,
   }
 
   protected writeSocket(request: tcp.Request): void {
-    if (this.socket != null) {
+    if ((this.socket != null) && this.isConnected) {
       this.socket.write(request.buffer);
       this.log.packetsTransmitted(1);
+    } else {
+      this.log.error(new adu.MasterError(Client.ERROR.WRITE));
     }
   }
 

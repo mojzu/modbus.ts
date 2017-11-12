@@ -14,10 +14,10 @@ export type IMasterRetryWhen<
   Exc extends pdu.Exception
   > = (
     master: Master<Req, Res, Exc>,
-    request: Req,
     retry: number,
     errorCount: number,
     error: any,
+    request?: Req,
   ) => void;
 
 /** Log interface. */
@@ -318,10 +318,10 @@ export abstract class Master<
   /** Default retryWhen callback for conditional retries. */
   protected defaultRetryWhen(
     master: Master<Req, Res, Exc>,
-    request: Req,
     retry: number,
     errorCount: number,
     error: any,
+    request?: Req,
   ): void {
     // If error is a timeout, retry up to limit.
     if (error instanceof TimeoutError) {
@@ -356,11 +356,12 @@ export abstract class Master<
           .retryWhen((errors) => {
             return errors
               .scan((errorCount, error) => {
+                errorCount += 1;
                 // Throws error if retry not required.
-                retryWhen(this, request, retry, errorCount, error);
+                retryWhen(this, retry, errorCount, error, request);
                 // Retransmit request and increment error counter.
                 this.transmitRequest(request, errorCount);
-                return (errorCount + 1);
+                return errorCount;
               }, 0);
           })
           .take(1)

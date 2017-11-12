@@ -1,16 +1,35 @@
 import { ValidateError } from "container.ts/lib/validate";
+import * as Debug from "debug";
 import * as adu from "../../adu";
 import { Observable } from "../../adu/RxJS";
 import * as pdu from "../../pdu";
-import { Client, IClientOptions } from "../Client";
+import { Client, IClientOptions, Log } from "../Client";
 import { MockDropServer, MockServer, MockSlowServer } from "../Mock";
 import { Server } from "../Server";
 
+const debug = Debug("modbus.ts:test");
+
+class TestLog extends Log {
+  public bytesTransmitted(value: number): void {
+    debug(`bytesTransmitted: ${value}`);
+  }
+  public bytesReceived(value: number): void {
+    debug(`bytesReceived: ${value}`);
+  }
+  public packetsTransmitted(value: number): void {
+    debug(`packetsTransmitted: ${value}`);
+  }
+  public packetsReceived(value: number): void {
+    debug(`packetsReceived: ${value}`);
+  }
+}
+
 let nextPort = 5020;
+
 function create(serverClass: any, options: IClientOptions = {}): [Server, Client] {
   const port = nextPort++;
   const server = new serverClass({ port });
-  const clientOptions: IClientOptions = Object.assign({ port }, options);
+  const clientOptions: IClientOptions = Object.assign({ port, log: new TestLog() }, options);
   const client = new Client(clientOptions);
   return [server, client];
 }
@@ -83,14 +102,14 @@ describe("Client", () => {
     server.open()
       .subscribe(() => {
         client.connect()
-          .switchMap(() => Observable.of(undefined).delay(2000))
+          .delay(2000)
           .subscribe({
             next: () => fail(),
             error: (error) => {
               expect(error instanceof adu.MasterError).toEqual(true);
               done();
             },
-            complete: () => fail(),
+            complete: () => done(),
           });
       });
   });
@@ -150,9 +169,7 @@ describe("Client", () => {
               fail(error);
               done();
             },
-            complete: () => {
-              done();
-            },
+            complete: () => done(),
           });
       });
   });
