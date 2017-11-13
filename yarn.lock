@@ -702,9 +702,9 @@ console-control-strings@^1.0.0, console-control-strings@~1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/console-control-strings/-/console-control-strings-1.1.0.tgz#3d7cf4464db6446ea644bf4b39507f9851008e8e"
 
-container.ts@^0.47.1:
-  version "0.47.1"
-  resolved "https://registry.yarnpkg.com/container.ts/-/container.ts-0.47.1.tgz#5657b507a88f6a79cac04cd17c13034f2cd147da"
+container.ts@^0.48.0:
+  version "0.48.0"
+  resolved "https://registry.yarnpkg.com/container.ts/-/container.ts-0.48.0.tgz#c404e27a89088dbcf93d0bf31d72ecaedc6a0fd6"
   dependencies:
     "@types/debug" "^0.0.30"
     awilix "^2.11.1"
@@ -3275,9 +3275,9 @@ trim-right@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/trim-right/-/trim-right-1.0.1.tgz#cb2e1203067e0c8de1f614094b9fe45704ea6003"
 
-ts-jest@^21.1.1:
-  version "21.2.1"
-  resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-21.2.1.tgz#cc98f4ed432c8f650940b5090a2efef365693fd0"
+ts-jest@^21.2.2:
+  version "21.2.2"
+  resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-21.2.2.tgz#60bd8a6bc599cf746bfa054600ba5694d3f39ebc"
   dependencies:
     babel-core "^6.24.1"
     babel-plugin-istanbul "^4.1.4"
