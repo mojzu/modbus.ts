@@ -19,17 +19,17 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
-"@types/jest@^21.1.6":
-  version "21.1.6"
-  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-21.1.6.tgz#9467945ce33261e4fdd14276576951aa130515aa"
+"@types/jest@^21.1.8":
+  version "21.1.8"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-21.1.8.tgz#d497213725684f1e5a37900b17a47c9c018f1a97"
 
 "@types/minimatch@*":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.1.tgz#b683eb60be358304ef146f5775db4c0e3696a550"
 
-"@types/moment-timezone@^0.5.1":
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/@types/moment-timezone/-/moment-timezone-0.5.1.tgz#2e8df25a100d40afc06b9e76ce43c458584ef610"
+"@types/moment-timezone@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@types/moment-timezone/-/moment-timezone-0.5.2.tgz#65129d5ee9fd3ce0f5440d10cd68c87540dce859"
   dependencies:
     moment ">=2.14.0"
 
@@ -259,9 +259,9 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
 
-awilix@^2.11.1:
-  version "2.11.1"
-  resolved "https://registry.yarnpkg.com/awilix/-/awilix-2.11.1.tgz#7d5432bf5d24b28aa07ef00849a466c8427e1111"
+awilix@^2.12.0:
+  version "2.12.0"
+  resolved "https://registry.yarnpkg.com/awilix/-/awilix-2.12.0.tgz#efb6704b31aea19dede2822f3fbe29f226d827fa"
   dependencies:
     camel-case "^3.0.0"
     glob "^7.1.2"
@@ -702,19 +702,19 @@ console-control-strings@^1.0.0, console-control-strings@~1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/console-control-strings/-/console-control-strings-1.1.0.tgz#3d7cf4464db6446ea644bf4b39507f9851008e8e"
 
-container.ts@^0.48.0:
-  version "0.48.0"
-  resolved "https://registry.yarnpkg.com/container.ts/-/container.ts-0.48.0.tgz#c404e27a89088dbcf93d0bf31d72ecaedc6a0fd6"
+container.ts@^0.55.0:
+  version "0.55.0"
+  resolved "https://registry.yarnpkg.com/container.ts/-/container.ts-0.55.0.tgz#e6cc2f21528db824e646d3867115ff60197c3678"
   dependencies:
     "@types/debug" "^0.0.30"
-    awilix "^2.11.1"
+    awilix "^2.12.0"
     debug "^3.1.0"
-    rxjs "^5.5.2"
+    rxjs "^5.5.3"
   optionalDependencies:
-    "@types/moment-timezone" "^0.5.1"
+    "@types/moment-timezone" "^0.5.2"
     "@types/validator" "^6.3.0"
     moment-timezone "^0.5.14"
-    validator "^9.1.1"
+    validator "^9.1.2"
 
 content-disposition@0.5.2:
   version "0.5.2"
@@ -2905,9 +2905,9 @@ rx@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/rx/-/rx-4.1.0.tgz#a5f13ff79ef3b740fe30aa803fb09f98805d4782"
 
-rxjs@^5.5.2:
-  version "5.5.2"
-  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.5.2.tgz#28d403f0071121967f18ad665563255d54236ac3"
+rxjs@^5.5.3:
+  version "5.5.3"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.5.3.tgz#b62227e74b84f4e77bdf440e50b5ee01a1bc7dcd"
   dependencies:
     symbol-observable "^1.0.1"
 
@@ -3431,9 +3431,9 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "~1.0.0"
     spdx-expression-parse "~1.0.0"
 
-validator@^9.1.1:
-  version "9.1.1"
-  resolved "https://registry.yarnpkg.com/validator/-/validator-9.1.1.tgz#3bdd1065cbd28f9d96ac806dee01030d32fd97ef"
+validator@^9.1.2:
+  version "9.1.2"
+  resolved "https://registry.yarnpkg.com/validator/-/validator-9.1.2.tgz#5711b6413f78bd9d56003130c81b47c39e86546c"
 
 vary@~1.1.2:
   version "1.1.2"

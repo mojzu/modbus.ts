@@ -89,7 +89,7 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
   }
 
   public open(options: IMasterRequestOptions = {}): Observable<void> {
-    // TODO: Timeout/retry support.
+    // TODO(MEDIUM): Timeout/retry support.
     return new Observable((subscriber: Subscriber<void>) => {
       // Ensure master closed and in known state.
       this.close();
@@ -188,7 +188,7 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
   }
 
   protected parseResponse(data: Buffer): number {
-    // TODO: Improve parsing based on expected response.
+    // TODO(MEDIUM): Improve parsing based on expected response.
     const slaveAddress = data.readUInt8(0);
     const pduBuffer = data.slice(1);
 

@@ -5,8 +5,8 @@ import * as pdu from "../Pdu";
 
 describe("Master", () => {
 
-  // TODO: Test coil/input bit off handling.
-  // TODO: Test coil/input bit multiple byte handling.
+  // TODO(LOW): Test coil/input bit off handling.
+  // TODO(LOW): Test coil/input bit multiple byte handling.
   const slave = new MockSlave();
 
   const readCoilsRequest = Master.readCoils(0x0020, 5);
