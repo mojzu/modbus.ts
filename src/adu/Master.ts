@@ -315,6 +315,13 @@ export abstract class Master<
     return callback || this.retryWhen;
   }
 
+  /** Returns true if error is RxJS Timeout. */
+  protected isTimeoutError(error: any): error is TimeoutError {
+    const isInstance = (error instanceof TimeoutError);
+    const hasName = (error.name === "TimeoutError");
+    return (isInstance || hasName);
+  }
+
   /** Default retryWhen callback for conditional retries. */
   protected defaultRetryWhen(
     master: Master<Req, Res, Exc>,
@@ -324,7 +331,7 @@ export abstract class Master<
     request?: Req,
   ): void {
     // If error is a timeout, retry up to limit.
-    if (error instanceof TimeoutError) {
+    if (this.isTimeoutError(error)) {
       if (errorCount >= retry) {
         throw new MasterError(Master.ERROR.TIMEOUT, error);
       }
