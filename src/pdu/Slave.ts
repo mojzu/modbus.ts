@@ -56,7 +56,7 @@ export abstract class Slave {
     }
   }
 
-  // TODO: Buffer value/data validation.
+  // (MEDIUM): Buffer value/data validation.
 
   protected onReadBitsRequest(functionCode: number, request: Buffer, isCoils: boolean): ISlaveResponse {
     const startingAddress = request.readUInt16BE(0);
