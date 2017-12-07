@@ -2,7 +2,7 @@
 import { Validate } from "container.ts/lib/validate";
 
 /** Modbus function codes. */
-export const enum EFunctionCode {
+export enum EFunctionCode {
   ReadCoils = 0x1,
   ReadDiscreteInputs,
   ReadHoldingRegisters,
@@ -15,7 +15,7 @@ export const enum EFunctionCode {
 }
 
 /** Modbus exception codes. */
-export const enum EExceptionCode {
+export enum EExceptionCode {
   IllegalFunctionCode = 0x1,
   IllegalDataAddress,
   IllegalDataValue,
