@@ -249,6 +249,25 @@ export abstract class Master<
     return this.onRequest(request, options);
   }
 
+  /** Default retryWhen callback for conditional retries. */
+  public defaultRetryWhen(
+    master: Master<Req, Res, Exc>,
+    retry: number,
+    errorCount: number,
+    error: any,
+    request?: Req,
+  ): void {
+    // If error is a timeout, retry up to limit.
+    if (this.isTimeoutError(error)) {
+      if (errorCount >= retry) {
+        throw new MasterError(Master.ERROR.TIMEOUT, error);
+      }
+    } else {
+      // Rethrow unknown errors.
+      throw new MasterError(error.code, error);
+    }
+  }
+
   // -----------------------------
   // Start implementation methods.
 
@@ -320,25 +339,6 @@ export abstract class Master<
     const isInstance = (error instanceof TimeoutError);
     const hasName = (error.name === "TimeoutError");
     return (isInstance || hasName);
-  }
-
-  /** Default retryWhen callback for conditional retries. */
-  protected defaultRetryWhen(
-    master: Master<Req, Res, Exc>,
-    retry: number,
-    errorCount: number,
-    error: any,
-    request?: Req,
-  ): void {
-    // If error is a timeout, retry up to limit.
-    if (this.isTimeoutError(error)) {
-      if (errorCount >= retry) {
-        throw new MasterError(Master.ERROR.TIMEOUT, error);
-      }
-    } else {
-      // Rethrow unknown errors.
-      throw new MasterError(error.code, error);
-    }
   }
 
   protected onRequest(request: Req, options: IMasterRequestOptions<Req, Res, Exc, L>): Observable<Res> {
