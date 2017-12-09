@@ -108,12 +108,12 @@ export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception,
    * Completes if no data transmitted or received after timeout.
    * @param options Request options.
    */
-  public connect<T>(options: IClientRequestOptions = {}): Observable<T> {
+  public connect(options: IClientRequestOptions = {}): Observable<any> {
     const retry = this.isRetry(options.retry);
     const retryWhen = this.isRetryWhen(options.retryWhen);
     let retrying = false;
 
-    return new Observable<T>((subscriber: Subscriber<T>) => {
+    return new Observable((subscriber: Subscriber<any>) => {
       // Disconnect and (re)open for clean state.
       this.disconnect();
       this.onOpen();
