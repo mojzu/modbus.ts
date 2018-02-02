@@ -48,21 +48,23 @@ describe("Master", () => {
     expect(buffer.readUInt16BE(3)).toEqual(5);
   });
 
-  it("Read coils starting address argument validation", () => {
+  it("Read coils starting address argument validation", (done) => {
     try {
       Master.readCoils(0xFF0000, 1);
-      fail();
+      done.fail();
     } catch (error) {
       expect(error instanceof ValidateError).toEqual(true);
+      done();
     }
   });
 
-  it("Read coils quantity of coils argument validation", () => {
+  it("Read coils quantity of coils argument validation", (done) => {
     try {
       Master.readCoils(0x0000, -1);
-      fail();
+      done.fail();
     } catch (error) {
       expect(error instanceof ValidateError).toEqual(true);
+      done();
     }
   });
 
@@ -73,13 +75,14 @@ describe("Master", () => {
     expect(buffer.readUInt8(2)).toEqual(0x15);
   });
 
-  it("Read coils client response", () => {
+  it("Read coils client response", (done) => {
     if (readCoilsClientResponse instanceof pdu.Response) {
       const data: pdu.IReadCoils = readCoilsClientResponse.data;
       expect(data.bytes).toEqual(1);
       expect(data.values).toEqual([true, false, true, false, true, false, false, false]);
+      done();
     } else {
-      fail(readCoilsClientResponse);
+      done.fail(String(readCoilsClientResponse));
     }
   });
 
@@ -104,13 +107,14 @@ describe("Master", () => {
     expect(buffer.readUInt8(2)).toEqual(0x5);
   });
 
-  it("Read discrete inputs client response", () => {
+  it("Read discrete inputs client response", (done) => {
     if (readDiscreteInputsClientResponse instanceof pdu.Response) {
       const data: pdu.IReadDiscreteInputs = readDiscreteInputsClientResponse.data;
       expect(data.bytes).toEqual(1);
       expect(data.values).toEqual([true, false, true, false, false, false, false, false]);
+      done();
     } else {
-      fail(readDiscreteInputsClientResponse);
+      done.fail(String(readDiscreteInputsClientResponse));
     }
   });
 
@@ -129,13 +133,14 @@ describe("Master", () => {
     expect(buffer.readUInt16BE(4)).toEqual(0xAFAF);
   });
 
-  it("Read holding registers client response", () => {
+  it("Read holding registers client response", (done) => {
     if (readHoldingRegistersClientResponse instanceof pdu.Response) {
       const data: pdu.IReadHoldingRegisters = readHoldingRegistersClientResponse.data;
       expect(data.bytes).toEqual(4);
       expect(data.values).toEqual([0xAFAF, 0xAFAF]);
+      done();
     } else {
-      fail(readHoldingRegistersClientResponse);
+      done.fail(String(readHoldingRegistersClientResponse));
     }
   });
 
@@ -153,13 +158,14 @@ describe("Master", () => {
     expect(buffer.readUInt16BE(2)).toEqual(0xAFAF);
   });
 
-  it("Read holding registers client response", () => {
+  it("Read holding registers client response", (done) => {
     if (readInputRegistersClientResponse instanceof pdu.Response) {
       const data: pdu.IReadInputRegisters = readInputRegistersClientResponse.data;
       expect(data.bytes).toEqual(2);
       expect(data.values).toEqual([0xAFAF]);
+      done();
     } else {
-      fail(readInputRegistersClientResponse);
+      done.fail(String(readInputRegistersClientResponse));
     }
   });
 
@@ -177,13 +183,14 @@ describe("Master", () => {
     expect(buffer.readUInt16BE(3)).toEqual(0xFF00);
   });
 
-  it("Write single coil client response", () => {
+  it("Write single coil client response", (done) => {
     if (writeSingleCoilClientResponse instanceof pdu.Response) {
       const data: pdu.IWriteSingleCoil = writeSingleCoilClientResponse.data;
       expect(data.address).toEqual(0x00FF);
       expect(data.value).toEqual(true);
+      done();
     } else {
-      fail(writeSingleCoilClientResponse);
+      done.fail(String(writeSingleCoilClientResponse));
     }
   });
 
@@ -201,13 +208,14 @@ describe("Master", () => {
     expect(buffer.readUInt16BE(3)).toEqual(0xABCD);
   });
 
-  it("Write single register client response", () => {
+  it("Write single register client response", (done) => {
     if (writeSingleRegisterClientResponse instanceof pdu.Response) {
       const data: pdu.IWriteSingleRegister = writeSingleRegisterClientResponse.data;
       expect(data.address).toEqual(0x4000);
       expect(data.value).toEqual(0xABCD);
+      done();
     } else {
-      fail(writeSingleRegisterClientResponse);
+      done.fail(String(writeSingleRegisterClientResponse));
     }
   });
 
@@ -227,13 +235,14 @@ describe("Master", () => {
     expect(buffer.readUInt16BE(3)).toEqual(4);
   });
 
-  it("Write multiple coils client response", () => {
+  it("Write multiple coils client response", (done) => {
     if (writeMultipleCoilsClientResponse instanceof pdu.Response) {
       const data: pdu.IWriteMultipleCoils = writeMultipleCoilsClientResponse.data;
       expect(data.address).toEqual(0x2000);
       expect(data.quantity).toEqual(4);
+      done();
     } else {
-      fail(writeMultipleCoilsClientResponse);
+      done.fail(String(writeMultipleCoilsClientResponse));
     }
   });
 
@@ -255,25 +264,27 @@ describe("Master", () => {
     expect(buffer.readUInt16BE(3)).toEqual(3);
   });
 
-  it("Write multiple registers client response", () => {
+  it("Write multiple registers client response", (done) => {
     if (writeMultipleRegistersClientResponse instanceof pdu.Response) {
       const data: pdu.IWriteMultipleRegisters = writeMultipleRegistersClientResponse.data;
       expect(data.address).toEqual(0x2000);
       expect(data.quantity).toEqual(3);
+      done();
     } else {
-      fail(writeMultipleRegistersClientResponse);
+      done.fail(String(writeMultipleRegistersClientResponse));
     }
   });
 
-  it("Exception for unsupported function code", () => {
+  it("Exception for unsupported function code", (done) => {
     const buffer = Buffer.from([pdu.EFunctionCode.Mei]);
     const clientResponse = Master.onResponse(buffer);
     if (clientResponse instanceof pdu.Exception) {
       expect(clientResponse.functionCode).toEqual(pdu.EFunctionCode.Mei);
       expect(clientResponse.exceptionFunctionCode).toEqual(pdu.EFunctionCode.Mei + 0x80);
       expect(clientResponse.exceptionCode).toEqual(pdu.EExceptionCode.IllegalFunctionCode);
+      done();
     } else {
-      fail(clientResponse);
+      done.fail(String(clientResponse));
     }
   });
 

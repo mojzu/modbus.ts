@@ -39,21 +39,23 @@ describe("Client", () => {
   // TODO(LOW): Test Client method requests/exceptions.
   // TODO(LOW): Test Client argument validation.
 
-  it("Throws error for invalid retry argument", () => {
+  it("Throws error for invalid retry argument", (done) => {
     try {
       create(MockServer, { retry: -1000 });
-      fail();
+      done.fail();
     } catch (error) {
       expect(error instanceof ValidateError).toEqual(true);
+      done();
     }
   });
 
-  it("Throws error for invalid timeout argument", () => {
+  it("Throws error for invalid timeout argument", (done) => {
     try {
       create(MockServer, { timeout: 1 });
-      fail();
+      done.fail();
     } catch (error) {
       expect(error instanceof ValidateError).toEqual(true);
+      done();
     }
   });
 
@@ -61,14 +63,13 @@ describe("Client", () => {
     const [, client] = create(MockServer);
     client.connect()
       .subscribe({
-        next: () => fail(),
+        next: () => done.fail(),
         error: (error) => {
           expect(error instanceof adu.MasterError).toEqual(true);
           done();
         },
         complete: () => {
-          fail();
-          done();
+          done.fail();
         },
       });
   });
@@ -86,8 +87,7 @@ describe("Client", () => {
               server.close();
             },
             error: (error) => {
-              fail(error);
-              done();
+              done.fail(error);
             },
             complete: () => {
               expect(nextCounter).toEqual(1);
@@ -104,7 +104,7 @@ describe("Client", () => {
         client.connect()
           .delay(2000)
           .subscribe({
-            next: () => fail(),
+            next: () => done.fail(),
             error: (error) => {
               expect(error instanceof adu.MasterError).toEqual(true);
               done();
@@ -136,8 +136,7 @@ describe("Client", () => {
               server.close();
             },
             error: (error) => {
-              fail(error);
-              done();
+              done.fail(error);
             },
             complete: () => {
               expect(nextCounter).toEqual(1);
@@ -166,8 +165,7 @@ describe("Client", () => {
               server.close();
             },
             error: (error) => {
-              fail(error);
-              done();
+              done.fail(error);
             },
             complete: () => done(),
           });
@@ -183,7 +181,7 @@ describe("Client", () => {
             return client.readCoils(0x0001, 1, { timeout: 1000 });
           })
           .subscribe({
-            next: () => fail(),
+            next: () => done.fail(),
             error: (error) => {
               expect(error instanceof adu.MasterError).toEqual(true);
               done();
@@ -215,8 +213,7 @@ describe("Client", () => {
               server.close();
             },
             error: (error) => {
-              fail(error);
-              done();
+              done.fail(error);
             },
             complete: () => {
               expect(nextCounter).toEqual(1);
@@ -248,8 +245,7 @@ describe("Client", () => {
               server.close();
             },
             error: (error) => {
-              fail(error);
-              done();
+              done.fail(error);
             },
             complete: () => {
               expect(nextCounter).toEqual(1);
@@ -281,8 +277,7 @@ describe("Client", () => {
               server.close();
             },
             error: (error) => {
-              fail(error);
-              done();
+              done.fail(error);
             },
             complete: () => {
               expect(nextCounter).toEqual(1);
