@@ -75,7 +75,7 @@ export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception,
   /** Is client connected. */
   public get connected(): boolean { return this.isConnected; }
 
-  protected socket: Socket | null;
+  protected socket: Socket | null = null;
   protected isConnected = false;
   protected transactionId = 0;
 

@@ -57,7 +57,7 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
   public readonly slaveAddress: number;
   public readonly inactivityTimeout: number;
 
-  protected port: SerialPort | null;
+  protected port: SerialPort | null = null;
 
   protected get openOptions(): SerialPort.OpenOptions {
     const parity: IRtuMasterParity = RTU_MASTER_PARITY[this.parity] as any;

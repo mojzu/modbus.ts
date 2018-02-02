@@ -17,7 +17,7 @@ export abstract class Server extends pdu.Slave {
   /** Port the server will listen on. */
   public readonly port: number;
 
-  protected server: net.Server | null;
+  protected server: net.Server | null = null;
 
   public constructor(options: IServerOptions) {
     super();

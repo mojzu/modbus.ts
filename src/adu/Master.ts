@@ -95,19 +95,19 @@ export abstract class Master<
   public readonly retryWhen: IMasterRetryWhen<Req, Res, Exc>;
 
   /** Responses/exceptions stream. */
-  public receive: Subject<Res | Exc>;
+  public receive!: Subject<Res | Exc>;
 
   /** Requests stream. */
-  public transmit: Subject<Req>;
+  public transmit!: Subject<Req>;
 
   /** Internal buffer. */
-  public buffer: Buffer;
+  public buffer!: Buffer;
 
   /** Internal log interface. */
   protected readonly log: L;
 
   /** Internal lock. */
-  protected locked: BehaviorSubject<boolean>;
+  protected locked!: BehaviorSubject<boolean>;
   protected lockDelay = 0;
 
   protected get nextLockDelay(): number {
