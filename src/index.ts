@@ -4,4 +4,4 @@ import * as rtu from "./rtu";
 import * as tcp from "./tcp";
 
 export { adu, pdu, rtu, tcp };
-// TODO(HIGH): Write library documentation.
+// TODO(H): Write library documentation.

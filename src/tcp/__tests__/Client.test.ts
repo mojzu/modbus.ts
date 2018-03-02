@@ -36,8 +36,8 @@ function create(serverClass: any, options: IClientOptions = {}): [Server, Client
 
 describe("Client", () => {
 
-  // TODO(LOW): Test Client method requests/exceptions.
-  // TODO(LOW): Test Client argument validation.
+  // TODO(L): Test Client method requests/exceptions.
+  // TODO(L): Test Client argument validation.
 
   it("Throws error for invalid retry argument", (done) => {
     try {

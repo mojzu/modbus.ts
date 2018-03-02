@@ -4,7 +4,7 @@ import * as pdu from "./Pdu";
 /**
  * Modbus PDU master.
  * Request factory for supported function codes.
- * TODO(MEDIUM): Implement more Modbus function codes.
+ * TODO(M): Implement more Modbus function codes.
  */
 export class Master {
 
