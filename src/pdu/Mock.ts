@@ -28,14 +28,14 @@ export class MockSlave extends Slave {
   public readBits(startingAddress: number, quantityOfBits: number): boolean[] {
     const values: boolean[] = [];
     for (let i = 0; i < quantityOfBits; i++) {
-      values.push((i % 2) === 0);
+      values.push(i % 2 === 0);
     }
     return values;
   }
   public readRegisters(startingAddress: number, quantityOfRegisters: number): number[] {
     const values: number[] = [];
     for (let i = 0; i < quantityOfRegisters; i++) {
-      values.push(0xAFAF);
+      values.push(0xafaf);
     }
     return values;
   }

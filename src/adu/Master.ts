@@ -1,31 +1,33 @@
 import { ErrorChain } from "container.ts/lib/error";
 import { Validate } from "container.ts/lib/validate";
 import * as Debug from "debug";
+import { BehaviorSubject, interval, Observable, Subject, throwError, TimeoutError } from "rxjs";
+import {
+  catchError,
+  filter,
+  map,
+  retryWhen as rxjsRetryWhen,
+  scan,
+  switchMap,
+  take,
+  timeout as rxjsTimeout
+} from "rxjs/operators";
 import * as pdu from "../pdu";
-import { BehaviorSubject, Observable, Subject, TimeoutError } from "./RxJS";
 
 // Internal debug output.
 const debug = Debug("modbus.ts");
 
 /** Conditional retry callback type. */
-export type IMasterRetryWhen<
-  Req extends pdu.Request,
-  Res extends pdu.Response,
-  Exc extends pdu.Exception
-  > = (
-    master: Master<Req, Res, Exc>,
-    retry: number,
-    errorCount: number,
-    error: any,
-    request?: Req,
-  ) => void;
+export type IMasterRetryWhen<Req extends pdu.Request, Res extends pdu.Response, Exc extends pdu.Exception> = (
+  master: Master<Req, Res, Exc>,
+  retry: number,
+  errorCount: number,
+  error: any,
+  request?: Req
+) => void;
 
 /** Log interface. */
-export class Log<
-  Req extends pdu.Request,
-  Res extends pdu.Response,
-  Exc extends pdu.Exception
-  > {
+export class Log<Req extends pdu.Request, Res extends pdu.Response, Exc extends pdu.Exception> {
   public request(request: Req, errorCount: number): void {
     debug(Master.LOG.REQUEST, request, errorCount);
   }
@@ -35,8 +37,8 @@ export class Log<
   public exception(exception: Exc): void {
     debug(Master.LOG.EXCEPTION, exception);
   }
-  public bytesTransmitted(value: number): void { }
-  public bytesReceived(value: number): void { }
+  public bytesTransmitted(value: number): void {}
+  public bytesReceived(value: number): void {}
 }
 
 /** Modbus ADU master request options. */
@@ -44,8 +46,8 @@ export interface IMasterRequestOptions<
   Req extends pdu.Request,
   Res extends pdu.Response,
   Exc extends pdu.Exception,
-  L extends Log<Req, Res, Exc> = Log<Req, Res, Exc>,
-  > {
+  L extends Log<Req, Res, Exc> = Log<Req, Res, Exc>
+> {
   retry?: number;
   timeout?: number;
   retryWhen?: IMasterRetryWhen<Req, Res, Exc>;
@@ -65,24 +67,23 @@ export abstract class Master<
   Res extends pdu.Response,
   Exc extends pdu.Exception,
   L extends Log<Req, Res, Exc> = Log<Req, Res, Exc>
-  > {
-
+> {
   /** Default values. */
   public static DEFAULT = {
     RETRY: 0,
-    TIMEOUT: 5000,
+    TIMEOUT: 5000
   };
 
   /** Error codes. */
   public static ERROR = {
-    TIMEOUT: "ModbusMasterTimeoutError",
+    TIMEOUT: "ModbusMasterTimeoutError"
   };
 
   /** Log names. */
   public static LOG = {
     REQUEST: "ModbusMasterRequest",
     RESPONSE: "ModbusMasterResponse",
-    EXCEPTION: "ModbusMasterException",
+    EXCEPTION: "ModbusMasterException"
   };
 
   /** Default number of retries performed during requests. */
@@ -130,7 +131,7 @@ export abstract class Master<
   public readCoils(
     startingAddress: number,
     quantityOfCoils: number,
-    options: IMasterRequestOptions<Req, Res, Exc, L> = {},
+    options: IMasterRequestOptions<Req, Res, Exc, L> = {}
   ): Observable<Res> {
     const pduRequest = pdu.Master.readCoils(startingAddress, quantityOfCoils);
     const request = this.setupRequest(pduRequest.functionCode, pduRequest.buffer);
@@ -146,7 +147,7 @@ export abstract class Master<
   public readDiscreteInputs(
     startingAddress: number,
     quantityOfInputs: number,
-    options: IMasterRequestOptions<Req, Res, Exc, L> = {},
+    options: IMasterRequestOptions<Req, Res, Exc, L> = {}
   ): Observable<Res> {
     const pduRequest = pdu.Master.readDiscreteInputs(startingAddress, quantityOfInputs);
     const request = this.setupRequest(pduRequest.functionCode, pduRequest.buffer);
@@ -162,7 +163,7 @@ export abstract class Master<
   public readHoldingRegisters(
     startingAddress: number,
     quantityOfRegisters: number,
-    options: IMasterRequestOptions<Req, Res, Exc, L> = {},
+    options: IMasterRequestOptions<Req, Res, Exc, L> = {}
   ): Observable<Res> {
     const pduRequest = pdu.Master.readHoldingRegisters(startingAddress, quantityOfRegisters);
     const request = this.setupRequest(pduRequest.functionCode, pduRequest.buffer);
@@ -178,7 +179,7 @@ export abstract class Master<
   public readInputRegisters(
     startingAddress: number,
     quantityOfRegisters: number,
-    options: IMasterRequestOptions<Req, Res, Exc, L> = {},
+    options: IMasterRequestOptions<Req, Res, Exc, L> = {}
   ): Observable<Res> {
     const pduRequest = pdu.Master.readInputRegisters(startingAddress, quantityOfRegisters);
     const request = this.setupRequest(pduRequest.functionCode, pduRequest.buffer);
@@ -194,7 +195,7 @@ export abstract class Master<
   public writeSingleCoil(
     outputAddress: number,
     outputValue: boolean,
-    options: IMasterRequestOptions<Req, Res, Exc, L> = {},
+    options: IMasterRequestOptions<Req, Res, Exc, L> = {}
   ): Observable<Res> {
     const pduRequest = pdu.Master.writeSingleCoil(outputAddress, outputValue);
     const request = this.setupRequest(pduRequest.functionCode, pduRequest.buffer);
@@ -210,7 +211,7 @@ export abstract class Master<
   public writeSingleRegister(
     registerAddress: number,
     registerValue: number,
-    options: IMasterRequestOptions<Req, Res, Exc, L> = {},
+    options: IMasterRequestOptions<Req, Res, Exc, L> = {}
   ): Observable<Res> {
     const pduRequest = pdu.Master.writeSingleRegister(registerAddress, registerValue);
     const request = this.setupRequest(pduRequest.functionCode, pduRequest.buffer);
@@ -226,7 +227,7 @@ export abstract class Master<
   public writeMultipleCoils(
     startingAddress: number,
     outputValues: boolean[],
-    options: IMasterRequestOptions<Req, Res, Exc, L> = {},
+    options: IMasterRequestOptions<Req, Res, Exc, L> = {}
   ): Observable<Res> {
     const pduRequest = pdu.Master.writeMultipleCoils(startingAddress, outputValues);
     const request = this.setupRequest(pduRequest.functionCode, pduRequest.buffer);
@@ -242,7 +243,7 @@ export abstract class Master<
   public writeMultipleRegisters(
     startingAddress: number,
     registerValues: number[],
-    options: IMasterRequestOptions<Req, Res, Exc, L> = {},
+    options: IMasterRequestOptions<Req, Res, Exc, L> = {}
   ): Observable<Res> {
     const pduRequest = pdu.Master.writeMultipleRegisters(startingAddress, registerValues);
     const request = this.setupRequest(pduRequest.functionCode, pduRequest.buffer);
@@ -255,7 +256,7 @@ export abstract class Master<
     retry: number,
     errorCount: number,
     error: any,
-    request?: Req,
+    request?: Req
   ): void {
     // If error is a timeout, retry up to limit.
     if (this.isTimeoutError(error)) {
@@ -319,13 +320,13 @@ export abstract class Master<
 
   /** Validate number of retries (0+). */
   protected isRetry(value?: number): number {
-    value = (value != null) ? value : this.retry;
+    value = value != null ? value : this.retry;
     return Validate.isInteger(String(value), { min: 0 });
   }
 
   /** Validate timeout in milliseconds (50+). */
   protected isTimeout(value?: number): number {
-    value = (value != null) ? value : this.timeout;
+    value = value != null ? value : this.timeout;
     return Validate.isInteger(String(value), { min: 50 });
   }
 
@@ -336,9 +337,9 @@ export abstract class Master<
 
   /** Returns true if error is RxJS Timeout. */
   protected isTimeoutError(error: any): error is TimeoutError {
-    const isInstance = (error instanceof TimeoutError);
-    const hasName = (error.name === "TimeoutError");
-    return (isInstance || hasName);
+    const isInstance = error instanceof TimeoutError;
+    const hasName = error.name === "TimeoutError";
+    return isInstance || hasName;
   }
 
   protected onRequest(request: Req, options: IMasterRequestOptions<Req, Res, Exc, L>): Observable<Res> {
@@ -347,45 +348,48 @@ export abstract class Master<
     const retryWhen = this.isRetryWhen(options.retryWhen);
 
     // Wait for master lock.
-    return Observable.interval(this.nextLockDelay)
-      .map(() => this.locked.value)
-      .filter((locked) => !locked)
-      .take(1)
-      .switchMap(() => {
+    return interval(this.nextLockDelay).pipe(
+      map(() => this.locked.value),
+      filter((locked) => !locked),
+      take(1),
+      switchMap(() => {
         // Lock and write via transmit subject.
         this.locked.next(true);
         this.transmitRequest(request);
 
         // Wait for response to be received.
-        return this.receive
-          .filter((response) => this.matchResponse(request, response))
-          .timeout(timeout)
-          .retryWhen((errors) => {
-            return errors
-              .scan((errorCount, error) => {
+        return this.receive.pipe(
+          filter((response) => this.matchResponse(request, response)),
+          rxjsTimeout(timeout),
+          rxjsRetryWhen((errors) => {
+            return errors.pipe(
+              scan((errorCount, error) => {
                 errorCount += 1;
                 // Throws error if retry not required.
                 retryWhen(this, retry, errorCount, error, request);
                 // Retransmit request and increment error counter.
                 this.transmitRequest(request, errorCount);
                 return errorCount;
-              }, 0);
-          })
-          .take(1)
-          .map((response) => {
+              }, 0)
+            );
+          }),
+          take(1),
+          map((response) => {
             // Unlock and handle response.
             this.locked.next(false);
             if (response instanceof pdu.Response) {
               return response;
             }
             throw response;
-          });
-      })
+          })
+        );
+      }),
       // Unlock master if error thrown.
-      .catch((error) => {
+      catchError((error) => {
         this.locked.next(false);
-        return Observable.throw(error);
-      });
+        return throwError(error);
+      })
+    );
   }
 
   /** Transmit request using transmit observable. */
@@ -394,5 +398,4 @@ export abstract class Master<
     this.log.bytesTransmitted(request.buffer.length);
     this.transmit.next(request);
   }
-
 }

@@ -4,7 +4,6 @@ import { MockSlave } from "../Mock";
 import * as pdu from "../Pdu";
 
 describe("Master", () => {
-
   // TODO(L): Test coil/input bit off handling.
   // TODO(L): Test coil/input bit multiple byte handling.
   const slave = new MockSlave();
@@ -17,19 +16,19 @@ describe("Master", () => {
   const readDiscreteInputsServerResponse = slave.onRequest(readDiscreteInputsRequest.buffer);
   const readDiscreteInputsClientResponse = Master.onResponse(readDiscreteInputsServerResponse.buffer);
 
-  const readHoldingRegistersRequest = Master.readHoldingRegisters(0xFF00, 2);
+  const readHoldingRegistersRequest = Master.readHoldingRegisters(0xff00, 2);
   const readHoldingRegistersServerResponse = slave.onRequest(readHoldingRegistersRequest.buffer);
   const readHoldingRegistersClientResponse = Master.onResponse(readHoldingRegistersServerResponse.buffer);
 
-  const readInputRegistersRequest = Master.readInputRegisters(0xAFAF, 1);
+  const readInputRegistersRequest = Master.readInputRegisters(0xafaf, 1);
   const readInputRegistersServerResponse = slave.onRequest(readInputRegistersRequest.buffer);
   const readInputRegistersClientResponse = Master.onResponse(readInputRegistersServerResponse.buffer);
 
-  const writeSingleCoilRequest = Master.writeSingleCoil(0x00FF, true);
+  const writeSingleCoilRequest = Master.writeSingleCoil(0x00ff, true);
   const writeSingleCoilServerResponse = slave.onRequest(writeSingleCoilRequest.buffer);
   const writeSingleCoilClientResponse = Master.onResponse(writeSingleCoilServerResponse.buffer);
 
-  const writeSingleRegisterRequest = Master.writeSingleRegister(0x4000, 0xABCD);
+  const writeSingleRegisterRequest = Master.writeSingleRegister(0x4000, 0xabcd);
   const writeSingleRegisterServerResponse = slave.onRequest(writeSingleRegisterRequest.buffer);
   const writeSingleRegisterClientResponse = Master.onResponse(writeSingleRegisterServerResponse.buffer);
 
@@ -50,7 +49,7 @@ describe("Master", () => {
 
   it("Read coils starting address argument validation", (done) => {
     try {
-      Master.readCoils(0xFF0000, 1);
+      Master.readCoils(0xff0000, 1);
       done.fail();
     } catch (error) {
       expect(error instanceof ValidateError).toEqual(true);
@@ -121,7 +120,7 @@ describe("Master", () => {
   it("Read holding registers request", () => {
     const buffer = readHoldingRegistersRequest.buffer;
     expect(buffer.readUInt8(0)).toEqual(pdu.EFunctionCode.ReadHoldingRegisters);
-    expect(buffer.readUInt16BE(1)).toEqual(0xFF00);
+    expect(buffer.readUInt16BE(1)).toEqual(0xff00);
     expect(buffer.readUInt16BE(3)).toEqual(2);
   });
 
@@ -129,15 +128,15 @@ describe("Master", () => {
     const buffer = readHoldingRegistersServerResponse.buffer;
     expect(buffer.readUInt8(0)).toEqual(pdu.EFunctionCode.ReadHoldingRegisters);
     expect(buffer.readUInt8(1)).toEqual(4);
-    expect(buffer.readUInt16BE(2)).toEqual(0xAFAF);
-    expect(buffer.readUInt16BE(4)).toEqual(0xAFAF);
+    expect(buffer.readUInt16BE(2)).toEqual(0xafaf);
+    expect(buffer.readUInt16BE(4)).toEqual(0xafaf);
   });
 
   it("Read holding registers client response", (done) => {
     if (readHoldingRegistersClientResponse instanceof pdu.Response) {
       const data: pdu.IReadHoldingRegisters = readHoldingRegistersClientResponse.data;
       expect(data.bytes).toEqual(4);
-      expect(data.values).toEqual([0xAFAF, 0xAFAF]);
+      expect(data.values).toEqual([0xafaf, 0xafaf]);
       done();
     } else {
       done.fail(String(readHoldingRegistersClientResponse));
@@ -147,7 +146,7 @@ describe("Master", () => {
   it("Read input registers request", () => {
     const buffer = readInputRegistersRequest.buffer;
     expect(buffer.readUInt8(0)).toEqual(pdu.EFunctionCode.ReadInputRegisters);
-    expect(buffer.readUInt16BE(1)).toEqual(0xAFAF);
+    expect(buffer.readUInt16BE(1)).toEqual(0xafaf);
     expect(buffer.readUInt16BE(3)).toEqual(1);
   });
 
@@ -155,14 +154,14 @@ describe("Master", () => {
     const buffer = readInputRegistersServerResponse.buffer;
     expect(buffer.readUInt8(0)).toEqual(pdu.EFunctionCode.ReadInputRegisters);
     expect(buffer.readUInt8(1)).toEqual(2);
-    expect(buffer.readUInt16BE(2)).toEqual(0xAFAF);
+    expect(buffer.readUInt16BE(2)).toEqual(0xafaf);
   });
 
   it("Read holding registers client response", (done) => {
     if (readInputRegistersClientResponse instanceof pdu.Response) {
       const data: pdu.IReadInputRegisters = readInputRegistersClientResponse.data;
       expect(data.bytes).toEqual(2);
-      expect(data.values).toEqual([0xAFAF]);
+      expect(data.values).toEqual([0xafaf]);
       done();
     } else {
       done.fail(String(readInputRegistersClientResponse));
@@ -172,21 +171,21 @@ describe("Master", () => {
   it("Write single coil request", () => {
     const buffer = writeSingleCoilRequest.buffer;
     expect(buffer.readUInt8(0)).toEqual(pdu.EFunctionCode.WriteSingleCoil);
-    expect(buffer.readUInt16BE(1)).toEqual(0x00FF);
-    expect(buffer.readUInt16BE(3)).toEqual(0xFF00);
+    expect(buffer.readUInt16BE(1)).toEqual(0x00ff);
+    expect(buffer.readUInt16BE(3)).toEqual(0xff00);
   });
 
   it("Write single coil server response", () => {
     const buffer = writeSingleCoilServerResponse.buffer;
     expect(buffer.readUInt8(0)).toEqual(pdu.EFunctionCode.WriteSingleCoil);
-    expect(buffer.readUInt16BE(1)).toEqual(0x00FF);
-    expect(buffer.readUInt16BE(3)).toEqual(0xFF00);
+    expect(buffer.readUInt16BE(1)).toEqual(0x00ff);
+    expect(buffer.readUInt16BE(3)).toEqual(0xff00);
   });
 
   it("Write single coil client response", (done) => {
     if (writeSingleCoilClientResponse instanceof pdu.Response) {
       const data: pdu.IWriteSingleCoil = writeSingleCoilClientResponse.data;
-      expect(data.address).toEqual(0x00FF);
+      expect(data.address).toEqual(0x00ff);
       expect(data.value).toEqual(true);
       done();
     } else {
@@ -198,21 +197,21 @@ describe("Master", () => {
     const buffer = writeSingleRegisterRequest.buffer;
     expect(buffer.readUInt8(0)).toEqual(pdu.EFunctionCode.WriteSingleRegister);
     expect(buffer.readUInt16BE(1)).toEqual(0x4000);
-    expect(buffer.readUInt16BE(3)).toEqual(0xABCD);
+    expect(buffer.readUInt16BE(3)).toEqual(0xabcd);
   });
 
   it("Write single register server response", () => {
     const buffer = writeSingleRegisterServerResponse.buffer;
     expect(buffer.readUInt8(0)).toEqual(pdu.EFunctionCode.WriteSingleRegister);
     expect(buffer.readUInt16BE(1)).toEqual(0x4000);
-    expect(buffer.readUInt16BE(3)).toEqual(0xABCD);
+    expect(buffer.readUInt16BE(3)).toEqual(0xabcd);
   });
 
   it("Write single register client response", (done) => {
     if (writeSingleRegisterClientResponse instanceof pdu.Response) {
       const data: pdu.IWriteSingleRegister = writeSingleRegisterClientResponse.data;
       expect(data.address).toEqual(0x4000);
-      expect(data.value).toEqual(0xABCD);
+      expect(data.value).toEqual(0xabcd);
       done();
     } else {
       done.fail(String(writeSingleRegisterClientResponse));
@@ -287,5 +286,4 @@ describe("Master", () => {
       done.fail(String(clientResponse));
     }
   });
-
 });

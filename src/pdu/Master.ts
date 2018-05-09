@@ -7,23 +7,17 @@ import * as pdu from "./Pdu";
  * TODO(M): Implement more Modbus function codes.
  */
 export class Master {
-
   /**
    * Create a new PDU exception.
    * @param functionCode Function code.
    * @param exceptionCode Exception code.
    */
   public static createException(functionCode: pdu.EFunctionCode, exceptionCode: pdu.EExceptionCode): pdu.Exception {
-    const exceptionFunctionCode = (functionCode + 0x80) % 0xFF;
+    const exceptionFunctionCode = (functionCode + 0x80) % 0xff;
     const buffer = Buffer.allocUnsafe(2);
     buffer.writeUInt8(exceptionFunctionCode, 0);
     buffer.writeUInt8(exceptionCode, 1);
-    return new pdu.Exception(
-      functionCode,
-      functionCode + 0x80,
-      exceptionCode,
-      buffer,
-    );
+    return new pdu.Exception(functionCode, functionCode + 0x80, exceptionCode, buffer);
   }
 
   /**
@@ -114,7 +108,7 @@ export class Master {
     const buffer = Buffer.allocUnsafe(5);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(outputAddress, 1);
-    buffer.writeUInt16BE((!!outputValue ? 0xFF00 : 0x0000), 3);
+    buffer.writeUInt16BE(!!outputValue ? 0xff00 : 0x0000, 3);
 
     return new pdu.Request(functionCode, buffer);
   }
@@ -144,7 +138,7 @@ export class Master {
    */
   public static writeMultipleCoils(startingAddress: number, outputValues: boolean[]): pdu.Request {
     pdu.isAddress(startingAddress);
-    pdu.isQuantityOfBits(outputValues.length, 0x7B0);
+    pdu.isQuantityOfBits(outputValues.length, 0x7b0);
     pdu.isAddress(startingAddress + outputValues.length);
 
     const functionCode = pdu.EFunctionCode.WriteMultipleCoils;
@@ -168,7 +162,7 @@ export class Master {
    */
   public static writeMultipleRegisters(startingAddress: number, registerValues: number[]): pdu.Request {
     pdu.isAddress(startingAddress);
-    pdu.isQuantityOfRegisters(registerValues.length, 0x7B);
+    pdu.isQuantityOfRegisters(registerValues.length, 0x7b);
     pdu.isAddress(startingAddress + registerValues.length);
     registerValues.map((value) => {
       pdu.isRegister(value);
@@ -182,7 +176,7 @@ export class Master {
     buffer.writeUInt16BE(registerValues.length, 3);
     buffer.writeUInt8(byteCount, 5);
     registerValues.map((value, index) => {
-      buffer.writeUInt16BE(value, 6 + (index * 2));
+      buffer.writeUInt16BE(value, 6 + index * 2);
     });
 
     return new pdu.Request(functionCode, buffer);
@@ -199,7 +193,7 @@ export class Master {
     if (functionCode >= 0x80) {
       // Buffer contains an exception response.
       const exceptionCode = buffer.readUInt8(1);
-      return Master.createException((functionCode - 0x80), exceptionCode);
+      return Master.createException(functionCode - 0x80, exceptionCode);
     }
 
     switch (functionCode) {
@@ -248,15 +242,15 @@ export class Master {
   public static onReadRegistersResponse(buffer: Buffer): pdu.IReadRegisters {
     const bytes = buffer.readUInt8(0);
     const values: number[] = [];
-    for (let i = 0; i < (bytes / 2); i++) {
-      values[i] = buffer.readUInt16BE(1 + (i * 2));
+    for (let i = 0; i < bytes / 2; i++) {
+      values[i] = buffer.readUInt16BE(1 + i * 2);
     }
     return { bytes, values };
   }
 
   public static onWriteBitResponse(buffer: Buffer): pdu.IWriteBit {
     const address = buffer.readUInt16BE(0);
-    const value = (buffer.readUInt16BE(2) === 0xFF00) ? true : false;
+    const value = buffer.readUInt16BE(2) === 0xff00 ? true : false;
     return { address, value };
   }
 
@@ -271,5 +265,4 @@ export class Master {
     const quantity = buffer.readUInt16BE(2);
     return { address, quantity };
   }
-
 }

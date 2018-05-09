@@ -1,8 +1,9 @@
 /* tslint:disable:no-bitwise prefer-for-of */
 import { Validate } from "container.ts/lib/validate";
+import { fromEvent, merge, Observable, Subscriber } from "rxjs";
+import { take, takeUntil, timeout } from "rxjs/operators";
 import * as SerialPort from "serialport";
 import * as adu from "../adu";
-import { Observable, Subscriber } from "../adu/RxJS";
 import * as pdu from "../pdu";
 import * as rtu from "./Rtu";
 
@@ -16,7 +17,7 @@ export type IMasterStopBits = 1 | 2;
 export enum EMasterParity {
   None,
   Even,
-  Odd,
+  Odd
 }
 export type IRtuMasterParity = "none" | "even" | "odd";
 export const RTU_MASTER_PARITY = ["none", "even", "odd"];
@@ -37,16 +38,18 @@ export interface IMasterOptions extends IMasterRequestOptions {
 
 /** Modbus RTU master. */
 export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception> {
-
   /** Default values. */
-  public static DEFAULT = Object.assign({
-    BAUDRATE: 19200,
-    DATA_BITS: 8,
-    STOP_BITS: 1,
-    PARITY: EMasterParity.Even,
-    RTSCTS: true,
-    SLAVE_ADDRESS: 1,
-  }, adu.Master.DEFAULT);
+  public static DEFAULT = Object.assign(
+    {
+      BAUDRATE: 19200,
+      DATA_BITS: 8,
+      STOP_BITS: 1,
+      PARITY: EMasterParity.Even,
+      RTSCTS: true,
+      SLAVE_ADDRESS: 1
+    },
+    adu.Master.DEFAULT
+  );
 
   public readonly path: string;
   public readonly baudRate: number;
@@ -66,7 +69,7 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
       dataBits: this.dataBits,
       stopBits: this.stopBits,
       parity,
-      rtscts: this.rtscts,
+      rtscts: this.rtscts
     };
   }
 
@@ -74,17 +77,18 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
     super(options);
 
     this.path = Validate.isString(options.path);
-    this.baudRate = Validate.isInteger(
-      String(options.baudRate || Master.DEFAULT.BAUDRATE));
-    this.dataBits = Validate.isInteger(
-      String(options.dataBits || Master.DEFAULT.DATA_BITS)) as IMasterDataBits;
-    this.stopBits = Validate.isInteger(
-      String(options.stopBits || Master.DEFAULT.STOP_BITS), { min: 1, max: 2 }) as IMasterStopBits;
+    this.baudRate = Validate.isInteger(String(options.baudRate || Master.DEFAULT.BAUDRATE));
+    this.dataBits = Validate.isInteger(String(options.dataBits || Master.DEFAULT.DATA_BITS)) as IMasterDataBits;
+    this.stopBits = Validate.isInteger(String(options.stopBits || Master.DEFAULT.STOP_BITS), {
+      min: 1,
+      max: 2
+    }) as IMasterStopBits;
     this.parity = options.parity || Master.DEFAULT.PARITY;
-    this.rtscts = Validate.isBoolean(
-      String(options.rtscts || Master.DEFAULT.RTSCTS));
-    this.slaveAddress = Validate.isInteger(
-      String(options.slaveAddress || Master.DEFAULT.SLAVE_ADDRESS), { min: 0, max: 0xFF });
+    this.rtscts = Validate.isBoolean(String(options.rtscts || Master.DEFAULT.RTSCTS));
+    this.slaveAddress = Validate.isInteger(String(options.slaveAddress || Master.DEFAULT.SLAVE_ADDRESS), {
+      min: 0,
+      max: 0xff
+    });
     this.inactivityTimeout = this.isTimeout(options.inactivityTimeout);
   }
 
@@ -102,39 +106,35 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
       });
 
       // If port closes, call close and complete observable.
-      const portClose = Observable.fromEvent<void>(this.port as any, "close").take(1);
-      portClose
-        .subscribe(() => {
-          this.close();
-          subscriber.complete();
-        });
+      const portClose = fromEvent<void>(this.port as any, "close").pipe(take(1));
+      portClose.subscribe(() => {
+        this.close();
+        subscriber.complete();
+      });
 
       // If port opens, call next.
-      Observable.fromEvent<void>(this.port as any, "open")
-        .take(1)
+      fromEvent<void>(this.port as any, "open")
+        .pipe(take(1))
         .subscribe(() => {
           subscriber.next();
         });
 
       // Port data event receives data into internal buffer and processes responses.
-      Observable.fromEvent<Buffer>(this.port as any, "data")
-        .takeUntil(portClose)
+      fromEvent<Buffer>(this.port as any, "data")
+        .pipe(takeUntil(portClose))
         .subscribe((buffer) => this.onData(buffer));
 
       // Requests transmitted via port.
-      this.transmit
-        .takeUntil(portClose)
-        .subscribe((request) => this.writePort(request));
+      this.transmit.pipe(takeUntil(portClose)).subscribe((request) => this.writePort(request));
 
       // If no activity occurs on port for timeout duration, master is closed.
-      Observable.merge(this.transmit, this.receive)
-        .takeUntil(portClose)
-        .timeout(this.inactivityTimeout)
+      merge(this.transmit, this.receive)
+        .pipe(takeUntil(portClose), timeout(this.inactivityTimeout))
         .subscribe({
           error: (error) => {
             this.close();
             subscriber.error(new adu.MasterError(error.code, error));
-          },
+          }
         });
     });
   }
@@ -167,7 +167,7 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
 
   /** Generate CRC for request buffer. */
   protected generateCrc(request: Buffer): number {
-    let crc = 0xFFFF;
+    let crc = 0xffff;
     for (let i = 0; i < request.length; i++) {
       crc = crc ^ request[i];
 
@@ -175,7 +175,7 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
         const odd = crc & 0x0001;
         crc = crc >> 1;
         if (!!odd) {
-          crc = crc ^ 0xA001;
+          crc = crc ^ 0xa001;
         }
       }
     }
@@ -193,7 +193,9 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
     const pduBuffer = data.slice(1);
 
     const response = this.onParseResponse(slaveAddress, pduBuffer, data);
-    if (response != null) { this.onResponse(response); }
+    if (response != null) {
+      this.onResponse(response);
+    }
 
     // Return length of parsed data.
     return data.length;
@@ -202,29 +204,23 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
   protected onParseResponse(
     slaveAddress: number,
     pduBuffer: Buffer,
-    aduBuffer: Buffer,
+    aduBuffer: Buffer
   ): rtu.Response | rtu.Exception | null {
     const pduResponse = pdu.Master.onResponse(pduBuffer);
     let response: rtu.Response | rtu.Exception | null = null;
 
     if (pduResponse instanceof pdu.Response) {
-      response = new rtu.Response(
-        slaveAddress,
-        pduResponse.functionCode,
-        pduResponse.data,
-        aduBuffer,
-      );
+      response = new rtu.Response(slaveAddress, pduResponse.functionCode, pduResponse.data, aduBuffer);
     } else if (pduResponse instanceof pdu.Exception) {
       response = new rtu.Exception(
         slaveAddress,
         pduResponse.functionCode,
         pduResponse.exceptionFunctionCode,
         pduResponse.exceptionCode,
-        aduBuffer,
+        aduBuffer
       );
     }
 
     return response;
   }
-
 }

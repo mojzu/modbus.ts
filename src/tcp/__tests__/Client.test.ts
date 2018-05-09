@@ -1,7 +1,8 @@
 import { ValidateError } from "container.ts/lib/validate";
 import * as Debug from "debug";
+import { forkJoin } from "rxjs";
+import { delay, map, switchMap } from "rxjs/operators";
 import * as adu from "../../adu";
-import { Observable } from "../../adu/RxJS";
 import * as pdu from "../../pdu";
 import { Client, IClientOptions, Log } from "../Client";
 import { MockDropServer, MockServer, MockSlowServer } from "../Mock";
@@ -35,7 +36,6 @@ function create(serverClass: any, options: IClientOptions = {}): [Server, Client
 }
 
 describe("Client", () => {
-
   // TODO(L): Test Client method requests/exceptions.
   // TODO(L): Test Client argument validation.
 
@@ -61,230 +61,238 @@ describe("Client", () => {
 
   it("Fails to connect to closed server port", (done) => {
     const [, client] = create(MockServer);
-    client.connect()
-      .subscribe({
-        next: () => done.fail(),
-        error: (error) => {
-          expect(error instanceof adu.MasterError).toEqual(true);
-          done();
-        },
-        complete: () => {
-          done.fail();
-        },
-      });
+    client.connect().subscribe({
+      next: () => done.fail(),
+      error: (error) => {
+        expect(error instanceof adu.MasterError).toEqual(true);
+        done();
+      },
+      complete: () => {
+        done.fail();
+      }
+    });
   });
 
   it("Connects to open server port", (done) => {
     const [server, client] = create(MockServer);
     let nextCounter = 0;
-    server.open()
-      .subscribe(() => {
-        client.connect()
-          .subscribe({
-            next: () => {
-              nextCounter += 1;
-              client.disconnect();
-              server.close();
-            },
-            error: (error) => {
-              done.fail(error);
-            },
-            complete: () => {
-              expect(nextCounter).toEqual(1);
-              done();
-            },
-          });
+    server.open().subscribe(() => {
+      client.connect().subscribe({
+        next: () => {
+          nextCounter += 1;
+          client.disconnect();
+          server.close();
+        },
+        error: (error) => {
+          done.fail(error);
+        },
+        complete: () => {
+          expect(nextCounter).toEqual(1);
+          done();
+        }
       });
+    });
   });
 
   it("Disconnects from server after inactivity timeout", (done) => {
     const [server, client] = create(MockServer, { inactivityTimeout: 1000 });
-    server.open()
-      .subscribe(() => {
-        client.connect()
-          .delay(2000)
-          .subscribe({
-            next: () => done.fail(),
-            error: (error) => {
-              expect(error instanceof adu.MasterError).toEqual(true);
-              done();
-            },
-            complete: () => done(),
-          });
-      });
+    server.open().subscribe(() => {
+      client
+        .connect()
+        .pipe(delay(2000))
+        .subscribe({
+          next: () => done.fail(),
+          error: (error) => {
+            expect(error instanceof adu.MasterError).toEqual(true);
+            done();
+          },
+          complete: () => done()
+        });
+    });
   });
 
   it("Reads coils from server", (done) => {
     const [server, client] = create(MockServer);
     let nextCounter = 0;
-    server.open()
-      .subscribe(() => {
-        client.connect()
-          .switchMap(() => {
+    server.open().subscribe(() => {
+      client
+        .connect()
+        .pipe(
+          switchMap(() => {
             return client.readCoils(0x1000, 4);
-          })
-          .map((response) => {
+          }),
+          map((response) => {
             const data: pdu.IReadCoils = response.data;
             expect(response.functionCode).toEqual(pdu.EFunctionCode.ReadCoils);
             expect(data.bytes).toEqual(1);
             expect(data.values).toEqual([true, false, true, false, false, false, false, false]);
           })
-          .subscribe({
-            next: () => {
-              nextCounter += 1;
-              client.disconnect();
-              server.close();
-            },
-            error: (error) => {
-              done.fail(error);
-            },
-            complete: () => {
-              expect(nextCounter).toEqual(1);
-              done();
-            },
-          });
-      });
+        )
+        .subscribe({
+          next: () => {
+            nextCounter += 1;
+            client.disconnect();
+            server.close();
+          },
+          error: (error) => {
+            done.fail(error);
+          },
+          complete: () => {
+            expect(nextCounter).toEqual(1);
+            done();
+          }
+        });
+    });
   });
 
   it("Buffers writes to socket", (done) => {
     const [server, client] = create(MockServer);
-    server.open()
-      .subscribe(() => {
-        client.connect()
-          .switchMap(() => {
-            return Observable.forkJoin(
-              client.writeSingleRegister(0x0101, 0xAFAF),
-              client.writeSingleRegister(0x0101, 0xAFAF),
+    server.open().subscribe(() => {
+      client
+        .connect()
+        .pipe(
+          switchMap(() => {
+            return forkJoin(
+              client.writeSingleRegister(0x0101, 0xafaf),
+              client.writeSingleRegister(0x0101, 0xafaf),
               client.writeMultipleCoils(0x1010, [false, true]),
-              client.writeMultipleCoils(0x1010, [false, true]),
+              client.writeMultipleCoils(0x1010, [false, true])
             );
           })
-          .subscribe({
-            next: () => {
-              client.disconnect();
-              server.close();
-            },
-            error: (error) => {
-              done.fail(error);
-            },
-            complete: () => done(),
-          });
-      });
+        )
+        .subscribe({
+          next: () => {
+            client.disconnect();
+            server.close();
+          },
+          error: (error) => {
+            done.fail(error);
+          },
+          complete: () => done()
+        });
+    });
   });
 
   it("Read coils from slow server causes timeout error", (done) => {
     const [server, client] = create(MockSlowServer);
-    server.open()
-      .subscribe(() => {
-        client.connect()
-          .switchMap(() => {
+    server.open().subscribe(() => {
+      client
+        .connect()
+        .pipe(
+          switchMap(() => {
             return client.readCoils(0x0001, 1, { timeout: 1000 });
           })
-          .subscribe({
-            next: () => done.fail(),
-            error: (error) => {
-              expect(error instanceof adu.MasterError).toEqual(true);
-              done();
-            },
-            complete: () => done(),
-          });
-      });
+        )
+        .subscribe({
+          next: () => done.fail(),
+          error: (error) => {
+            expect(error instanceof adu.MasterError).toEqual(true);
+            done();
+          },
+          complete: () => done()
+        });
+    });
   });
 
   it("Read coils from drop server succeeds with retries", (done) => {
     const [server, client] = create(MockDropServer);
     let nextCounter = 0;
-    server.open()
-      .subscribe(() => {
-        client.connect()
-          .switchMap(() => {
+    server.open().subscribe(() => {
+      client
+        .connect()
+        .pipe(
+          switchMap(() => {
             return client.readCoils(0x0001, 1, { retry: 3, timeout: 1000 });
-          })
-          .map((response) => {
+          }),
+          map((response) => {
             const data: pdu.IReadCoils = response.data;
             expect(response.functionCode).toEqual(pdu.EFunctionCode.ReadCoils);
             expect(data.bytes).toEqual(1);
             expect(data.values).toEqual([true, false, false, false, false, false, false, false]);
           })
-          .subscribe({
-            next: () => {
-              nextCounter += 1;
-              client.disconnect();
-              server.close();
-            },
-            error: (error) => {
-              done.fail(error);
-            },
-            complete: () => {
-              expect(nextCounter).toEqual(1);
-              done();
-            },
-          });
-      });
+        )
+        .subscribe({
+          next: () => {
+            nextCounter += 1;
+            client.disconnect();
+            server.close();
+          },
+          error: (error) => {
+            done.fail(error);
+          },
+          complete: () => {
+            expect(nextCounter).toEqual(1);
+            done();
+          }
+        });
+    });
   });
 
   it("Reads discrete inputs from server", (done) => {
     const [server, client] = create(MockServer);
     let nextCounter = 0;
-    server.open()
-      .subscribe(() => {
-        client.connect()
-          .switchMap(() => {
+    server.open().subscribe(() => {
+      client
+        .connect()
+        .pipe(
+          switchMap(() => {
             return client.readDiscreteInputs(0x0010, 1);
-          })
-          .map((response) => {
+          }),
+          map((response) => {
             const data: pdu.IReadDiscreteInputs = response.data;
             expect(response.functionCode).toEqual(pdu.EFunctionCode.ReadDiscreteInputs);
             expect(data.bytes).toEqual(1);
             expect(data.values).toEqual([true, false, false, false, false, false, false, false]);
           })
-          .subscribe({
-            next: () => {
-              nextCounter += 1;
-              client.disconnect();
-              server.close();
-            },
-            error: (error) => {
-              done.fail(error);
-            },
-            complete: () => {
-              expect(nextCounter).toEqual(1);
-              done();
-            },
-          });
-      });
+        )
+        .subscribe({
+          next: () => {
+            nextCounter += 1;
+            client.disconnect();
+            server.close();
+          },
+          error: (error) => {
+            done.fail(error);
+          },
+          complete: () => {
+            expect(nextCounter).toEqual(1);
+            done();
+          }
+        });
+    });
   });
 
   it("Reads holding registers from server", (done) => {
     const [server, client] = create(MockServer);
     let nextCounter = 0;
-    server.open()
-      .subscribe(() => {
-        client.connect()
-          .switchMap(() => {
+    server.open().subscribe(() => {
+      client
+        .connect()
+        .pipe(
+          switchMap(() => {
             return client.readHoldingRegisters(0x0010, 2);
-          })
-          .map((response) => {
+          }),
+          map((response) => {
             const data: pdu.IReadHoldingRegisters = response.data;
             expect(response.functionCode).toEqual(pdu.EFunctionCode.ReadHoldingRegisters);
             expect(data.bytes).toEqual(4);
-            expect(data.values).toEqual([0xAFAF, 0xAFAF]);
+            expect(data.values).toEqual([0xafaf, 0xafaf]);
           })
-          .subscribe({
-            next: () => {
-              nextCounter += 1;
-              client.disconnect();
-              server.close();
-            },
-            error: (error) => {
-              done.fail(error);
-            },
-            complete: () => {
-              expect(nextCounter).toEqual(1);
-              done();
-            },
-          });
-      });
+        )
+        .subscribe({
+          next: () => {
+            nextCounter += 1;
+            client.disconnect();
+            server.close();
+          },
+          error: (error) => {
+            done.fail(error);
+          },
+          complete: () => {
+            expect(nextCounter).toEqual(1);
+            done();
+          }
+        });
+    });
   });
-
 });

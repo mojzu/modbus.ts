@@ -1,7 +1,8 @@
 // import * as process from "process";
+import { forkJoin } from "rxjs";
+import { switchMap } from "rxjs/operators";
 import { argv } from "yargs";
 import * as modbus from "../src";
-import * as Rx from "rxjs";
 
 // Test using Diagslave, run following commands in different terminals:
 // $ socat -d -d PTY PTY
@@ -14,22 +15,25 @@ import * as Rx from "rxjs";
 const master = new modbus.rtu.Master({ path: argv.p });
 
 // Open master.
-master.open()
-  .switchMap(() => {
-    // Make request(s) to slave.
-    // return master.readHoldingRegisters(1, 4);
-    return Rx.Observable.forkJoin(
-      master.readHoldingRegisters(1, 4),
-      master.readHoldingRegisters(1, 4),
-      master.readHoldingRegisters(1, 4),
-      master.readHoldingRegisters(1, 4),
-      master.readHoldingRegisters(1, 4),
-      master.readHoldingRegisters(1, 4),
-      master.readHoldingRegisters(1, 4),
-      master.readHoldingRegisters(1, 4),
-      master.readHoldingRegisters(1, 4),
-    );
-  })
+master
+  .open()
+  .pipe(
+    switchMap(() => {
+      // Make request(s) to slave.
+      // return master.readHoldingRegisters(1, 4);
+      return forkJoin(
+        master.readHoldingRegisters(1, 4),
+        master.readHoldingRegisters(1, 4),
+        master.readHoldingRegisters(1, 4),
+        master.readHoldingRegisters(1, 4),
+        master.readHoldingRegisters(1, 4),
+        master.readHoldingRegisters(1, 4),
+        master.readHoldingRegisters(1, 4),
+        master.readHoldingRegisters(1, 4),
+        master.readHoldingRegisters(1, 4)
+      );
+    })
+  )
   .subscribe((response) => {
     // // Handle slave response(s).
     // process.stdout.write(`${JSON.stringify(response.data, null, 2)}\n`);

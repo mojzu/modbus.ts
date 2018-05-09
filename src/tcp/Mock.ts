@@ -30,14 +30,14 @@ export class MockServer extends Server {
   public readBits(startingAddress: number, quantityOfBits: number): boolean[] {
     const values: boolean[] = [];
     for (let i = 0; i < quantityOfBits; i++) {
-      values.push((i % 2) === 0);
+      values.push(i % 2 === 0);
     }
     return values;
   }
   public readRegisters(startingAddress: number, quantityOfRegisters: number): number[] {
     const values: number[] = [];
     for (let i = 0; i < quantityOfRegisters; i++) {
-      values.push(0xAFAF);
+      values.push(0xafaf);
     }
     return values;
   }
@@ -45,25 +45,21 @@ export class MockServer extends Server {
 
 /** Emulate a Modbus TCP server with slow response time. */
 export class MockSlowServer extends MockServer {
-
   protected writeSocket(socket: Socket, packet: Buffer): void {
     setTimeout(() => {
       socket.write(packet);
     }, 3000);
   }
-
 }
 
 /** Emulate a Modbus TCP server which drops 2/3 of packets. */
 export class MockDropServer extends MockServer {
-
   protected dropCounter = 0;
 
   protected writeSocket(socket: Socket, packet: Buffer): void {
     this.dropCounter += 1;
-    if ((this.dropCounter % 3) === 0) {
+    if (this.dropCounter % 3 === 0) {
       socket.write(packet);
     }
   }
-
 }

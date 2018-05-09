@@ -19,7 +19,7 @@ fuseBox.Sparky.task("clean", () => {
     "adu",
     "pdu",
     "rtu",
-    "tcp",
+    "tcp"
   ]);
 });
 

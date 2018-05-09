@@ -2,11 +2,7 @@ import * as pdu from "../pdu";
 
 /** Modbus RTU request. */
 export class Request extends pdu.Request {
-  public constructor(
-    public slaveAddress: number,
-    public functionCode: number,
-    public buffer: Buffer,
-  ) {
+  public constructor(public slaveAddress: number, public functionCode: number, public buffer: Buffer) {
     super(functionCode, buffer);
   }
 }
@@ -17,7 +13,7 @@ export class Response extends pdu.Response {
     public slaveAddress: number,
     public functionCode: number,
     public data: any,
-    public buffer: Buffer,
+    public buffer: Buffer
   ) {
     super(functionCode, data, buffer);
   }
@@ -30,7 +26,7 @@ export class Exception extends pdu.Exception {
     public functionCode: number,
     public exceptionFunctionCode: number,
     public exceptionCode: number,
-    public buffer: Buffer,
+    public buffer: Buffer
   ) {
     super(functionCode, exceptionFunctionCode, exceptionCode, buffer);
   }

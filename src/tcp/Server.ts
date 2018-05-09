@@ -1,8 +1,9 @@
 import { Validate } from "container.ts/lib/validate";
 import * as net from "net";
-import { Observable, Subject } from "../adu/RxJS";
+import { bindCallback, fromEvent, Observable, Subject } from "rxjs";
+import { map, take, takeUntil } from "rxjs/operators";
 import * as pdu from "../pdu";
-import { Client} from "./Client";
+import { Client } from "./Client";
 import * as tcp from "./Tcp";
 
 /** Modbus TCP observable response or exception. */
@@ -13,7 +14,6 @@ export interface IServerOptions {
 }
 
 export abstract class Server extends pdu.Slave {
-
   /** Port the server will listen on. */
   public readonly port: number;
 
@@ -31,31 +31,28 @@ export abstract class Server extends pdu.Slave {
 
       // Map socket close event to observable.
       // Close event will complete other socket observables.
-      const socketClose = Observable.fromEvent<void>(socket as any, "close").take(1);
-      socketClose
-        .subscribe(() => {
-          transmit.complete();
-        });
+      const socketClose = fromEvent<void>(socket as any, "close").pipe(take(1));
+      socketClose.subscribe(() => {
+        transmit.complete();
+      });
 
       // Receive data into buffer and process.
       let buffer = Buffer.allocUnsafe(0);
-      const socketData = Observable.fromEvent<Buffer>(socket as any, "data").takeUntil(socketClose);
-      socketData
-        .subscribe((data) => {
-          buffer = this.onData(buffer, data, transmit);
-        });
+      const socketData = fromEvent<Buffer>(socket as any, "data").pipe(takeUntil(socketClose));
+      socketData.subscribe((data) => {
+        buffer = this.onData(buffer, data, transmit);
+      });
 
       // Transmit responses by writing to socket.
-      transmit.takeUntil(socketClose)
-        .subscribe((response) => {
-          const packet = this.aduHeader(response);
-          this.writeSocket(socket, packet);
-        });
+      transmit.pipe(takeUntil(socketClose)).subscribe((response) => {
+        const packet = this.aduHeader(response);
+        this.writeSocket(socket, packet);
+      });
     });
 
     // Server listen to port.
-    const serverListen = Observable.bindCallback(this.server.listen.bind(this.server, this.port));
-    return serverListen();
+    const serverListen = bindCallback(this.server.listen.bind(this.server, this.port));
+    return serverListen().pipe(map(() => undefined));
   }
 
   public close(): void {
@@ -107,7 +104,7 @@ export abstract class Server extends pdu.Slave {
         unitId,
         pduResponse.functionCode,
         pduResponse.data,
-        pduResponse.buffer,
+        pduResponse.buffer
       );
     } else if (pduResponse instanceof pdu.Exception) {
       response = new tcp.Exception(
@@ -116,7 +113,7 @@ export abstract class Server extends pdu.Slave {
         pduResponse.functionCode,
         pduResponse.exceptionFunctionCode,
         pduResponse.exceptionCode,
-        pduResponse.buffer,
+        pduResponse.buffer
       );
     }
 
@@ -127,7 +124,7 @@ export abstract class Server extends pdu.Slave {
     const buffer = Buffer.concat([Buffer.allocUnsafe(7), response.buffer]);
     buffer.writeUInt16BE(response.transactionId, 0);
     buffer.writeUInt16BE(0, 2);
-    buffer.writeUInt16BE((response.buffer.length + 1), 4);
+    buffer.writeUInt16BE(response.buffer.length + 1, 4);
     buffer.writeUInt8(response.unitId, 6);
     return buffer;
   }
@@ -135,5 +132,4 @@ export abstract class Server extends pdu.Slave {
   protected writeSocket(socket: net.Socket, packet: Buffer): void {
     socket.write(packet);
   }
-
 }

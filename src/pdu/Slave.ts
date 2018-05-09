@@ -6,7 +6,6 @@ export type ISlaveResponse = pdu.Response | pdu.Exception;
 
 /** Modbus abstract PDU slave. */
 export abstract class Slave {
-
   public abstract readCoils(startingAddress: number, quantityOfCoils: number): boolean[];
   public abstract readDiscreteInputs(startingAddress: number, quantityOfInputs: number): boolean[];
   public abstract readHoldingRegisters(startingAddress: number, quantityOfRegisters: number): number[];
@@ -62,9 +61,9 @@ export abstract class Slave {
     const startingAddress = request.readUInt16BE(0);
     const quantityOfBits = request.readUInt16BE(2);
 
-    const values = isCoils ?
-      this.readCoils(startingAddress, quantityOfBits) :
-      this.readDiscreteInputs(startingAddress, quantityOfBits);
+    const values = isCoils
+      ? this.readCoils(startingAddress, quantityOfBits)
+      : this.readDiscreteInputs(startingAddress, quantityOfBits);
     const [bytes, byteValues] = pdu.bitsToBytes(values);
 
     const buffer = Buffer.allocUnsafe(2 + bytes);
@@ -82,16 +81,16 @@ export abstract class Slave {
     const startingAddress = request.readUInt16BE(0);
     const quantityOfRegisters = request.readUInt16BE(2);
 
-    const values = isHolding ?
-      this.readHoldingRegisters(startingAddress, quantityOfRegisters) :
-      this.readInputRegisters(startingAddress, quantityOfRegisters);
+    const values = isHolding
+      ? this.readHoldingRegisters(startingAddress, quantityOfRegisters)
+      : this.readInputRegisters(startingAddress, quantityOfRegisters);
     const bytes = values.length * 2;
 
     const buffer = Buffer.allocUnsafe(2 + bytes);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt8(bytes, 1);
     values.map((value, index) => {
-      buffer.writeUInt16BE(value, 2 + (index * 2));
+      buffer.writeUInt16BE(value, 2 + index * 2);
     });
 
     const data: pdu.IReadRegisters = { bytes, values };
@@ -100,13 +99,13 @@ export abstract class Slave {
 
   protected onWriteSingleBitRequest(functionCode: number, request: Buffer): ISlaveResponse {
     const address = request.readUInt16BE(0);
-    const outputValue = request.readUInt16BE(2) === 0xFF00;
+    const outputValue = request.readUInt16BE(2) === 0xff00;
     const value = this.writeSingleCoil(address, outputValue);
 
     const buffer = Buffer.allocUnsafe(5);
     buffer.writeUInt8(functionCode, 0);
     buffer.writeUInt16BE(address, 1);
-    buffer.writeUInt16BE(value ? 0xFF00 : 0x0, 3);
+    buffer.writeUInt16BE(value ? 0xff00 : 0x0, 3);
 
     const data: pdu.IWriteBit = { address, value };
     return new pdu.Response(functionCode, data, buffer);
@@ -146,7 +145,7 @@ export abstract class Slave {
     const quantityOfRegisters = request.readUInt16BE(2);
     const registerValues: number[] = [];
     for (let i = 0; i < quantityOfRegisters; i++) {
-      registerValues.push(request.readUInt16BE(5 + (i * 2)));
+      registerValues.push(request.readUInt16BE(5 + i * 2));
     }
     const quantity = this.writeMultipleRegisters(address, registerValues);
 
@@ -158,5 +157,4 @@ export abstract class Slave {
     const data: pdu.IWriteMultiple = { address, quantity };
     return new pdu.Response(functionCode, data, buffer);
   }
-
 }
