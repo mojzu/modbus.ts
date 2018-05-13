@@ -1,5 +1,5 @@
 /* tslint:disable:no-bitwise prefer-for-of */
-import { Validate } from "container.ts/lib/validate";
+import { isBoolean, isInteger, isString } from "container.ts/lib/validate";
 import { fromEvent, merge, Observable, Subscriber } from "rxjs";
 import { take, takeUntil, timeout } from "rxjs/operators";
 import * as SerialPort from "serialport";
@@ -76,16 +76,16 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
   public constructor(options: IMasterOptions) {
     super(options);
 
-    this.path = Validate.isString(options.path);
-    this.baudRate = Validate.isInteger(String(options.baudRate || Master.DEFAULT.BAUDRATE));
-    this.dataBits = Validate.isInteger(String(options.dataBits || Master.DEFAULT.DATA_BITS)) as IMasterDataBits;
-    this.stopBits = Validate.isInteger(String(options.stopBits || Master.DEFAULT.STOP_BITS), {
+    this.path = isString(options.path);
+    this.baudRate = isInteger(String(options.baudRate || Master.DEFAULT.BAUDRATE));
+    this.dataBits = isInteger(String(options.dataBits || Master.DEFAULT.DATA_BITS)) as IMasterDataBits;
+    this.stopBits = isInteger(String(options.stopBits || Master.DEFAULT.STOP_BITS), {
       min: 1,
       max: 2
     }) as IMasterStopBits;
     this.parity = options.parity || Master.DEFAULT.PARITY;
-    this.rtscts = Validate.isBoolean(String(options.rtscts || Master.DEFAULT.RTSCTS));
-    this.slaveAddress = Validate.isInteger(String(options.slaveAddress || Master.DEFAULT.SLAVE_ADDRESS), {
+    this.rtscts = isBoolean(String(options.rtscts || Master.DEFAULT.RTSCTS));
+    this.slaveAddress = isInteger(String(options.slaveAddress || Master.DEFAULT.SLAVE_ADDRESS), {
       min: 0,
       max: 0xff
     });

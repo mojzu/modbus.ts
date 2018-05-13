@@ -1,4 +1,4 @@
-import { Validate } from "container.ts/lib/validate";
+import { isInteger, isPort, isString } from "container.ts/lib/validate";
 import * as Debug from "debug";
 import { createConnection, Socket } from "net";
 import { fromEvent, merge, Observable, Subscriber } from "rxjs";
@@ -108,9 +108,9 @@ export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception,
   public constructor(options: IClientOptions, logConstructor: any = Log) {
     super(options, logConstructor);
 
-    this.host = Validate.isString(options.host || Client.DEFAULT.HOST);
-    this.port = Validate.isPort(String(options.port || Client.DEFAULT.PORT));
-    this.unitId = Validate.isInteger(String(options.unitId || Client.DEFAULT.UNIT_ID), { min: 0x1, max: 0xff });
+    this.host = isString(options.host || Client.DEFAULT.HOST);
+    this.port = isPort(String(options.port || Client.DEFAULT.PORT));
+    this.unitId = isInteger(String(options.unitId || Client.DEFAULT.UNIT_ID), { min: 0x1, max: 0xff });
     this.inactivityTimeout = this.isTimeout(options.inactivityTimeout);
   }
 

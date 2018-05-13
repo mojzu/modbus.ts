@@ -1,5 +1,5 @@
 // tslint:disable:no-bitwise
-import { Validate } from "container.ts/lib/validate";
+import { isInteger } from "container.ts/lib/validate";
 
 /** Modbus function codes. */
 export enum EFunctionCode {
@@ -84,22 +84,22 @@ export class Exception {
 
 /** Throw an error if value is not a valid address. */
 export function isAddress(value: number): void {
-  Validate.isInteger(String(value), { min: 0x0, max: 0xffff });
+  isInteger(String(value), { min: 0x0, max: 0xffff });
 }
 
 /** Throw an error if value is not a valid register. */
 export function isRegister(value: number): void {
-  Validate.isInteger(String(value), { min: 0x0, max: 0xffff });
+  isInteger(String(value), { min: 0x0, max: 0xffff });
 }
 
 /** Throw an error if value is not a valid quantity of bits. */
 export function isQuantityOfBits(value: number, maximum = 0x7d0): void {
-  Validate.isInteger(String(value), { min: 0x1, max: maximum });
+  isInteger(String(value), { min: 0x1, max: maximum });
 }
 
 /** Throw an error if value is not a valid quantity of bits. */
 export function isQuantityOfRegisters(value: number, maximum = 0x7d): void {
-  Validate.isInteger(String(value), { min: 0x1, max: maximum });
+  isInteger(String(value), { min: 0x1, max: maximum });
 }
 
 /** Convert an array of boolean bits to an array of byte values. */

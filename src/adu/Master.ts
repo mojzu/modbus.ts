@@ -1,5 +1,5 @@
 import { ErrorChain } from "container.ts/lib/error";
-import { Validate } from "container.ts/lib/validate";
+import { isInteger } from "container.ts/lib/validate";
 import * as Debug from "debug";
 import { BehaviorSubject, interval, Observable, Subject, throwError, TimeoutError } from "rxjs";
 import {
@@ -321,13 +321,13 @@ export abstract class Master<
   /** Validate number of retries (0+). */
   protected isRetry(value?: number): number {
     value = value != null ? value : this.retry;
-    return Validate.isInteger(String(value), { min: 0 });
+    return isInteger(String(value), { min: 0 });
   }
 
   /** Validate timeout in milliseconds (50+). */
   protected isTimeout(value?: number): number {
     value = value != null ? value : this.timeout;
-    return Validate.isInteger(String(value), { min: 50 });
+    return isInteger(String(value), { min: 50 });
   }
 
   /** Get retryWhen callback. */

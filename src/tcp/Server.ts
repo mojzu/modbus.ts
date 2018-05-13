@@ -1,4 +1,4 @@
-import { Validate } from "container.ts/lib/validate";
+import { isPort } from "container.ts/lib/validate";
 import * as net from "net";
 import { bindCallback, fromEvent, Observable, Subject } from "rxjs";
 import { map, take, takeUntil } from "rxjs/operators";
@@ -21,7 +21,7 @@ export abstract class Server extends pdu.Slave {
 
   public constructor(options: IServerOptions) {
     super();
-    this.port = Validate.isPort(String(options.port || Client.DEFAULT.PORT));
+    this.port = isPort(String(options.port || Client.DEFAULT.PORT));
   }
 
   public open(): Observable<void> {
