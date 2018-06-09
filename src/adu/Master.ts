@@ -96,6 +96,7 @@ export abstract class Master<
   public readonly retryWhen: IMasterRetryWhen<Req, Res, Exc>;
 
   /** Responses/exceptions stream. */
+  // TODO(M): Improve !: format.
   public receive!: Subject<Res | Exc>;
 
   /** Requests stream. */
@@ -111,6 +112,7 @@ export abstract class Master<
   protected locked!: BehaviorSubject<boolean>;
   protected lockDelay = 0;
 
+  // TODO(H): Update buffering/queuing method to preserve packet order.
   protected get nextLockDelay(): number {
     return (++this.lockDelay * 20) % 200;
   }
