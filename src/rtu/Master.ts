@@ -83,8 +83,8 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
       min: 1,
       max: 2
     }) as IMasterStopBits;
-    this.parity = options.parity || Master.DEFAULT.PARITY;
-    this.rtscts = isBoolean(String(options.rtscts || Master.DEFAULT.RTSCTS));
+    this.parity = (options.parity != null) ? options.parity : Master.DEFAULT.PARITY;
+    this.rtscts = (options.rtscts != null) ? isBoolean(String(options.rtscts)) : Master.DEFAULT.RTSCTS;
     this.slaveAddress = isInteger(String(options.slaveAddress || Master.DEFAULT.SLAVE_ADDRESS), {
       min: 0,
       max: 0xff
