@@ -10,7 +10,6 @@ fuseBox.Sparky.task("clean", () => {
   return tools.clean(CWD, [
     ".fusebox",
     "coverage",
-    "docs/_book",
     "*.tgz",
     "*.log",
     "index.d.ts",

@@ -17,5 +17,3 @@ Publishing library to NPM/GitHub.
 $ yarn run dist && npm publish --access=public [--tag=beta]
 $ git push origin master --tags
 ```
-
-Add [Code Climate](https://codeclimate.com/) repository token to [Travis CI](https://travis-ci.org/) in `Settings -> Environment Variables`.

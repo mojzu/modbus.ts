@@ -1,6 +1,4 @@
-# Modbus
-
-## Quickstart
+# Quickstart
 
 Modbus TCP client communicating with mock server example.
 
