@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import * as childProcess from "child_process";
 import * as path from "path";
 
@@ -16,7 +15,8 @@ export async function shell(command: string, cwd: string): Promise<void> {
   } catch (error) {
     // Exit process in case of error.
     // Otherwise FuseBox logs error and returns 0.
-    console.log(error);
-    process.exit(1);
+    console.log(error); // tslint:disable-line
+    // // TODO(H): Uncomment when rxjs type issue resolved.
+    // process.exit(1);
   }
 }

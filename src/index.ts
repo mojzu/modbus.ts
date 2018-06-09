@@ -5,3 +5,4 @@ import * as tcp from "./tcp";
 
 export { adu, pdu, rtu, tcp };
 // TODO(H): Write library documentation.
+// TODO(M): Refactor file names to lowercase for consistency with other libraries.
