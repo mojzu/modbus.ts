@@ -86,6 +86,20 @@ export abstract class Master<
     EXCEPTION: "ModbusMasterException"
   };
 
+  /** Returns true if error is RxJS Timeout. */
+  public static isTimeoutError(error: any): error is TimeoutError {
+    const isInstance = error instanceof TimeoutError;
+    const hasName = error.name === "TimeoutError";
+    return isInstance || hasName;
+  }
+
+  /** Returns true if error is MasterError. */
+  public static isMasterError(error: any): error is MasterError {
+    const isInstance = error instanceof MasterError;
+    const hasName = error.name === "ModbusMasterError";
+    return isInstance || hasName;
+  }
+
   /** Default number of retries performed during requests. */
   public readonly retry: number;
 
@@ -251,7 +265,10 @@ export abstract class Master<
     return this.onRequest(request, options);
   }
 
-  /** Default retryWhen callback for conditional retries. */
+  /**
+   * Default retryWhen callback for conditional retries.
+   * This will allow retries in cases of timeout and throw all other errors.
+   */
   public defaultRetryWhen(
     master: Master<Req, Res, Exc>,
     retry: number,
@@ -259,13 +276,16 @@ export abstract class Master<
     error: any,
     request?: Req
   ): void {
-    // If error is a timeout, retry up to limit.
-    if (this.isTimeoutError(error)) {
+    if (Master.isTimeoutError(error)) {
+      // If error is a timeout, retry up to limit.
       if (errorCount >= retry) {
         throw new MasterError(Master.ERROR.TIMEOUT, error);
       }
+    } else if (Master.isMasterError(error)) {
+      // If error is a master error, rethrow now.
+      throw error;
     } else {
-      // Rethrow unknown errors.
+      // Wrap and rethrow unknown errors.
       throw new MasterError(error.code, error);
     }
   }
@@ -341,13 +361,6 @@ export abstract class Master<
   /** Get retryWhen callback. */
   protected isRetryWhen(callback?: IMasterRetryWhen<Req, Res, Exc>): IMasterRetryWhen<Req, Res, Exc> {
     return callback || this.retryWhen;
-  }
-
-  /** Returns true if error is RxJS Timeout. */
-  protected isTimeoutError(error: any): error is TimeoutError {
-    const isInstance = error instanceof TimeoutError;
-    const hasName = error.name === "TimeoutError";
-    return isInstance || hasName;
   }
 
   protected onRequest(request: Req, options: IMasterRequestOptions<Req, Res, Exc, L>): Observable<Res> {

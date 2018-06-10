@@ -18,10 +18,16 @@ client
       return client.readHoldingRegisters(1, 4);
     })
   )
-  .subscribe((response) => {
-    // Handle server response(s).
-    console.log("tcp", JSON.stringify(response, null, 2));
+  .subscribe({
+    next: (response) => {
+      // Handle server response(s).
+      console.log("tcp", JSON.stringify(response, null, 2));
 
-    // Disconnect client.
-    client.disconnect();
+      // Disconnect client.
+      client.disconnect();
+    },
+    error: (error) => {
+      // Handle error(s).
+      console.error("tcp", error);
+    }
   });
