@@ -1,6 +1,6 @@
 import { ErrorChain } from "container.ts/lib/error";
 import { isInteger } from "container.ts/lib/validate";
-import * as Debug from "debug";
+import * as debug from "debug";
 import { BehaviorSubject, interval, Observable, Subject, throwError, TimeoutError } from "rxjs";
 import {
   catchError,
@@ -15,7 +15,7 @@ import {
 import * as pdu from "../pdu";
 
 // Internal debug output.
-const debug = Debug("modbus.ts");
+const debugLog = debug("modbus.ts");
 
 /** Conditional retry callback type. */
 export type IMasterRetryWhen<Req extends pdu.Request, Res extends pdu.Response, Exc extends pdu.Exception> = (
@@ -29,13 +29,13 @@ export type IMasterRetryWhen<Req extends pdu.Request, Res extends pdu.Response, 
 /** Log interface. */
 export class Log<Req extends pdu.Request, Res extends pdu.Response, Exc extends pdu.Exception> {
   public request(request: Req, errorCount: number): void {
-    debug(Master.LOG.REQUEST, request, errorCount);
+    debugLog(Master.LOG.REQUEST, request, errorCount);
   }
   public response(response: Res): void {
-    debug(Master.LOG.RESPONSE, response);
+    debugLog(Master.LOG.RESPONSE, response);
   }
   public exception(exception: Exc): void {
-    debug(Master.LOG.EXCEPTION, exception);
+    debugLog(Master.LOG.EXCEPTION, exception);
   }
   public bytesTransmitted(value: number): void {}
   public bytesReceived(value: number): void {}
@@ -96,20 +96,19 @@ export abstract class Master<
   public readonly retryWhen: IMasterRetryWhen<Req, Res, Exc>;
 
   /** Responses/exceptions stream. */
-  // TODO(M): Improve !: format.
-  public receive!: Subject<Res | Exc>;
+  public receive = new Subject<Res | Exc>();
 
   /** Requests stream. */
-  public transmit!: Subject<Req>;
+  public transmit = new Subject<Req>();
 
   /** Internal buffer. */
-  public buffer!: Buffer;
+  public buffer = Buffer.allocUnsafe(0);
 
   /** Internal log interface. */
   protected readonly log: L;
 
   /** Internal lock. */
-  protected locked!: BehaviorSubject<boolean>;
+  protected locked = new BehaviorSubject<boolean>(false);
   protected lockDelay = 0;
 
   // TODO(H): Update buffering/queuing method to preserve packet order.
@@ -283,7 +282,11 @@ export abstract class Master<
   /** Implemented by subclass to parse received data, returns length of parsed data */
   protected abstract parseResponse(data: Buffer): number;
 
-  /** Setup observables. */
+  /**
+   * Setup internal receive/transmit observables and buffer.
+   * Should be called on (re)creating a connection to a device.
+   * TODO(M): Rethink these methods for better usability.
+   */
   protected onOpen(): void {
     this.receive = new Subject<Res | Exc>();
     this.transmit = new Subject<Req>();
@@ -291,7 +294,10 @@ export abstract class Master<
     this.locked = new BehaviorSubject(false);
   }
 
-  /** Clean observables. */
+  /**
+   * Cleanup internal observables and buffer.
+   * Should be called on closing a connection to a device.
+   */
   protected onClose(): void {
     this.receive.complete();
     this.transmit.complete();

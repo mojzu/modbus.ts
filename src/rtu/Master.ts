@@ -1,4 +1,4 @@
-/* tslint:disable:no-bitwise prefer-for-of */
+// tslint:disable:no-bitwise prefer-for-of
 import { isInteger } from "container.ts/lib/validate";
 import { fromEvent, merge, Observable, Subscriber } from "rxjs";
 import { take, takeUntil, timeout } from "rxjs/operators";
@@ -6,14 +6,18 @@ import * as adu from "../adu";
 import * as pdu from "../pdu";
 import * as rtu from "./Rtu";
 
+/** RTU master request options. */
 export type IMasterRequestOptions = adu.IMasterRequestOptions<rtu.Request, rtu.Response, rtu.Exception>;
 
-export interface ISerialPort {
+/** Generic serial port interface. */
+export interface IMasterSerialPort {
   readonly isOpen: boolean;
   open(success?: () => void): void;
   close(): void;
   write(buffer: Buffer): void;
-  on(event: string, listener: (error: any) => void): void;
+  on(event: "error", callback?: (error?: any) => void): this;
+  on(event: "open" | "close", callback?: () => void): this;
+  on(event: "data", callback?: (buffer: Buffer) => void): this;
 }
 
 /** Modbus RTU master options */
@@ -24,29 +28,13 @@ export interface IMasterOptions extends IMasterRequestOptions {
 
 /** Modbus RTU master. */
 export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception> {
-  /** Default values. */
-  public static DEFAULT = Object.assign(
-    {
-      SLAVE_ADDRESS: 1
-    },
-    adu.Master.DEFAULT
-  );
-
   public readonly slaveAddress: number;
   public readonly inactivityTimeout: number;
 
-  protected port: ISerialPort;
-
-  public constructor(port: ISerialPort, options: IMasterOptions) {
+  public constructor(protected readonly port: IMasterSerialPort, options: IMasterOptions) {
     super(options);
-
-    this.slaveAddress = isInteger(String(options.slaveAddress || Master.DEFAULT.SLAVE_ADDRESS), {
-      min: 0,
-      max: 0xff
-    });
+    this.slaveAddress = options.slaveAddress != null ? isInteger(`${options.slaveAddress}`, { min: 0, max: 0xff }) : 1;
     this.inactivityTimeout = this.isTimeout(options.inactivityTimeout);
-
-    this.port = port;
   }
 
   public open(options: IMasterRequestOptions = {}): Observable<void> {
@@ -56,12 +44,13 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
       this.close();
       this.onOpen();
 
+      // (Re)open serial port
       if (!this.port.isOpen) {
         this.port.open();
       }
 
       // Add error listener.
-      this.port.on("error", (error: any) => {
+      this.port.on("error", (error) => {
         subscriber.error(new adu.MasterError(error.code, error));
       });
 
@@ -89,7 +78,10 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
 
       // If no activity occurs on port for timeout duration, master is closed.
       merge(this.transmit, this.receive)
-        .pipe(takeUntil(portClose), timeout(this.inactivityTimeout))
+        .pipe(
+          takeUntil(portClose),
+          timeout(this.inactivityTimeout)
+        )
         .subscribe({
           error: (error) => {
             this.close();
@@ -101,9 +93,9 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
 
   public close(): void {
     if (this.port.isOpen) {
-      this.onClose();
       this.port.close();
     }
+    this.onClose();
   }
 
   /** Write request to master port. */
