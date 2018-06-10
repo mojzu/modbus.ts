@@ -1,6 +1,7 @@
-// import * as process from "process";
+// tslint:disable:no-console
 import { forkJoin } from "rxjs";
 import { switchMap } from "rxjs/operators";
+import * as SerialPort from "serialport";
 import { argv } from "yargs";
 import * as modbus from "../src";
 
@@ -9,25 +10,22 @@ import * as modbus from "../src";
 // socat[13872] N PTY is /dev/pts/7
 // socat[13872] N PTY is /dev/pts/19
 // $ ./diagslave -m rtu -a 1 /dev/pts/7
-// $ yarn run example -- -f rtu -p /dev/pts/19
-import * as SerialPort from "serialport";
+// $ yarn run ts-node ./examples/rtu.ts -p /dev/pts/19
 
 const path = argv.p;
-const serialOptions: SerialPort.OpenOptions = {
+const port: modbus.rtu.IMasterSerialPort = new SerialPort(path, {
   autoOpen: false,
-  baudRate: 115200,
+  baudRate: 19200,
   dataBits: 8,
   stopBits: 1,
-  parity: "none",
+  parity: "even",
   rtscts: false
-};
-const port = new SerialPort(path, serialOptions);
+}) as any;
 
 // Create master instance.
-const opts = {
-  slaveAddress: 10
-};
-const master = new modbus.rtu.Master(port, opts);
+const master = new modbus.rtu.Master(port, {
+  slaveAddress: 1
+});
 
 // Open master.
 master
@@ -35,15 +33,17 @@ master
   .pipe(
     switchMap(() => {
       // Make request(s) to slave.
-      // return master.readHoldingRegisters(1, 4);
+      // return master.readInputRegisters(0, 1);
       return forkJoin(
-        master.readInputRegisters(0, 1)
+        master.readHoldingRegisters(1, 4),
+        master.readHoldingRegisters(1, 4),
+        master.readHoldingRegisters(1, 4)
       );
     })
   )
   .subscribe((response) => {
-    // // Handle slave response(s).
-    console.log(JSON.stringify(response[0].data));
+    // Handle slave response(s).
+    console.log("rtu", JSON.stringify(response, null, 2));
 
     // Close master.
     master.close();

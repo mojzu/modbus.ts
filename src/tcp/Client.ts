@@ -135,6 +135,7 @@ export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception,
       // (Re)create socket, add error listener.
       this.socket = createConnection(this.connectionOptions);
       this.socket.on("error", (error: any) => {
+        // TODO(M): Why is ECONNREFUSED throwing nested MasterError?
         subscriber.error(new adu.MasterError(error.code, error));
       });
 

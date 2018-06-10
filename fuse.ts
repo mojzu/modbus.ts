@@ -1,6 +1,5 @@
 import * as fuseBox from "fuse-box";
 import * as path from "path";
-import { argv } from "yargs";
 
 import * as tools from "./tools";
 const CWD = path.resolve(__dirname);
@@ -40,11 +39,6 @@ fuseBox.Sparky.task("lint", () => {
 // Run Jest tests with coverage.
 fuseBox.Sparky.task("test", ["clean"], () => {
   return tools.shell("jest --coverage", CWD);
-});
-
-// Run example.
-fuseBox.Sparky.task("example", () => {
-  return tools.shell(`ts-node ./examples/${argv._[1] || "quickstart"}.ts`, CWD);
 });
 
 // Build library for distribution.

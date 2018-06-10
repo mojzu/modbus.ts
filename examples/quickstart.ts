@@ -1,6 +1,9 @@
+// tslint:disable:no-console
 // import * as modbus from "modbus.ts";
 import { switchMap } from "rxjs/operators";
 import * as modbus from "../src";
+
+// $ yarn run ts-node ./examples/quickstart.ts
 
 // Create mock server and client instances.
 const server = new modbus.tcp.MockServer({ port: 5022 });
@@ -19,7 +22,7 @@ server.open().subscribe(() => {
     )
     .subscribe((response) => {
       // Handle server response(s).
-      process.stdout.write(`${JSON.stringify(response.data, null, 2)}\n`);
+      console.log("quickstart", JSON.stringify(response, null, 2));
 
       // Disconnect client, close server.
       client.disconnect();

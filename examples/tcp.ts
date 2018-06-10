@@ -1,10 +1,10 @@
-import * as process from "process";
+// tslint:disable:no-console
 import { switchMap } from "rxjs/operators";
 import * as modbus from "../src";
 
 // Test using Diagslave, run following commands in different terminals:
 // $ ./diagslave -m tcp -a 1 -p 5002
-// $ yarn run example tcp
+// $ yarn run ts-node ./examples/tcp.ts
 
 // Create client instance.
 const client = new modbus.tcp.Client({ host: "localhost", port: 5002 });
@@ -20,7 +20,7 @@ client
   )
   .subscribe((response) => {
     // Handle server response(s).
-    process.stdout.write(`${JSON.stringify(response.data, null, 2)}\n`);
+    console.log("tcp", JSON.stringify(response, null, 2));
 
     // Disconnect client.
     client.disconnect();
