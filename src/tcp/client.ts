@@ -1,14 +1,10 @@
 import { isInteger, isPort, isString } from "container.ts/lib/validate";
-import * as debug from "debug";
 import { createConnection, Socket } from "net";
 import { fromEvent, merge, Observable, Subscriber } from "rxjs";
 import { delay, retryWhen as rxjsRetryWhen, scan, take, takeUntil, timeout } from "rxjs/operators";
 import * as adu from "../adu";
 import * as pdu from "../pdu";
 import * as tcp from "../tcp";
-
-// Internal debug output.
-const debugLog = debug("modbus.ts");
 
 /** Modbus TCP client log names. */
 export enum EMasterLog {
@@ -18,24 +14,24 @@ export enum EMasterLog {
   Error = "ModbusTcpClientError"
 }
 
-export class Log extends adu.Log<tcp.Request, tcp.Response, tcp.Exception> {
+export class ClientLog extends adu.MasterLog<tcp.Request, tcp.Response, tcp.Exception> {
   public connecting(host: string, port: number, unitId: number): void {
-    debugLog(EMasterLog.Connecting, host, port, unitId);
+    this.debug(EMasterLog.Connecting, host, port, unitId);
   }
   public connected(host: string, port: number, unitId: number): void {
-    debugLog(EMasterLog.Connected, host, port, unitId);
+    this.debug(EMasterLog.Connected, host, port, unitId);
   }
   public disconnected(host: string, port: number, unitId: number): void {
-    debugLog(EMasterLog.Disconnected, host, port, unitId);
+    this.debug(EMasterLog.Disconnected, host, port, unitId);
   }
   public error(error: adu.MasterError): void {
-    debugLog(EMasterLog.Error, error);
+    this.debug(EMasterLog.Error, error);
   }
   public packetsTransmitted(value: number): void {}
   public packetsReceived(value: number): void {}
 }
 
-export type IClientRequestOptions = adu.IMasterRequestOptions<tcp.Request, tcp.Response, tcp.Exception, Log>;
+export type IClientRequestOptions = adu.IMasterRequestOptions<tcp.Request, tcp.Response, tcp.Exception, ClientLog>;
 
 /** Modbus TCP client options. */
 export interface IClientOptions extends IClientRequestOptions {
@@ -43,7 +39,7 @@ export interface IClientOptions extends IClientRequestOptions {
   port?: number;
   unitId?: number;
   inactivityTimeout?: number;
-  log?: Log;
+  log?: ClientLog;
 }
 
 /** Modbus TCP client error codes. */
@@ -52,7 +48,7 @@ export enum EClientError {
 }
 
 /** Modbus TCP client. */
-export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception, Log> {
+export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception, ClientLog> {
   /** Host the client will connect to. */
   public readonly host: string;
 
@@ -89,7 +85,7 @@ export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception,
    * Create TCP client instance.
    * @param options Client and default request options.
    */
-  public constructor(options: IClientOptions, logConstructor: any = Log) {
+  public constructor(options: IClientOptions, logConstructor = ClientLog) {
     super(options, logConstructor);
 
     this.host = options.host != null ? isString(options.host) : "localhost";

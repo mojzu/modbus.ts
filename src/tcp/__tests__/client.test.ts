@@ -1,27 +1,24 @@
 import { ValidateError } from "container.ts/lib/validate";
-import * as Debug from "debug";
 import { forkJoin } from "rxjs";
 import { delay, map, switchMap } from "rxjs/operators";
 import * as adu from "../../adu";
 import * as pdu from "../../pdu";
-import { Client, IClientOptions, Log } from "../client";
+import { Client, ClientLog, IClientOptions } from "../client";
 import { MockDropServer, MockServer, MockSlowServer } from "../mock";
 import { Server } from "../server";
 
-const debug = Debug("modbus.ts:test");
-
-class TestLog extends Log {
+class TestLog extends ClientLog {
   public bytesTransmitted(value: number): void {
-    debug(`bytesTransmitted: ${value}`);
+    this.debug(`bytesTransmitted: ${value}`);
   }
   public bytesReceived(value: number): void {
-    debug(`bytesReceived: ${value}`);
+    this.debug(`bytesReceived: ${value}`);
   }
   public packetsTransmitted(value: number): void {
-    debug(`packetsTransmitted: ${value}`);
+    this.debug(`packetsTransmitted: ${value}`);
   }
   public packetsReceived(value: number): void {
-    debug(`packetsReceived: ${value}`);
+    this.debug(`packetsReceived: ${value}`);
   }
 }
 

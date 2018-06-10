@@ -1,6 +1,6 @@
 {
   "name": "modbus.ts",
-  "version": "3.0.0-beta.1",
+  "version": "3.0.0-beta.2",
   "description": "Modbus application protocol",
   "main": "./index.js",
   "typings": "./index.d.ts",

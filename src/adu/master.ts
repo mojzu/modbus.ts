@@ -14,56 +14,6 @@ import {
 } from "rxjs/operators";
 import * as pdu from "../pdu";
 
-// Internal debug output.
-const debugLog = debug("modbus.ts");
-
-/** Conditional retry callback type. */
-export type IMasterRetryWhen<Req extends pdu.Request, Res extends pdu.Response, Exc extends pdu.Exception> = (
-  master: Master<Req, Res, Exc>,
-  retry: number,
-  errorCount: number,
-  error: any,
-  request?: Req
-) => void;
-
-/** Master log names. */
-export enum EMasterLog {
-  Request = "ModbusMasterRequest",
-  Response = "ModbusMasterResponse",
-  Exception = "ModbusMasterException"
-}
-
-/**
- * Log interface.
- * TODO(L): Rename to MasterLog, improve types/inheritance.
- */
-export class Log<Req extends pdu.Request, Res extends pdu.Response, Exc extends pdu.Exception> {
-  public request(request: Req, errorCount: number): void {
-    debugLog(EMasterLog.Request, request, errorCount);
-  }
-  public response(response: Res): void {
-    debugLog(EMasterLog.Response, response);
-  }
-  public exception(exception: Exc): void {
-    debugLog(EMasterLog.Exception, exception);
-  }
-  public bytesTransmitted(value: number): void {}
-  public bytesReceived(value: number): void {}
-}
-
-/** Modbus ADU master request options. */
-export interface IMasterRequestOptions<
-  Req extends pdu.Request,
-  Res extends pdu.Response,
-  Exc extends pdu.Exception,
-  L extends Log<Req, Res, Exc> = Log<Req, Res, Exc>
-> {
-  retry?: number;
-  timeout?: number;
-  retryWhen?: IMasterRetryWhen<Req, Res, Exc>;
-  log?: L;
-}
-
 /** Master error codes. */
 export enum EMasterError {
   Timeout = "ModbusMasterTimeoutError"
@@ -76,12 +26,57 @@ export class MasterError extends ErrorChain {
   }
 }
 
+/** Master log names. */
+export enum EMasterLog {
+  Request = "ModbusMasterRequest",
+  Response = "ModbusMasterResponse",
+  Exception = "ModbusMasterException"
+}
+
+/** Master log interface. */
+export class MasterLog<Req extends pdu.Request, Res extends pdu.Response, Exc extends pdu.Exception> {
+  protected readonly debug = debug("modbus.ts");
+  public request(request: Req, errorCount: number): void {
+    this.debug(EMasterLog.Request, request, errorCount);
+  }
+  public response(response: Res): void {
+    this.debug(EMasterLog.Response, response);
+  }
+  public exception(exception: Exc): void {
+    this.debug(EMasterLog.Exception, exception);
+  }
+  public bytesTransmitted(value: number): void {}
+  public bytesReceived(value: number): void {}
+}
+
+/** Conditional retry callback type. */
+export type IMasterRetryWhen<Req extends pdu.Request, Res extends pdu.Response, Exc extends pdu.Exception> = (
+  master: Master<Req, Res, Exc>,
+  retry: number,
+  errorCount: number,
+  error: any,
+  request?: Req
+) => void;
+
+/** Modbus ADU master request options. */
+export interface IMasterRequestOptions<
+  Req extends pdu.Request,
+  Res extends pdu.Response,
+  Exc extends pdu.Exception,
+  L extends MasterLog<Req, Res, Exc> = MasterLog<Req, Res, Exc>
+> {
+  retry?: number;
+  timeout?: number;
+  retryWhen?: IMasterRetryWhen<Req, Res, Exc>;
+  log?: L;
+}
+
 /** Modbus abstract ADU master. */
 export abstract class Master<
   Req extends pdu.Request,
   Res extends pdu.Response,
   Exc extends pdu.Exception,
-  L extends Log<Req, Res, Exc> = Log<Req, Res, Exc>
+  L extends MasterLog<Req, Res, Exc> = MasterLog<Req, Res, Exc>
 > {
   /** Returns true if error is RxJS Timeout. */
   public static isTimeoutError(error: any): error is TimeoutError {
@@ -127,7 +122,7 @@ export abstract class Master<
     return (++this.lockDelay * 20) % 200;
   }
 
-  public constructor(options: IMasterRequestOptions<Req, Res, Exc, L>, logConstructor: any = Log) {
+  public constructor(options: IMasterRequestOptions<Req, Res, Exc, L>, logConstructor: any = MasterLog) {
     this.retry = options.retry != null ? this.isRetry(options.retry) : 0;
     this.timeout = options.timeout != null ? this.isTimeout(options.timeout) : 5000;
     this.retryWhen = this.isRetryWhen(options.retryWhen || this.defaultRetryWhen.bind(this));
