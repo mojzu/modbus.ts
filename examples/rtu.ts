@@ -10,9 +10,24 @@ import * as modbus from "../src";
 // socat[13872] N PTY is /dev/pts/19
 // $ ./diagslave -m rtu -a 1 /dev/pts/7
 // $ yarn run example -- -f rtu -p /dev/pts/19
+import * as SerialPort from "serialport";
+
+const path = argv.p;
+const serialOptions: SerialPort.OpenOptions = {
+  autoOpen: false,
+  baudRate: 115200,
+  dataBits: 8,
+  stopBits: 1,
+  parity: "none",
+  rtscts: false
+};
+const port = new SerialPort(path, serialOptions);
 
 // Create master instance.
-const master = new modbus.rtu.Master({ path: argv.p });
+const opts = {
+  slaveAddress: 10
+};
+const master = new modbus.rtu.Master(port, opts);
 
 // Open master.
 master
@@ -22,21 +37,13 @@ master
       // Make request(s) to slave.
       // return master.readHoldingRegisters(1, 4);
       return forkJoin(
-        master.readHoldingRegisters(1, 4),
-        master.readHoldingRegisters(1, 4),
-        master.readHoldingRegisters(1, 4),
-        master.readHoldingRegisters(1, 4),
-        master.readHoldingRegisters(1, 4),
-        master.readHoldingRegisters(1, 4),
-        master.readHoldingRegisters(1, 4),
-        master.readHoldingRegisters(1, 4),
-        master.readHoldingRegisters(1, 4)
+        master.readInputRegisters(0, 1)
       );
     })
   )
   .subscribe((response) => {
     // // Handle slave response(s).
-    // process.stdout.write(`${JSON.stringify(response.data, null, 2)}\n`);
+    console.log(JSON.stringify(response[0].data));
 
     // Close master.
     master.close();
