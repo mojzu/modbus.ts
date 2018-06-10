@@ -1,37 +1,23 @@
 /* tslint:disable:no-bitwise prefer-for-of */
-import { isBoolean, isInteger, isString } from "container.ts/lib/validate";
+import { isInteger } from "container.ts/lib/validate";
 import { fromEvent, merge, Observable, Subscriber } from "rxjs";
 import { take, takeUntil, timeout } from "rxjs/operators";
-import * as SerialPort from "serialport";
 import * as adu from "../adu";
 import * as pdu from "../pdu";
 import * as rtu from "./Rtu";
 
-/** Modbus RTU master data bits options. */
-export type IMasterDataBits = 8 | 7 | 6 | 5;
-
-/** Modbus RTU master stop bits options. */
-export type IMasterStopBits = 1 | 2;
-
-/** Modbus RTU master parity options. */
-export enum EMasterParity {
-  None,
-  Even,
-  Odd
-}
-export type IRtuMasterParity = "none" | "even" | "odd";
-export const RTU_MASTER_PARITY = ["none", "even", "odd"];
-
 export type IMasterRequestOptions = adu.IMasterRequestOptions<rtu.Request, rtu.Response, rtu.Exception>;
+
+export interface ISerialPort {
+  readonly isOpen: boolean;
+  open(success?: () => void): void;
+  close(): void;
+  write(buffer: Buffer): void;
+  on(event: string, listener: (error: any) => void): void;
+}
 
 /** Modbus RTU master options */
 export interface IMasterOptions extends IMasterRequestOptions {
-  path: string;
-  baudRate?: number;
-  dataBits?: IMasterDataBits;
-  stopBits?: IMasterStopBits;
-  parity?: EMasterParity;
-  rtscts?: boolean;
   slaveAddress?: number;
   inactivityTimeout?: number;
 }
@@ -41,55 +27,26 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
   /** Default values. */
   public static DEFAULT = Object.assign(
     {
-      BAUDRATE: 19200,
-      DATA_BITS: 8,
-      STOP_BITS: 1,
-      PARITY: EMasterParity.Even,
-      RTSCTS: true,
       SLAVE_ADDRESS: 1
     },
     adu.Master.DEFAULT
   );
 
-  public readonly path: string;
-  public readonly baudRate: number;
-  public readonly dataBits: IMasterDataBits;
-  public readonly stopBits: IMasterStopBits;
-  public readonly parity: EMasterParity;
-  public readonly rtscts: boolean;
   public readonly slaveAddress: number;
   public readonly inactivityTimeout: number;
 
-  protected port: SerialPort | null = null;
+  protected port: ISerialPort;
 
-  protected get openOptions(): SerialPort.OpenOptions {
-    const parity: IRtuMasterParity = RTU_MASTER_PARITY[this.parity] as any;
-    return {
-      baudRate: this.baudRate,
-      dataBits: this.dataBits,
-      stopBits: this.stopBits,
-      parity,
-      rtscts: this.rtscts
-    };
-  }
-
-  public constructor(options: IMasterOptions) {
+  public constructor(port: ISerialPort, options: IMasterOptions) {
     super(options);
 
-    this.path = isString(options.path);
-    this.baudRate = isInteger(String(options.baudRate || Master.DEFAULT.BAUDRATE));
-    this.dataBits = isInteger(String(options.dataBits || Master.DEFAULT.DATA_BITS)) as IMasterDataBits;
-    this.stopBits = isInteger(String(options.stopBits || Master.DEFAULT.STOP_BITS), {
-      min: 1,
-      max: 2
-    }) as IMasterStopBits;
-    this.parity = (options.parity != null) ? options.parity : Master.DEFAULT.PARITY;
-    this.rtscts = (options.rtscts != null) ? isBoolean(String(options.rtscts)) : Master.DEFAULT.RTSCTS;
     this.slaveAddress = isInteger(String(options.slaveAddress || Master.DEFAULT.SLAVE_ADDRESS), {
       min: 0,
       max: 0xff
     });
     this.inactivityTimeout = this.isTimeout(options.inactivityTimeout);
+
+    this.port = port;
   }
 
   public open(options: IMasterRequestOptions = {}): Observable<void> {
@@ -99,8 +56,11 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
       this.close();
       this.onOpen();
 
-      // (Re)create serial port, add error listener.
-      this.port = new SerialPort(this.path, this.openOptions);
+      if (!this.port.isOpen) {
+        this.port.open();
+      }
+
+      // Add error listener.
       this.port.on("error", (error: any) => {
         subscriber.error(new adu.MasterError(error.code, error));
       });
@@ -140,10 +100,9 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
   }
 
   public close(): void {
-    if (this.port != null) {
+    if (this.port.isOpen) {
       this.onClose();
       this.port.close();
-      this.port = null;
     }
   }
 
