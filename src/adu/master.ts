@@ -26,16 +26,26 @@ export type IMasterRetryWhen<Req extends pdu.Request, Res extends pdu.Response, 
   request?: Req
 ) => void;
 
-/** Log interface. */
+/** Master log names. */
+export enum EMasterLog {
+  Request = "ModbusMasterRequest",
+  Response = "ModbusMasterResponse",
+  Exception = "ModbusMasterException"
+}
+
+/**
+ * Log interface.
+ * TODO(L): Rename to MasterLog, improve types/inheritance.
+ */
 export class Log<Req extends pdu.Request, Res extends pdu.Response, Exc extends pdu.Exception> {
   public request(request: Req, errorCount: number): void {
-    debugLog(Master.LOG.REQUEST, request, errorCount);
+    debugLog(EMasterLog.Request, request, errorCount);
   }
   public response(response: Res): void {
-    debugLog(Master.LOG.RESPONSE, response);
+    debugLog(EMasterLog.Response, response);
   }
   public exception(exception: Exc): void {
-    debugLog(Master.LOG.EXCEPTION, exception);
+    debugLog(EMasterLog.Exception, exception);
   }
   public bytesTransmitted(value: number): void {}
   public bytesReceived(value: number): void {}
@@ -54,6 +64,11 @@ export interface IMasterRequestOptions<
   log?: L;
 }
 
+/** Master error codes. */
+export enum EMasterError {
+  Timeout = "ModbusMasterTimeoutError"
+}
+
 /** Modbus ADU error class. */
 export class MasterError extends ErrorChain {
   public constructor(value?: string, cause?: Error) {
@@ -68,24 +83,6 @@ export abstract class Master<
   Exc extends pdu.Exception,
   L extends Log<Req, Res, Exc> = Log<Req, Res, Exc>
 > {
-  /** Default values. */
-  public static DEFAULT = {
-    RETRY: 0,
-    TIMEOUT: 5000
-  };
-
-  /** Error codes. */
-  public static ERROR = {
-    TIMEOUT: "ModbusMasterTimeoutError"
-  };
-
-  /** Log names. */
-  public static LOG = {
-    REQUEST: "ModbusMasterRequest",
-    RESPONSE: "ModbusMasterResponse",
-    EXCEPTION: "ModbusMasterException"
-  };
-
   /** Returns true if error is RxJS Timeout. */
   public static isTimeoutError(error: any): error is TimeoutError {
     const isInstance = error instanceof TimeoutError;
@@ -131,8 +128,8 @@ export abstract class Master<
   }
 
   public constructor(options: IMasterRequestOptions<Req, Res, Exc, L>, logConstructor: any = Log) {
-    this.retry = this.isRetry(options.retry || Master.DEFAULT.RETRY);
-    this.timeout = this.isTimeout(options.timeout || Master.DEFAULT.TIMEOUT);
+    this.retry = options.retry != null ? this.isRetry(options.retry) : 0;
+    this.timeout = options.timeout != null ? this.isTimeout(options.timeout) : 5000;
     this.retryWhen = this.isRetryWhen(options.retryWhen || this.defaultRetryWhen.bind(this));
     this.log = options.log || new logConstructor();
   }
@@ -279,7 +276,7 @@ export abstract class Master<
     if (Master.isTimeoutError(error)) {
       // If error is a timeout, retry up to limit.
       if (errorCount >= retry) {
-        throw new MasterError(Master.ERROR.TIMEOUT, error);
+        throw new MasterError(EMasterError.Timeout, error);
       }
     } else if (Master.isMasterError(error)) {
       // If error is a master error, rethrow now.

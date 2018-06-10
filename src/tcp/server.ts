@@ -3,7 +3,6 @@ import * as net from "net";
 import { bindCallback, fromEvent, Observable, Subject } from "rxjs";
 import { map, take, takeUntil } from "rxjs/operators";
 import * as pdu from "../pdu";
-import { Client } from "./client";
 import * as tcp from "./tcp";
 
 /** Modbus TCP observable response or exception. */
@@ -21,7 +20,7 @@ export abstract class Server extends pdu.Slave {
 
   public constructor(options: IServerOptions) {
     super();
-    this.port = isPort(String(options.port || Client.DEFAULT.PORT));
+    this.port = options.port != null ? isPort(String(options.port)) : 502;
   }
 
   public open(): Observable<void> {

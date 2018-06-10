@@ -1,5 +1,5 @@
 import { isInteger, isPort, isString } from "container.ts/lib/validate";
-import * as Debug from "debug";
+import * as debug from "debug";
 import { createConnection, Socket } from "net";
 import { fromEvent, merge, Observable, Subscriber } from "rxjs";
 import { delay, retryWhen as rxjsRetryWhen, scan, take, takeUntil, timeout } from "rxjs/operators";
@@ -8,20 +8,28 @@ import * as pdu from "../pdu";
 import * as tcp from "../tcp";
 
 // Internal debug output.
-const debug = Debug("modbus.ts");
+const debugLog = debug("modbus.ts");
+
+/** Modbus TCP client log names. */
+export enum EMasterLog {
+  Connecting = "ModbusTcpClientConnecting",
+  Connected = "ModbusTcpClientConnected",
+  Disconnected = "ModbusTcpClientDisconnected",
+  Error = "ModbusTcpClientError"
+}
 
 export class Log extends adu.Log<tcp.Request, tcp.Response, tcp.Exception> {
   public connecting(host: string, port: number, unitId: number): void {
-    debug(Client.LOG.CONNECTING, host, port, unitId);
+    debugLog(EMasterLog.Connecting, host, port, unitId);
   }
   public connected(host: string, port: number, unitId: number): void {
-    debug(Client.LOG.CONNECTED, host, port, unitId);
+    debugLog(EMasterLog.Connected, host, port, unitId);
   }
   public disconnected(host: string, port: number, unitId: number): void {
-    debug(Client.LOG.DISCONNECTED, host, port, unitId);
+    debugLog(EMasterLog.Disconnected, host, port, unitId);
   }
   public error(error: adu.MasterError): void {
-    debug(Client.LOG.ERROR, error);
+    debugLog(EMasterLog.Error, error);
   }
   public packetsTransmitted(value: number): void {}
   public packetsReceived(value: number): void {}
@@ -38,37 +46,13 @@ export interface IClientOptions extends IClientRequestOptions {
   log?: Log;
 }
 
+/** Modbus TCP client error codes. */
+export enum EClientError {
+  Write = "ModbusTcpClientWriteError"
+}
+
 /** Modbus TCP client. */
 export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception, Log> {
-  /** Default values. */
-  public static DEFAULT = Object.assign(
-    {
-      HOST: "localhost",
-      PORT: 502,
-      UNIT_ID: 1
-    },
-    adu.Master.DEFAULT
-  );
-
-  /** Error names. */
-  public static ERROR = Object.assign(
-    {
-      WRITE: "ModbusTcpClientWriteError"
-    },
-    adu.Master.ERROR
-  );
-
-  /** Log names. */
-  public static LOG = Object.assign(
-    {
-      CONNECTING: "ModbusTcpClientConnecting",
-      CONNECTED: "ModbusTcpClientConnected",
-      DISCONNECTED: "ModbusTcpClientDisconnected",
-      ERROR: "ModbusTcpClientError"
-    },
-    adu.Master.LOG
-  );
-
   /** Host the client will connect to. */
   public readonly host: string;
 
@@ -108,9 +92,9 @@ export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception,
   public constructor(options: IClientOptions, logConstructor: any = Log) {
     super(options, logConstructor);
 
-    this.host = isString(options.host || Client.DEFAULT.HOST);
-    this.port = isPort(String(options.port || Client.DEFAULT.PORT));
-    this.unitId = isInteger(String(options.unitId || Client.DEFAULT.UNIT_ID), { min: 0x1, max: 0xff });
+    this.host = options.host != null ? isString(options.host) : "localhost";
+    this.port = options.port != null ? isPort(String(options.port)) : 502;
+    this.unitId = options.unitId != null ? isInteger(String(options.unitId), { min: 0x1, max: 0xff }) : 1;
     this.inactivityTimeout = this.isTimeout(options.inactivityTimeout);
   }
 
@@ -166,7 +150,10 @@ export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception,
 
       // If no activity occurs on socket for timeout duration, client is disconnected.
       merge(this.transmit, this.receive)
-        .pipe(takeUntil(socketClose), timeout(this.inactivityTimeout))
+        .pipe(
+          takeUntil(socketClose),
+          timeout(this.inactivityTimeout)
+        )
         .subscribe({
           error: (error) => {
             this.disconnect();
@@ -207,7 +194,7 @@ export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception,
       this.socket.write(request.buffer);
       this.log.packetsTransmitted(1);
     } else {
-      this.log.error(new adu.MasterError(Client.ERROR.WRITE));
+      this.log.error(new adu.MasterError(EClientError.Write));
     }
   }
 
