@@ -1,5 +1,5 @@
-import { Master } from "./Master";
-import * as pdu from "./Pdu";
+import { Master } from "./master";
+import * as pdu from "./pdu";
 
 /** Modbus PDU slave response or exception. */
 export type ISlaveResponse = pdu.Response | pdu.Exception;
@@ -55,7 +55,7 @@ export abstract class Slave {
     }
   }
 
-  // (MEDIUM): Buffer value/data validation.
+  // TODO(M): Buffer value/data validation.
 
   protected onReadBitsRequest(functionCode: number, request: Buffer, isCoils: boolean): ISlaveResponse {
     const startingAddress = request.readUInt16BE(0);

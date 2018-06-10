@@ -4,9 +4,9 @@ import { forkJoin } from "rxjs";
 import { delay, map, switchMap } from "rxjs/operators";
 import * as adu from "../../adu";
 import * as pdu from "../../pdu";
-import { Client, IClientOptions, Log } from "../Client";
-import { MockDropServer, MockServer, MockSlowServer } from "../Mock";
-import { Server } from "../Server";
+import { Client, IClientOptions, Log } from "../client";
+import { MockDropServer, MockServer, MockSlowServer } from "../mock";
+import { Server } from "../server";
 
 const debug = Debug("modbus.ts:test");
 
@@ -39,7 +39,7 @@ describe("Client", () => {
   // TODO(L): Test Client method requests/exceptions.
   // TODO(L): Test Client argument validation.
 
-  it("Throws error for invalid retry argument", (done) => {
+  it("throws error for invalid retry argument", (done) => {
     try {
       create(MockServer, { retry: -1000 });
       done.fail();
@@ -49,7 +49,7 @@ describe("Client", () => {
     }
   });
 
-  it("Throws error for invalid timeout argument", (done) => {
+  it("throws error for invalid timeout argument", (done) => {
     try {
       create(MockServer, { timeout: 1 });
       done.fail();
@@ -59,7 +59,7 @@ describe("Client", () => {
     }
   });
 
-  it("Fails to connect to closed server port", (done) => {
+  it("fails to connect to closed server port", (done) => {
     const [, client] = create(MockServer);
     client.connect().subscribe({
       next: () => done.fail(),
@@ -73,7 +73,7 @@ describe("Client", () => {
     });
   });
 
-  it("Connects to open server port", (done) => {
+  it("connects to open server port", (done) => {
     const [server, client] = create(MockServer);
     let nextCounter = 0;
     server.open().subscribe(() => {
@@ -94,7 +94,7 @@ describe("Client", () => {
     });
   });
 
-  it("Disconnects from server after inactivity timeout", (done) => {
+  it("disconnects from server after inactivity timeout", (done) => {
     const [server, client] = create(MockServer, { inactivityTimeout: 1000 });
     server.open().subscribe(() => {
       client
@@ -111,7 +111,7 @@ describe("Client", () => {
     });
   });
 
-  it("Reads coils from server", (done) => {
+  it("reads coils from server", (done) => {
     const [server, client] = create(MockServer);
     let nextCounter = 0;
     server.open().subscribe(() => {
@@ -145,7 +145,7 @@ describe("Client", () => {
     });
   });
 
-  it("Buffers writes to socket", (done) => {
+  it("buffers writes to socket", (done) => {
     const [server, client] = create(MockServer);
     server.open().subscribe(() => {
       client
@@ -173,7 +173,7 @@ describe("Client", () => {
     });
   });
 
-  it("Read coils from slow server causes timeout error", (done) => {
+  it("read coils from slow server causes timeout error", (done) => {
     const [server, client] = create(MockSlowServer);
     server.open().subscribe(() => {
       client
@@ -194,7 +194,7 @@ describe("Client", () => {
     });
   });
 
-  it("Read coils from drop server succeeds with retries", (done) => {
+  it("read coils from drop server succeeds with retries", (done) => {
     const [server, client] = create(MockDropServer);
     let nextCounter = 0;
     server.open().subscribe(() => {
@@ -228,7 +228,7 @@ describe("Client", () => {
     });
   });
 
-  it("Reads discrete inputs from server", (done) => {
+  it("reads discrete inputs from server", (done) => {
     const [server, client] = create(MockServer);
     let nextCounter = 0;
     server.open().subscribe(() => {
@@ -262,7 +262,7 @@ describe("Client", () => {
     });
   });
 
-  it("Reads holding registers from server", (done) => {
+  it("reads holding registers from server", (done) => {
     const [server, client] = create(MockServer);
     let nextCounter = 0;
     server.open().subscribe(() => {

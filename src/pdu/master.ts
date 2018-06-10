@@ -1,5 +1,5 @@
 // tslint:disable:no-bitwise
-import * as pdu from "./Pdu";
+import * as pdu from "./pdu";
 
 /**
  * Modbus PDU master.

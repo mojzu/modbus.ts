@@ -26,59 +26,59 @@ export enum EExceptionCode {
 
 /** Modbus read coils/discrete inputs common interface. */
 export interface IReadBits {
-  bytes: number;
-  values: boolean[];
+  readonly bytes: number;
+  readonly values: boolean[];
 }
 export interface IReadCoils extends IReadBits {}
 export interface IReadDiscreteInputs extends IReadBits {}
 
 /** Modbus read holding/input registers common interface. */
 export interface IReadRegisters {
-  bytes: number;
-  values: number[];
+  readonly bytes: number;
+  readonly values: number[];
 }
 export interface IReadHoldingRegisters extends IReadRegisters {}
 export interface IReadInputRegisters extends IReadRegisters {}
 
 /** Modbus write coil common interface. */
 export interface IWriteBit {
-  address: number;
-  value: boolean;
+  readonly address: number;
+  readonly value: boolean;
 }
 export interface IWriteSingleCoil extends IWriteBit {}
 
 /** Modbus write register common interface. */
 export interface IWriteRegister {
-  address: number;
-  value: number;
+  readonly address: number;
+  readonly value: number;
 }
 export interface IWriteSingleRegister extends IWriteRegister {}
 
 /** Modbus write multiple coils/registers common interface. */
 export interface IWriteMultiple {
-  address: number;
-  quantity: number;
+  readonly address: number;
+  readonly quantity: number;
 }
 export interface IWriteMultipleCoils extends IWriteMultiple {}
 export interface IWriteMultipleRegisters extends IWriteMultiple {}
 
 /** Modbus PDU request. */
 export class Request {
-  public constructor(public functionCode: number, public buffer: Buffer) {}
+  public constructor(public readonly functionCode: number, public readonly buffer: Buffer) {}
 }
 
 /** Modbus PDU response. */
 export class Response {
-  public constructor(public functionCode: number, public data: any, public buffer: Buffer) {}
+  public constructor(public readonly functionCode: number, public readonly data: any, public readonly buffer: Buffer) {}
 }
 
 /** Modbus PDU exception. */
 export class Exception {
   public constructor(
-    public functionCode: number,
-    public exceptionFunctionCode: number,
-    public exceptionCode: number,
-    public buffer: Buffer
+    public readonly functionCode: number,
+    public readonly exceptionFunctionCode: number,
+    public readonly exceptionCode: number,
+    public readonly buffer: Buffer
   ) {}
 }
 

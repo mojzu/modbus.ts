@@ -4,7 +4,7 @@ import { fromEvent, merge, Observable, Subscriber } from "rxjs";
 import { take, takeUntil, timeout } from "rxjs/operators";
 import * as adu from "../adu";
 import * as pdu from "../pdu";
-import * as rtu from "./Rtu";
+import * as rtu from "./rtu";
 
 /** RTU master request options. */
 export type IMasterRequestOptions = adu.IMasterRequestOptions<rtu.Request, rtu.Response, rtu.Exception>;

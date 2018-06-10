@@ -1,32 +1,40 @@
 import { Socket } from "net";
-import { Server } from "./Server";
+import { Server } from "./server";
 
 /** Modbus TCP server mock for testing. */
 export class MockServer extends Server {
   public readCoils(startingAddress: number, quantityOfCoils: number): boolean[] {
     return this.readBits(startingAddress, quantityOfCoils);
   }
+
   public readDiscreteInputs(startingAddress: number, quantityOfInputs: number): boolean[] {
     return this.readBits(startingAddress, quantityOfInputs);
   }
+
   public readHoldingRegisters(startingAddress: number, quantityOfRegisters: number): number[] {
     return this.readRegisters(startingAddress, quantityOfRegisters);
   }
+
   public readInputRegisters(startingAddress: number, quantityOfRegisters: number): number[] {
     return this.readRegisters(startingAddress, quantityOfRegisters);
   }
+
   public writeSingleCoil(outputAddress: number, outputValue: boolean): boolean {
     return outputValue;
   }
+
   public writeSingleRegister(registerAddress: number, registerValue: number): number {
     return registerValue;
   }
+
   public writeMultipleCoils(startingAddress: number, outputValues: boolean[]): number {
     return outputValues.length;
   }
+
   public writeMultipleRegisters(startingAddress: number, registerValues: number[]): number {
     return registerValues.length;
   }
+
   public readBits(startingAddress: number, quantityOfBits: number): boolean[] {
     const values: boolean[] = [];
     for (let i = 0; i < quantityOfBits; i++) {
@@ -34,6 +42,7 @@ export class MockServer extends Server {
     }
     return values;
   }
+
   public readRegisters(startingAddress: number, quantityOfRegisters: number): number[] {
     const values: number[] = [];
     for (let i = 0; i < quantityOfRegisters; i++) {

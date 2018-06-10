@@ -1,2 +1,2 @@
-export * from "./Master";
-export * from "./Slave";
+export * from "./master";
+export * from "./slave";

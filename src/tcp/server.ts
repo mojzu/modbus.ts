@@ -3,8 +3,8 @@ import * as net from "net";
 import { bindCallback, fromEvent, Observable, Subject } from "rxjs";
 import { map, take, takeUntil } from "rxjs/operators";
 import * as pdu from "../pdu";
-import { Client } from "./Client";
-import * as tcp from "./Tcp";
+import { Client } from "./client";
+import * as tcp from "./tcp";
 
 /** Modbus TCP observable response or exception. */
 export type IServerResponse = tcp.Response | tcp.Exception | null;
