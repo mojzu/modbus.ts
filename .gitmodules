@@ -1,0 +1,3 @@
+[submodule "fuse-tools"]
+	path = fuse-tools
+	url = https://github.com/mojzu/fuse-tools.git
