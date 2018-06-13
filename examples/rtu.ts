@@ -13,14 +13,14 @@ import * as modbus from "../src";
 // $ yarn run ts-node ./examples/rtu.ts -p /dev/pts/19
 
 const path = argv.p;
-const port: modbus.rtu.IMasterSerialPort = new SerialPort(path, {
+const port = new SerialPort(path, {
   autoOpen: false,
   baudRate: 19200,
   dataBits: 8,
   stopBits: 1,
   parity: "even",
   rtscts: false
-}) as any;
+});
 
 // Create master instance.
 const master = new modbus.rtu.Master(port, {
