@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@types/debug": "^0.0.30",
-    "container.ts": "^2.0.9",
+    "container.ts": "^2.0.10",
     "debug": "^3.1.0",
     "rxjs": "^6.2.2"
   },
@@ -45,11 +45,11 @@
   "devDependencies": {
     "@types/del": "^3.0.1",
     "@types/jest": "^23.3.1",
-    "@types/node": "^10.5.3",
+    "@types/node": "^10.5.4",
     "@types/yargs": "^11.1.1",
     "del": "^3.0.0",
     "fuse-box": "^3.4.0",
-    "jest": "^23.4.1",
+    "jest": "^23.4.2",
     "ts-jest": "^23.0.0",
     "ts-node": "^7.0.0",
     "tslint": "^5.11.0",
