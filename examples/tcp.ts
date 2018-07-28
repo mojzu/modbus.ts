@@ -1,4 +1,5 @@
 // tslint:disable:no-console
+import { forkJoin } from "rxjs";
 import { switchMap } from "rxjs/operators";
 import * as modbus from "../src";
 
@@ -14,8 +15,16 @@ client
   .connect()
   .pipe(
     switchMap(() => {
-      // Make request(s) to server.
-      return client.readHoldingRegisters(1, 4);
+      // // Make request to server.
+      // return client.readHoldingRegisters(1, 4);
+
+      // Make multiple requests in order to server.
+      return forkJoin(
+        client.readHoldingRegisters(1, 4),
+        client.readDiscreteInputs(1, 4),
+        client.readHoldingRegisters(1, 4),
+        client.readInputRegisters(1, 4)
+      );
     })
   )
   .subscribe({
@@ -23,11 +32,14 @@ client
       // Handle server response(s).
       console.log("tcp", JSON.stringify(response, null, 2));
 
-      // Disconnect client.
-      client.disconnect();
+      // Destroy client.
+      client.destroy();
     },
     error: (error) => {
       // Handle error(s).
       console.error("tcp", error);
+
+      // Destroy client.
+      client.destroy();
     }
   });

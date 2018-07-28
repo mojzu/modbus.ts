@@ -40,9 +40,8 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
   public open(options: IMasterRequestOptions = {}): Observable<void> {
     // TODO(M): Timeout/retry support.
     return new Observable((subscriber: Subscriber<void>) => {
-      // Ensure master closed and in known state.
-      this.close();
-      this.onOpen();
+      // Ensure master in known state.
+      this.masterReset();
 
       // (Re)open serial port
       if (!this.port.isOpen) {
@@ -71,7 +70,7 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
       // Port data event receives data into internal buffer and processes responses.
       fromEvent<Buffer>(this.port as any, "data")
         .pipe(takeUntil(portClose))
-        .subscribe((buffer) => this.onData(buffer));
+        .subscribe((buffer) => this.masterOnData(buffer));
 
       // Requests transmitted via port.
       this.transmit.pipe(takeUntil(portClose)).subscribe((request) => this.writePort(request));
@@ -95,7 +94,14 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
     if (this.port.isOpen) {
       this.port.close();
     }
-    this.onClose();
+    this.masterReset();
+  }
+
+  public destroy(): void {
+    if (this.port.isOpen) {
+      this.port.close();
+    }
+    this.masterDestroy();
   }
 
   /** Write request to master port. */
@@ -103,17 +109,6 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
     if (this.port != null) {
       this.port.write(request.buffer);
     }
-  }
-
-  /** Construct and prepend RTU header, append CRC to PDU request buffer. */
-  protected setupRequest(functionCode: pdu.EFunctionCode, request: Buffer): rtu.Request {
-    const buffer = Buffer.concat([Buffer.allocUnsafe(1), request, Buffer.allocUnsafe(2)]);
-
-    buffer.writeUInt8(this.slaveAddress, 0);
-    const crc = this.generateCrc(buffer.slice(0, -2));
-    buffer.writeUInt16LE(crc, request.length + 1);
-
-    return new rtu.Request(this.slaveAddress, functionCode, buffer);
   }
 
   /** Generate CRC for request buffer. */
@@ -131,25 +126,6 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
       }
     }
     return crc;
-  }
-
-  /** Incoming responses matched using expected size. */
-  protected matchResponse(request: rtu.Request, response: rtu.Response | rtu.Exception): boolean {
-    return true;
-  }
-
-  protected parseResponse(data: Buffer): number {
-    // TODO(M): Improve parsing based on expected response.
-    const slaveAddress = data.readUInt8(0);
-    const pduBuffer = data.slice(1);
-
-    const response = this.onParseResponse(slaveAddress, pduBuffer, data);
-    if (response != null) {
-      this.onResponse(response);
-    }
-
-    // Return length of parsed data.
-    return data.length;
   }
 
   protected onParseResponse(
@@ -173,5 +149,35 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
     }
 
     return response;
+  }
+
+  /** Construct and prepend RTU header, append CRC to PDU request buffer. */
+  protected masterSetupRequest(functionCode: pdu.EFunctionCode, request: Buffer): rtu.Request {
+    const buffer = Buffer.concat([Buffer.allocUnsafe(1), request, Buffer.allocUnsafe(2)]);
+
+    buffer.writeUInt8(this.slaveAddress, 0);
+    const crc = this.generateCrc(buffer.slice(0, -2));
+    buffer.writeUInt16LE(crc, request.length + 1);
+
+    return new rtu.Request(this.slaveAddress, functionCode, buffer);
+  }
+
+  /** Incoming responses matched using expected size. */
+  protected masterMatchResponse(request: rtu.Request, response: rtu.Response | rtu.Exception): boolean {
+    return true;
+  }
+
+  protected masterParseResponse(data: Buffer): number {
+    // TODO(M): Improve parsing based on expected response.
+    const slaveAddress = data.readUInt8(0);
+    const pduBuffer = data.slice(1);
+
+    const response = this.onParseResponse(slaveAddress, pduBuffer, data);
+    if (response != null) {
+      this.masterOnResponse(response);
+    }
+
+    // Return length of parsed data.
+    return data.length;
   }
 }

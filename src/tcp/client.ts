@@ -107,9 +107,9 @@ export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception,
     let retrying = false;
 
     return new Observable((subscriber: Subscriber<any>) => {
-      // Disconnect and (re)open for clean state.
-      this.disconnect();
-      this.onOpen();
+      // Ensure master in known state.
+      this.masterReset();
+      this.destroySocket();
       this.log.connecting(this.host, this.port, this.unitId);
 
       // (Re)create socket, add error listener.
@@ -139,7 +139,7 @@ export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception,
       // Socket data event receives data into internal buffer and processes responses.
       fromEvent<Buffer>(this.socket as any, "data")
         .pipe(takeUntil(socketClose))
-        .subscribe((buffer) => this.onData(buffer));
+        .subscribe((buffer) => this.masterOnData(buffer));
 
       // Requests transmitted via socket.
       this.transmit.pipe(takeUntil(socketClose)).subscribe((request) => this.writeSocket(request));
@@ -163,7 +163,7 @@ export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception,
             errorCount += 1;
             retrying = false;
             // Throws error if retry not required.
-            retryWhen(this, retry, errorCount, error);
+            retryWhen(this as any, retry, errorCount, error);
             retrying = true;
             return errorCount;
           }, 0),
@@ -175,9 +175,18 @@ export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception,
 
   /** If connected, disconnect the client from the configured host:port. */
   public disconnect(): void {
+    this.log.disconnected(this.host, this.port, this.unitId);
+    this.destroySocket();
+    this.masterReset();
+  }
+
+  public destroy(): void {
+    this.destroySocket();
+    this.masterDestroy();
+  }
+
+  protected destroySocket(): void {
     if (this.socket != null) {
-      this.onClose();
-      this.log.disconnected(this.host, this.port, this.unitId);
       this.isConnected = false;
       this.socket.end();
       this.socket.destroy();
@@ -192,55 +201,6 @@ export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception,
     } else {
       this.log.error(new adu.MasterError(EClientError.Write));
     }
-  }
-
-  /** Construct and prepend MBAP header to PDU request buffer. */
-  protected setupRequest(functionCode: pdu.EFunctionCode, request: Buffer): tcp.Request {
-    const buffer = Buffer.concat([Buffer.allocUnsafe(7), request]);
-    const transactionId = this.nextTransactionId;
-
-    buffer.writeUInt16BE(transactionId, 0);
-    buffer.writeUInt16BE(0, 2); // Protocol ID.
-    buffer.writeUInt16BE(request.length + 1, 4);
-    buffer.writeUInt8(this.unitId, 6);
-
-    return new tcp.Request(transactionId, this.unitId, functionCode, buffer);
-  }
-
-  /** Match transaction and unit identifiers of incoming responses. */
-  protected matchResponse(request: tcp.Request, response: tcp.Response | tcp.Exception): boolean {
-    const transactionIdMatch = response.transactionId === request.transactionId;
-    const unitIdMatch = response.unitId === request.unitId;
-    return transactionIdMatch && unitIdMatch;
-  }
-
-  protected parseResponse(data: Buffer): number {
-    // Check if buffer may contain MBAP header.
-    if (data.length >= 7) {
-      const header = data.slice(0, 7);
-      const headerLength = header.readUInt16BE(4);
-      const responseLength = 6 + headerLength;
-
-      // If buffer contains complete response, extract it now.
-      if (data.length >= responseLength) {
-        this.log.packetsReceived(1);
-
-        const aduBuffer = data.slice(0, responseLength);
-        const transactionId = aduBuffer.readUInt16BE(0);
-        const unitId = aduBuffer.readUInt8(6);
-        const pduBuffer = aduBuffer.slice(7);
-
-        const response = this.onParseResponse(transactionId, unitId, pduBuffer, aduBuffer);
-        if (response != null) {
-          this.onResponse(response);
-        }
-
-        // Return length of parsed data.
-        return responseLength;
-      }
-    }
-
-    return 0;
   }
 
   /**
@@ -270,5 +230,54 @@ export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception,
     }
 
     return response;
+  }
+
+  /** Construct and prepend MBAP header to PDU request buffer. */
+  protected masterSetupRequest(functionCode: pdu.EFunctionCode, request: Buffer): tcp.Request {
+    const buffer = Buffer.concat([Buffer.allocUnsafe(7), request]);
+    const transactionId = this.nextTransactionId;
+
+    buffer.writeUInt16BE(transactionId, 0);
+    buffer.writeUInt16BE(0, 2); // Protocol ID.
+    buffer.writeUInt16BE(request.length + 1, 4);
+    buffer.writeUInt8(this.unitId, 6);
+
+    return new tcp.Request(transactionId, this.unitId, functionCode, buffer);
+  }
+
+  /** Match transaction and unit identifiers of incoming responses. */
+  protected masterMatchResponse(request: tcp.Request, response: tcp.Response | tcp.Exception): boolean {
+    const transactionIdMatch = response.transactionId === request.transactionId;
+    const unitIdMatch = response.unitId === request.unitId;
+    return transactionIdMatch && unitIdMatch;
+  }
+
+  protected masterParseResponse(data: Buffer): number {
+    // Check if buffer may contain MBAP header.
+    if (data.length >= 7) {
+      const header = data.slice(0, 7);
+      const headerLength = header.readUInt16BE(4);
+      const responseLength = 6 + headerLength;
+
+      // If buffer contains complete response, extract it now.
+      if (data.length >= responseLength) {
+        this.log.packetsReceived(1);
+
+        const aduBuffer = data.slice(0, responseLength);
+        const transactionId = aduBuffer.readUInt16BE(0);
+        const unitId = aduBuffer.readUInt8(6);
+        const pduBuffer = aduBuffer.slice(7);
+
+        const response = this.onParseResponse(transactionId, unitId, pduBuffer, aduBuffer);
+        if (response != null) {
+          this.masterOnResponse(response);
+        }
+
+        // Return length of parsed data.
+        return responseLength;
+      }
+    }
+
+    return 0;
   }
 }

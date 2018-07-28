@@ -1,14 +1,15 @@
 import { ErrorChain } from "container.ts/lib/error";
 import { isInteger } from "container.ts/lib/validate";
 import * as debug from "debug";
-import { BehaviorSubject, interval, Observable, Subject, throwError, TimeoutError } from "rxjs";
+import { Observable, of, Subject, throwError, TimeoutError } from "rxjs";
 import {
   catchError,
+  concatMap,
   filter,
   map,
+  mergeMap,
   retryWhen as rxjsRetryWhen,
   scan,
-  switchMap,
   take,
   timeout as rxjsTimeout
 } from "rxjs/operators";
@@ -30,7 +31,8 @@ export class MasterError extends ErrorChain {
 export enum EMasterLog {
   Request = "ModbusMasterRequest",
   Response = "ModbusMasterResponse",
-  Exception = "ModbusMasterException"
+  Exception = "ModbusMasterException",
+  Error = "MasterMasterError"
 }
 
 /** Master log interface. */
@@ -44,6 +46,9 @@ export class MasterLog<Req extends pdu.Request, Res extends pdu.Response, Exc ex
   }
   public exception(exception: Exc): void {
     this.debug(EMasterLog.Exception, exception);
+  }
+  public error(error: any): void {
+    this.debug(EMasterLog.Error, error);
   }
   public bytesTransmitted(value: number): void {}
   public bytesReceived(value: number): void {}
@@ -69,6 +74,25 @@ export interface IMasterRequestOptions<
   timeout?: number;
   retryWhen?: IMasterRetryWhen<Req, Res, Exc>;
   log?: L;
+}
+
+/** Internal queue in type. */
+export interface IMasterQueueIn<
+  Req extends pdu.Request,
+  Res extends pdu.Response,
+  Exc extends pdu.Exception,
+  L extends MasterLog<Req, Res, Exc> = MasterLog<Req, Res, Exc>
+> {
+  id: number;
+  request: Req;
+  options: IMasterRequestOptions<Req, Res, Exc, L>;
+}
+
+/** Internal queue out type. */
+export interface IMasterQueueOut<Res extends pdu.Response> {
+  id: number;
+  response?: Res;
+  error?: any;
 }
 
 /** Modbus abstract ADU master. */
@@ -107,26 +131,27 @@ export abstract class Master<
   /** Requests stream. */
   public transmit = new Subject<Req>();
 
-  /** Internal buffer. */
-  public buffer = Buffer.allocUnsafe(0);
-
   /** Internal log interface. */
   protected readonly log: L;
 
-  /** Internal lock. */
-  protected locked = new BehaviorSubject<boolean>(false);
-  protected lockDelay = 0;
+  /** Internal transmit input queue. */
+  protected queueIn = new Subject<IMasterQueueIn<Req, Res, Exc, L>>();
 
-  // TODO(H): Update buffering/queuing method to preserve packet order.
-  protected get nextLockDelay(): number {
-    return (++this.lockDelay * 20) % 200;
-  }
+  /** Internal transmit output queue. */
+  protected queueOut = new Subject<IMasterQueueOut<Res>>();
+
+  /** Queue ID counter. */
+  protected queueCounter = 0;
+
+  /** Internal buffer. */
+  protected buffer = Buffer.allocUnsafe(0);
 
   public constructor(options: IMasterRequestOptions<Req, Res, Exc, L>, logConstructor: any = MasterLog) {
     this.retry = options.retry != null ? this.isRetry(options.retry) : 0;
     this.timeout = options.timeout != null ? this.isTimeout(options.timeout) : 5000;
-    this.retryWhen = this.isRetryWhen(options.retryWhen || this.defaultRetryWhen.bind(this));
+    this.retryWhen = this.isRetryWhen(options.retryWhen || this.masterDefaultRetryWhen.bind(this));
     this.log = options.log || new logConstructor();
+    this.masterReset();
   }
 
   /**
@@ -141,8 +166,8 @@ export abstract class Master<
     options: IMasterRequestOptions<Req, Res, Exc, L> = {}
   ): Observable<Res> {
     const pduRequest = pdu.Master.readCoils(startingAddress, quantityOfCoils);
-    const request = this.setupRequest(pduRequest.functionCode, pduRequest.buffer);
-    return this.onRequest(request, options);
+    const request = this.masterSetupRequest(pduRequest.functionCode, pduRequest.buffer);
+    return this.masterOnQueue(request, options);
   }
 
   /**
@@ -157,8 +182,8 @@ export abstract class Master<
     options: IMasterRequestOptions<Req, Res, Exc, L> = {}
   ): Observable<Res> {
     const pduRequest = pdu.Master.readDiscreteInputs(startingAddress, quantityOfInputs);
-    const request = this.setupRequest(pduRequest.functionCode, pduRequest.buffer);
-    return this.onRequest(request, options);
+    const request = this.masterSetupRequest(pduRequest.functionCode, pduRequest.buffer);
+    return this.masterOnQueue(request, options);
   }
 
   /**
@@ -173,8 +198,8 @@ export abstract class Master<
     options: IMasterRequestOptions<Req, Res, Exc, L> = {}
   ): Observable<Res> {
     const pduRequest = pdu.Master.readHoldingRegisters(startingAddress, quantityOfRegisters);
-    const request = this.setupRequest(pduRequest.functionCode, pduRequest.buffer);
-    return this.onRequest(request, options);
+    const request = this.masterSetupRequest(pduRequest.functionCode, pduRequest.buffer);
+    return this.masterOnQueue(request, options);
   }
 
   /**
@@ -189,8 +214,8 @@ export abstract class Master<
     options: IMasterRequestOptions<Req, Res, Exc, L> = {}
   ): Observable<Res> {
     const pduRequest = pdu.Master.readInputRegisters(startingAddress, quantityOfRegisters);
-    const request = this.setupRequest(pduRequest.functionCode, pduRequest.buffer);
-    return this.onRequest(request, options);
+    const request = this.masterSetupRequest(pduRequest.functionCode, pduRequest.buffer);
+    return this.masterOnQueue(request, options);
   }
 
   /**
@@ -205,8 +230,8 @@ export abstract class Master<
     options: IMasterRequestOptions<Req, Res, Exc, L> = {}
   ): Observable<Res> {
     const pduRequest = pdu.Master.writeSingleCoil(outputAddress, outputValue);
-    const request = this.setupRequest(pduRequest.functionCode, pduRequest.buffer);
-    return this.onRequest(request, options);
+    const request = this.masterSetupRequest(pduRequest.functionCode, pduRequest.buffer);
+    return this.masterOnQueue(request, options);
   }
 
   /**
@@ -221,8 +246,8 @@ export abstract class Master<
     options: IMasterRequestOptions<Req, Res, Exc, L> = {}
   ): Observable<Res> {
     const pduRequest = pdu.Master.writeSingleRegister(registerAddress, registerValue);
-    const request = this.setupRequest(pduRequest.functionCode, pduRequest.buffer);
-    return this.onRequest(request, options);
+    const request = this.masterSetupRequest(pduRequest.functionCode, pduRequest.buffer);
+    return this.masterOnQueue(request, options);
   }
 
   /**
@@ -237,8 +262,8 @@ export abstract class Master<
     options: IMasterRequestOptions<Req, Res, Exc, L> = {}
   ): Observable<Res> {
     const pduRequest = pdu.Master.writeMultipleCoils(startingAddress, outputValues);
-    const request = this.setupRequest(pduRequest.functionCode, pduRequest.buffer);
-    return this.onRequest(request, options);
+    const request = this.masterSetupRequest(pduRequest.functionCode, pduRequest.buffer);
+    return this.masterOnQueue(request, options);
   }
 
   /**
@@ -253,15 +278,15 @@ export abstract class Master<
     options: IMasterRequestOptions<Req, Res, Exc, L> = {}
   ): Observable<Res> {
     const pduRequest = pdu.Master.writeMultipleRegisters(startingAddress, registerValues);
-    const request = this.setupRequest(pduRequest.functionCode, pduRequest.buffer);
-    return this.onRequest(request, options);
+    const request = this.masterSetupRequest(pduRequest.functionCode, pduRequest.buffer);
+    return this.masterOnQueue(request, options);
   }
 
   /**
    * Default retryWhen callback for conditional retries.
    * This will allow retries in cases of timeout and throw all other errors.
    */
-  public defaultRetryWhen(
+  public masterDefaultRetryWhen(
     master: Master<Req, Res, Exc>,
     retry: number,
     errorCount: number,
@@ -284,49 +309,69 @@ export abstract class Master<
 
   // -----------------------------
   // Start implementation methods.
+  // To implement a subclass, it must provide the following abstract methods.
+  // When receiving data it must call the methods below to implement response handling.
+  // It must subscribe to the `transmit` subject of this class and send the data contained within.
 
   /** Implemented by subclass to prepend/append data to request. */
-  protected abstract setupRequest(functionCode: pdu.EFunctionCode, request: Buffer): Req;
+  protected abstract masterSetupRequest(functionCode: pdu.EFunctionCode, request: Buffer): Req;
 
   /** Implemented by subclass to filter responses based on request. */
-  protected abstract matchResponse(request: Req, response: Res | Exc): boolean;
+  protected abstract masterMatchResponse(request: Req, response: Res | Exc): boolean;
 
-  /** Implemented by subclass to parse received data, returns length of parsed data */
-  protected abstract parseResponse(data: Buffer): number;
+  /** Implemented by subclass to parse received data, returns length of parsed data. */
+  protected abstract masterParseResponse(data: Buffer): number;
 
-  /**
-   * Setup internal receive/transmit observables and buffer.
-   * Should be called on (re)creating a connection to a device.
-   * TODO(M): Rethink these methods for better usability.
-   */
-  protected onOpen(): void {
+  /** Reset master internal state, must be called by subclass when (re)creating a connection. */
+  protected masterReset(): void {
+    this.masterDestroy();
     this.receive = new Subject<Res | Exc>();
     this.transmit = new Subject<Req>();
+    this.queueIn = new Subject<IMasterQueueIn<Req, Res, Exc, L>>();
+    this.queueOut = new Subject<IMasterQueueOut<Res>>();
+
+    // Subscribe to queue input, make requests in sequence.
+    this.queueIn
+      .pipe(
+        concatMap((item) => {
+          return this.masterOnRequest(item.id, item.request, item.options);
+        }),
+        map((response) => this.queueOut.next(response)),
+        // Throwing here would end subscription, catch and log.
+        catchError((error) => {
+          this.log.error(error);
+          return of(undefined);
+        })
+      )
+      .subscribe();
+  }
+
+  /** Complete internal observable state, must be called by subclass on destruction. */
+  protected masterDestroy(): void {
     this.buffer = Buffer.allocUnsafe(0);
-    this.locked = new BehaviorSubject(false);
+    this.receive.complete();
+    this.transmit.complete();
+    this.queueIn.complete();
+    this.queueOut.complete();
   }
 
   /**
-   * Cleanup internal observables and buffer.
-   * Should be called on closing a connection to a device.
+   * Receive data into internal buffer and try to parse responses.
+   * Must be called by subclass after receiving data via connection for internal buffer management.
+   * If a response is succesfully parsed then `masterOnResponse` shall be called with the result.
    */
-  protected onClose(): void {
-    this.receive.complete();
-    this.transmit.complete();
-    this.buffer = Buffer.allocUnsafe(0);
-    this.locked.complete();
-  }
-
-  /** Receive data into internal buffer and try to parse responses. */
-  protected onData(data: Buffer): void {
+  protected masterOnData(data: Buffer): void {
     this.log.bytesReceived(data.length);
     this.buffer = Buffer.concat([this.buffer, data]);
-    const parsedLength = this.parseResponse(this.buffer);
+    const parsedLength = this.masterParseResponse(this.buffer);
     this.buffer = this.buffer.slice(parsedLength);
   }
 
-  /** Send response/exception on observable stream. */
-  protected onResponse(response: Res | Exc): void {
+  /**
+   * Response or exception parsed from incoming data by subclass.
+   * Must be called by subclass after a response is successfully parsed from data.
+   */
+  protected masterOnResponse(response: Res | Exc): void {
     if (response instanceof pdu.Response) {
       this.log.response(response);
     } else {
@@ -355,60 +400,73 @@ export abstract class Master<
     return callback || this.retryWhen;
   }
 
-  protected onRequest(request: Req, options: IMasterRequestOptions<Req, Res, Exc, L>): Observable<Res> {
-    const retry = this.isRetry(options.retry);
-    const timeout = this.isTimeout(options.timeout);
-    const retryWhen = this.isRetryWhen(options.retryWhen);
+  /** Master queue handler for requests. */
+  protected masterOnQueue(request: Req, options: IMasterRequestOptions<Req, Res, Exc, L>): Observable<Res> {
+    // Generate ID using counter and emit on input queue.
+    const id = ++this.queueCounter;
+    this.queueIn.next({ id, request, options });
 
-    // Wait for master lock.
-    return interval(this.nextLockDelay).pipe(
-      map(() => this.locked.value),
-      filter((locked) => !locked),
+    // Filter queue output to get response/error for this request.
+    return this.queueOut.pipe(
+      filter((out) => out.id === id),
       take(1),
-      switchMap(() => {
-        // Lock and write via transmit subject.
-        this.locked.next(true);
-        this.transmitRequest(request);
-
-        // Wait for response to be received.
-        return this.receive.pipe(
-          filter((response) => this.matchResponse(request, response)),
-          rxjsTimeout(timeout),
-          rxjsRetryWhen((errors) => {
-            return errors.pipe(
-              scan((errorCount, error) => {
-                errorCount += 1;
-                // Throws error if retry not required.
-                retryWhen(this, retry, errorCount, error, request);
-                // Retransmit request and increment error counter.
-                this.transmitRequest(request, errorCount);
-                return errorCount;
-              }, 0)
-            );
-          }),
-          take(1),
-          map((response) => {
-            // Unlock and handle response.
-            this.locked.next(false);
-            if (response instanceof pdu.Response) {
-              return response;
-            }
-            throw response;
-          })
-        );
-      }),
-      // Unlock master if error thrown.
-      catchError((error) => {
-        this.locked.next(false);
-        return throwError(error);
+      mergeMap((out) => {
+        if (out.response != null) {
+          return of(out.response);
+        }
+        return throwError(out.error);
       })
     );
   }
 
-  /** Transmit request using transmit observable. */
-  protected transmitRequest(request: Req, errorCount: number = 0): void {
-    this.log.request(request, errorCount);
+  /** Master handler for requests, sends request, waits for and matches responses. */
+  protected masterOnRequest(
+    id: number,
+    request: Req,
+    options: IMasterRequestOptions<Req, Res, Exc, L>
+  ): Observable<IMasterQueueOut<Res>> {
+    const retry = this.isRetry(options.retry);
+    const timeout = this.isTimeout(options.timeout);
+    const retryWhen = this.isRetryWhen(options.retryWhen);
+
+    // Transmit request via subject.
+    this.log.request(request, 0);
     this.log.bytesTransmitted(request.buffer.length);
     this.transmit.next(request);
+
+    // Wait for responses on receive subject.
+    return this.receive.pipe(
+      // Match responses to requests using subclass method.
+      filter((response) => this.masterMatchResponse(request, response)),
+      // Timeout based on options.
+      rxjsTimeout(timeout),
+      // Handle retries using retryWhen callback.
+      rxjsRetryWhen((errors) => {
+        return errors.pipe(
+          scan((errorCount, error) => {
+            // Throws error if retry not required.
+            errorCount += 1;
+            retryWhen(this as any, retry, errorCount, error, request);
+
+            // Retransmit request and increment error counter.
+            this.log.request(request, errorCount);
+            this.log.bytesTransmitted(request.buffer.length);
+            this.transmit.next(request);
+            return errorCount;
+          }, 0)
+        );
+      }),
+      take(1),
+      map((response) => {
+        // Return response or error if exception.
+        if (response instanceof pdu.Response) {
+          return { id, response };
+        }
+        return { id, error: response };
+      }),
+      catchError((error) => {
+        return of({ id, error });
+      })
+    );
   }
 }
