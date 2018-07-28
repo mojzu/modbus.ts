@@ -24,8 +24,8 @@ server.open().subscribe(() => {
       // Handle server response(s).
       console.log("quickstart", JSON.stringify(response, null, 2));
 
-      // Disconnect client, close server.
-      client.disconnect();
+      // Destroy client, close server.
+      client.destroy();
       server.close();
     });
 });

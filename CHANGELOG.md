@@ -12,3 +12,4 @@
 
 - Refactoring for file/class name consistency with other libraries.
 - Update documentation link in `README.md`.
+- Update `examples` directory files.

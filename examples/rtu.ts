@@ -32,19 +32,31 @@ master
   .open()
   .pipe(
     switchMap(() => {
-      // Make request(s) to slave.
+      // Make request to slave.
       // return master.readInputRegisters(0, 1);
+
+      // Make multiple requests in order to slave.
       return forkJoin(
         master.readHoldingRegisters(1, 4),
+        master.readDiscreteInputs(1, 4),
         master.readHoldingRegisters(1, 4),
-        master.readHoldingRegisters(1, 4)
+        master.readInputRegisters(1, 4)
       );
     })
   )
-  .subscribe((response) => {
-    // Handle slave response(s).
-    console.log("rtu", JSON.stringify(response, null, 2));
+  .subscribe({
+    next: (response) => {
+      // Handle slave response(s).
+      console.log("rtu", JSON.stringify(response, null, 2));
 
-    // Close master.
-    master.close();
+      // Destroy master.
+      master.destroy();
+    },
+    error: (error) => {
+      // Handle error(s).
+      console.error("rtu", error);
+
+      // Destroy master.
+      master.destroy();
+    }
   });
