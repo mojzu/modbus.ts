@@ -22,6 +22,7 @@ export enum EMasterError {
 
 /** Modbus ADU error class. */
 export class MasterError extends ErrorChain {
+  protected readonly isMasterError = true;
   public constructor(value?: string, cause?: Error) {
     super({ name: "ModbusMasterError", value }, cause);
   }
@@ -104,16 +105,16 @@ export abstract class Master<
 > {
   /** Returns true if error is RxJS Timeout. */
   public static isTimeoutError(error: any): error is TimeoutError {
-    const isInstance = error instanceof TimeoutError;
+    const instanceOf = error instanceof TimeoutError;
     const hasName = error.name === "TimeoutError";
-    return isInstance || hasName;
+    return instanceOf || hasName;
   }
 
   /** Returns true if error is MasterError. */
   public static isMasterError(error: any): error is MasterError {
-    const isInstance = error instanceof MasterError;
-    const hasName = error.name === "ModbusMasterError";
-    return isInstance || hasName;
+    const instanceOf = error instanceof MasterError;
+    const hasProperty = !!error.isMasterError;
+    return instanceOf || hasProperty;
   }
 
   /** Default number of retries performed during requests. */
@@ -372,12 +373,15 @@ export abstract class Master<
    * Must be called by subclass after a response is successfully parsed from data.
    */
   protected masterOnResponse(response: Res | Exc): void {
-    if (response instanceof pdu.Response) {
+    if (pdu.isResponse(response)) {
       this.log.response(response);
-    } else {
+      this.receive.next(response);
+    } else if (pdu.isException(response)) {
       this.log.exception(response);
+      this.receive.next(response);
+    } else {
+      this.log.error(response);
     }
-    this.receive.next(response);
   }
 
   // End implementation methods.
@@ -459,10 +463,13 @@ export abstract class Master<
       take(1),
       map((response) => {
         // Return response or error if exception.
-        if (response instanceof pdu.Response) {
+        if (pdu.isResponse(response)) {
           return { id, response };
+        } else if (pdu.isException(response)) {
+          return { id, error: response };
+        } else {
+          throw response;
         }
-        return { id, error: response };
       }),
       catchError((error) => {
         return of({ id, error });

@@ -64,22 +64,46 @@ export interface IWriteMultipleRegisters extends IWriteMultiple {}
 
 /** Modbus PDU request. */
 export class Request {
+  protected readonly isRequest = true;
   public constructor(public readonly functionCode: number, public readonly buffer: Buffer) {}
 }
 
 /** Modbus PDU response. */
 export class Response {
+  protected readonly isResponse = true;
   public constructor(public readonly functionCode: number, public readonly data: any, public readonly buffer: Buffer) {}
 }
 
 /** Modbus PDU exception. */
 export class Exception {
+  protected readonly isException = true;
   public constructor(
     public readonly functionCode: number,
     public readonly exceptionFunctionCode: number,
     public readonly exceptionCode: number,
     public readonly buffer: Buffer
   ) {}
+}
+
+/** Returns true if instance of Request. */
+export function isRequest(request: any): request is Request {
+  const instanceOf = request instanceof Request;
+  const hasProperty = !!request.isRequest;
+  return instanceOf || hasProperty;
+}
+
+/** Returns true if instance of Response. */
+export function isResponse(response: any): response is Response {
+  const instanceOf = response instanceof Response;
+  const hasProperty = !!response.isResponse;
+  return instanceOf || hasProperty;
+}
+
+/** Returns true if instance of Exception. */
+export function isException(exception: any): exception is Exception {
+  const instanceOf = exception instanceof Exception;
+  const hasProperty = !!exception.isException;
+  return instanceOf || hasProperty;
 }
 
 /** Throw an error if value is not a valid address. */

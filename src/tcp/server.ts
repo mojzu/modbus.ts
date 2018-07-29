@@ -97,7 +97,7 @@ export abstract class Server extends pdu.Slave {
     const pduResponse = this.onRequest(pduBuffer);
     let response: IServerResponse = null;
 
-    if (pduResponse instanceof pdu.Response) {
+    if (pdu.isResponse(pduResponse)) {
       response = new tcp.Response(
         transactionId,
         unitId,
@@ -105,7 +105,7 @@ export abstract class Server extends pdu.Slave {
         pduResponse.data,
         pduResponse.buffer
       );
-    } else if (pduResponse instanceof pdu.Exception) {
+    } else if (pdu.isException(pduResponse)) {
       response = new tcp.Exception(
         transactionId,
         unitId,

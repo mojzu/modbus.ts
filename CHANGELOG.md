@@ -13,3 +13,4 @@
 - Refactoring for file/class name consistency with other libraries.
 - Update documentation link in `README.md`.
 - Update `examples` directory files.
+- Reduced use of `instanceof` for checking types, use property as secondary test.

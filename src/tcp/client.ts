@@ -216,9 +216,9 @@ export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception,
     const pduResponse = pdu.Master.onResponse(pduBuffer);
     let response: tcp.Response | tcp.Exception | null = null;
 
-    if (pduResponse instanceof pdu.Response) {
+    if (pdu.isResponse(pduResponse)) {
       response = new tcp.Response(transactionId, unitId, pduResponse.functionCode, pduResponse.data, aduBuffer);
-    } else if (pduResponse instanceof pdu.Exception) {
+    } else if (pdu.isException(pduResponse)) {
       response = new tcp.Exception(
         transactionId,
         unitId,

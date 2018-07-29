@@ -136,9 +136,9 @@ export class Master extends adu.Master<rtu.Request, rtu.Response, rtu.Exception>
     const pduResponse = pdu.Master.onResponse(pduBuffer);
     let response: rtu.Response | rtu.Exception | null = null;
 
-    if (pduResponse instanceof pdu.Response) {
+    if (pdu.isResponse(pduResponse)) {
       response = new rtu.Response(slaveAddress, pduResponse.functionCode, pduResponse.data, aduBuffer);
-    } else if (pduResponse instanceof pdu.Exception) {
+    } else if (pdu.isException(pduResponse)) {
       response = new rtu.Exception(
         slaveAddress,
         pduResponse.functionCode,
