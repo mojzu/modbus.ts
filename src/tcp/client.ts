@@ -42,11 +42,6 @@ export interface IClientOptions extends IClientRequestOptions {
   log?: ClientLog;
 }
 
-/** Modbus TCP client error codes. */
-export enum EClientError {
-  Write = "ModbusTcpClientWriteError"
-}
-
 /** Modbus TCP client. */
 export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception, ClientLog> {
   /** Host the client will connect to. */
@@ -199,7 +194,7 @@ export class Client extends adu.Master<tcp.Request, tcp.Response, tcp.Exception,
       this.socket.write(request.buffer);
       this.log.packetsTransmitted(1);
     } else {
-      this.log.error(new adu.MasterError(EClientError.Write));
+      this.log.error(new adu.MasterError(adu.EMasterError.Write));
     }
   }
 

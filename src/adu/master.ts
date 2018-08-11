@@ -17,14 +17,15 @@ import * as pdu from "../pdu";
 
 /** Master error codes. */
 export enum EMasterError {
-  Timeout = "ModbusMasterTimeoutError"
+  Timeout,
+  Write
 }
 
 /** Modbus ADU error class. */
 export class MasterError extends ErrorChain {
   protected readonly isMasterError = true;
-  public constructor(value?: string, cause?: Error) {
-    super({ name: "ModbusMasterError", value }, cause);
+  public constructor(code: EMasterError, cause?: Error, context?: object) {
+    super({ name: "MasterError", value: { code, ...context } }, cause);
   }
 }
 
@@ -297,14 +298,14 @@ export abstract class Master<
     if (Master.isTimeoutError(error)) {
       // If error is a timeout, retry up to limit.
       if (errorCount >= retry) {
-        throw new MasterError(EMasterError.Timeout, error);
+        throw new MasterError(EMasterError.Timeout, error, { request });
       }
     } else if (Master.isMasterError(error)) {
       // If error is a master error, rethrow now.
       throw error;
     } else {
       // Wrap and rethrow unknown errors.
-      throw new MasterError(error.code, error);
+      throw new MasterError(error.code, error, { request });
     }
   }
 

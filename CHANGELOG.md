@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 3.0.3 (2018-08-11)
+
+### Changed
+
+- Refactored `MasterError` class constructor arguments for consistency with `container.ts`. Check usage of error `name` any `value` properties, search and replace: `ModbusTcpClientWriteError`, `ModbusTcpClientWriteError`.
+- Package dependency updates.
+
+---
+
 ## 3.0.2 (2018-08-07)
 
 ### Changed
