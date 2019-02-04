@@ -1,6 +1,6 @@
 {
   "name": "modbus.ts",
-  "version": "3.1.23",
+  "version": "3.1.24",
   "description": "Modbus application protocol",
   "main": "./index.js",
   "typings": "./index.d.ts",
@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@types/debug": "^0.0.31",
-    "container.ts": "^3.2.13",
+    "container.ts": "^3.2.14",
     "debug": "^4.1.1",
     "rxjs": "^6.4.0"
   },
