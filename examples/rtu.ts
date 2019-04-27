@@ -10,7 +10,7 @@ import * as modbus from "../src";
 // socat[13872] N PTY is /dev/pts/7
 // socat[13872] N PTY is /dev/pts/19
 // $ ./diagslave -m rtu -a 1 /dev/pts/7
-// $ yarn run ts-node ./examples/rtu.ts -p /dev/pts/19
+// $ npm run ts-node ./examples/rtu.ts -p /dev/pts/19
 
 const path = argv.p;
 const port = new SerialPort(path, {

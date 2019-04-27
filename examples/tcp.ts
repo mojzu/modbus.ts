@@ -5,7 +5,7 @@ import * as modbus from "../src";
 
 // Test using Diagslave, run following commands in different terminals:
 // $ ./diagslave -m tcp -a 1 -p 5002
-// $ yarn run ts-node ./examples/tcp.ts
+// $ npm run ts-node ./examples/tcp.ts
 
 // Create client instance.
 const client = new modbus.tcp.Client({ host: "localhost", port: 5002 });

@@ -3,7 +3,7 @@
 import { switchMap } from "rxjs/operators";
 import * as modbus from "../src";
 
-// $ yarn run ts-node ./examples/quickstart.ts
+// $ npm run ts-node ./examples/quickstart.ts
 
 // Create mock server and client instances.
 const server = new modbus.tcp.MockServer({ port: 5022 });

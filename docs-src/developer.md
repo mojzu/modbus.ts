@@ -1,6 +1,6 @@
 # Developer
 
-Clone repository, install dependencies with `yarn install` and run scripts: `yarn run ...`
+Clone repository, install dependencies with `npm install` and run scripts: `npm run ...`
 
 | Script      | Description                                    |
 | ----------- | ---------------------------------------------- |
@@ -13,6 +13,6 @@ Clone repository, install dependencies with `yarn install` and run scripts: `yar
 Publishing library to NPM/GitHub.
 
 ```Shell
-$ yarn run dist && npm publish --access=public [--tag=beta]
+$ npm run dist && npm publish --access=public [--tag=beta]
 $ git push origin master --tags
 ```

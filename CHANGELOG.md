@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 3.1.30 (2019-04-27)
+
+### Changed
+
+- Replaced yarn with npm.
+
+---
+
 ## 3.1.29 (2019-03-24)
 
 ### Changed
