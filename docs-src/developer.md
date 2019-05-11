@@ -2,15 +2,21 @@
 
 Clone repository, install dependencies with `npm install` and run scripts: `npm run ...`
 
-| Script      | Description                                    |
-| ----------- | ---------------------------------------------- |
-| `clean`     | Clean compiled files.                          |
-| `distclean` | Remove Node modules.                           |
-| `lint`      | Run TSLint on project.                         |
-| `test`      | Run tests using Jest.                          |
-| `dist`      | Build library for release.                     |
+| Script      | Description                |
+| ----------- | -------------------------- |
+| `clean`     | Clean compiled files.      |
+| `distclean` | Remove Node modules.       |
+| `lint`      | Run TSLint on project.     |
+| `test`      | Run tests using Jest.      |
+| `dist`      | Build library for release. |
 
-Publishing library to NPM/GitHub.
+Update package dependencies.
+
+```Shell
+$ ncu --upgrade
+```
+
+Publish library to NPM and GitHub.
 
 ```Shell
 $ npm run dist && npm publish --access=public [--tag=beta]

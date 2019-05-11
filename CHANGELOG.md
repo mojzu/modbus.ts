@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 3.1.31 (2019-05-11)
+
+### Changed
+
+- Package dependency updates.
+
+---
+
 ## 3.1.30 (2019-04-27)
 
 ### Changed
