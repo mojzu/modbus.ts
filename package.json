@@ -1,6 +1,6 @@
 {
   "name": "modbus.ts",
-  "version": "3.1.32",
+  "version": "3.1.33",
   "description": "Modbus application protocol",
   "main": "./index.js",
   "typings": "./index.d.ts",
@@ -27,6 +27,7 @@
   "scripts": {
     "clean": "ts-node fuse.ts clean",
     "distclean": "ts-node fuse.ts distclean",
+    "tsc": "ts-node fuse.ts tsc",
     "lint": "ts-node fuse.ts lint",
     "test": "ts-node fuse.ts test",
     "example": "ts-node fuse.ts example",
@@ -34,7 +35,7 @@
   },
   "dependencies": {
     "@types/debug": "^4.1.4",
-    "container.ts": "^3.2.22",
+    "container.ts": "^3.2.23",
     "debug": "^4.1.1",
     "rxjs": "^6.5.2"
   },
@@ -44,15 +45,15 @@
   },
   "devDependencies": {
     "@types/jest": "^24.0.13",
-    "@types/node": "^12.0.2",
+    "@types/node": "^12.0.5",
     "@types/yargs": "^13.0.0",
     "del": "^4.1.1",
     "fuse-box": "^3.7.1",
     "jest": "^24.8.0",
     "ts-jest": "^24.0.2",
-    "ts-node": "^8.1.0",
-    "tslint": "^5.16.0",
-    "typescript": "^3.4.5",
+    "ts-node": "^8.2.0",
+    "tslint": "^5.17.0",
+    "typescript": "^3.5.1",
     "yargs": "^13.2.4"
   },
   "jest": {
