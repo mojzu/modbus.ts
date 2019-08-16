@@ -1,4 +1,7 @@
 
+TODO: Testing with...
+<https://github.com/stephane/libmodbus/tree/master/tests>
+
 # PDU
 
 Modbus Protocol Data Unit layer.
