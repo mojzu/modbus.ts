@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 3.1.41 (2019-11-19)
+
+### Changed
+
+- Downgrade TypeScript version for compatability.
+
+---
+
 ## 3.1.40 (2019-11-19)
 
 ### Changed
