@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 3.1.45 (2020-05-04)
+
+### Changed
+
+- Updated package dependencies.
+
+---
+
 ## 3.1.44 (2020-04-02)
 
 ### Changed
