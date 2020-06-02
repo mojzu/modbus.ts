@@ -1,6 +1,6 @@
 {
   "name": "modbus.ts",
-  "version": "3.1.45",
+  "version": "3.1.46",
   "description": "Modbus application protocol",
   "main": "./index.js",
   "typings": "./index.d.ts",
@@ -35,23 +35,23 @@
   },
   "dependencies": {
     "@types/debug": "^4.1.5",
-    "container.ts": "^3.2.44",
+    "container.ts": "^3.2.45",
     "debug": "^4.1.1",
     "rxjs": "^6.5.5"
   },
   "optionalDependencies": {
-    "@types/serialport": "^8.0.0",
-    "serialport": "^8.0.7"
+    "@types/serialport": "^8.0.1",
+    "serialport": "^9.0.0"
   },
   "devDependencies": {
-    "@types/jest": "^25.2.1",
-    "@types/node": "^13.13.4",
-    "@types/yargs": "^15.0.4",
+    "@types/jest": "^25.2.3",
+    "@types/node": "^14.0.9",
+    "@types/yargs": "^15.0.5",
     "del": "^5.1.0",
     "fuse-box": "^3.7.1",
-    "jest": "^25.5.4",
-    "ts-jest": "^25.4.0",
-    "ts-node": "^8.10.1",
+    "jest": "^26.0.1",
+    "ts-jest": "^26.1.0",
+    "ts-node": "^8.10.2",
     "tslint": "^6.1.2",
     "typescript": "~3.8.3",
     "yargs": "^15.3.1"
