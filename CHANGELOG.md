@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 3.1.55 (2021-04-12)
+
+### Changed
+
+- Updated package dependencies.
+
+---
+
 ## 3.1.54 (2021-02-03)
 
 ### Changed
